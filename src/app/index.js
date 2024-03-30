@@ -1,11 +1,30 @@
+import { router } from "expo-router";
 import { View, Text } from "react-native";
 import React from "react";
-import { Link } from "expo-router";
 
 export default function index() {
   return (
     <View>
-      <Link href="/home">Home</Link>
+      <Text
+        onPress={() => {
+          // signIn();
+          // Navigate after signing in. You may want to tweak this to ensure sign-in is
+          // successful before navigating.
+          router.push("./home");
+        }}
+      >
+        To Home
+      </Text>
+      <Text
+        onPress={() => {
+          // signIn();
+          // Navigate after signing in. You may want to tweak this to ensure sign-in is
+          // successful before navigating.
+          router.push("./sign-in");
+        }}
+      >
+        To Sign In page
+      </Text>
     </View>
   );
 }
