@@ -9,7 +9,7 @@ export default function GoogleMapHomeView() {
         style={{
           width: "100%",
           height: "100%",
-        }}
+        }} git checkout testing
         provider={PROVIDER_GOOGLE}
         showsUserLocation={true}
       ></MapView>

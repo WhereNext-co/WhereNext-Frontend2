@@ -5,7 +5,7 @@ import { Link } from "expo-router";
 export default function index() {
   return (
     <View>
-      <Link href="/home">Home</Link>
+      <Link href="/Introduce">Welcome</Link>
     </View>
   );
 }
