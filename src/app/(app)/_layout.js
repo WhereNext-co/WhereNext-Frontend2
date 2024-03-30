@@ -7,6 +7,8 @@ import Friends from "../../../assets/tabs/friends.svg";
 import Profile from "../../../assets/tabs/profile.svg";
 import Dairy from "../../../assets/tabs/dairy.svg";
 import Home from "../../../assets/tabs/home.svg";
+import { View } from "react-native";
+import { UserLocationContext } from "../../context/userLocationContext";
 
 export default function TabLayout() {
   // const { session, isLoading } = useSession();
@@ -71,6 +73,7 @@ export default function TabLayout() {
           ),
         }}
       />
+      \
     </Tabs>
   );
 }
