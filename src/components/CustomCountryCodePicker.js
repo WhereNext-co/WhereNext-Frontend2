@@ -28,11 +28,11 @@ const CustomCountryCodePicker = ({ onPhoneChange }) => {
                     withCallingCodeButton
                     onSelect={onSelect}
                 />
-                <Text>{countryCode} {phoneDisplay}</Text>
+                <Text>{countryCode}</Text>
                 <TextInput
                     placeholder="Phone Number"
                     keyboardType="phone-pad"
-                    value={phone}
+                    value={phoneDisplay}
                     style={styles.input}
                     onChangeText={(text) => {
                         onPhoneChange(text); //Send Phone to parent
