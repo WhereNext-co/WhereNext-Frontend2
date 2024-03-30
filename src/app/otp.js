@@ -12,7 +12,7 @@ export default function SignIn() {
     return (
         <View>
             
-            
+            <OTP />
 
         </View>
 );
