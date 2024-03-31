@@ -19,6 +19,7 @@ export default function SignIn() {
         <View>
             
             <OTP onOTPChange={OTPChangeHandler} />
+            
 
         </View>
 );

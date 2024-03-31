@@ -18,7 +18,7 @@ export default function OTP( {onOTPChange} ) {
     })}
     />
   );
-
+// onCodeFilled for when the OTP is filled
 }
 
 
