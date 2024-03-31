@@ -11,12 +11,12 @@ import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "fire
 export default function SignIn() {
 
   const [phone, setPhone] = useState('');
-  const [countryCode, setCountryCode] = useState('+66');
+  const [countryCode, setCountryCode] = useState('+66'); // Default country code is +66 (Thailand)
   const [emailphoneFormat, setEmailPhoneFormat] = useState('');
   const [password, setPassword] = useState('defaultPass');
   const [loading, setLoading] = useState(false);
   const auth = FIREBASE_AUTH;
-  
+
   //Debug
   console.log('<------>');
   console.log(phone);
