@@ -1,6 +1,11 @@
-import OTPInputView from '@twotalltotems/react-native-otp-input'
+import OTPInputView from '@twotalltotems/react-native-otp-input';
+import React from 'react';
+import { StyleSheet } from 'react-native';
 
-<OTPInputView
+export default function OTP( {onOTPChange} ) {
+
+  return(
+    <OTPInputView
     style={{width: '80%', height: 200}}
     pinCount={6}
     // code={this.state.code} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
@@ -9,9 +14,14 @@ import OTPInputView from '@twotalltotems/react-native-otp-input'
     codeInputFieldStyle={styles.underlineStyleBase}
     codeInputHighlightStyle={styles.underlineStyleHighLighted}
     onCodeFilled = {(code => {
-        console.log(`Code is ${code}, you are good to go!`)
+        onOTPChange(code)
     })}
-/>
+    />
+  );
+
+}
+
+
 
 const styles = StyleSheet.create({
   borderStyleBase: {

@@ -3,8 +3,7 @@ import { View, TextInput, Text } from 'react-native';
 import CountryPicker from 'react-native-country-picker-modal';
 import { StyleSheet } from "react-native";
 
-const CustomCountryCodePicker = ({ onPhoneChange }) => {
-    const [countryCode, setCountryCode] = useState('');
+const CustomCountryCodePicker = ({ onPhoneChange, onCountryCodeChange }) => {
     const [country, setCountry] = useState({
         cca2: 'TH',
         callingCode: '66',
@@ -13,7 +12,7 @@ const CustomCountryCodePicker = ({ onPhoneChange }) => {
 
     const onSelect = (country) => {
         setCountry(country);
-        setCountryCode(`+${country.callingCode}`);
+        onCountryCodeChange(country.callingCode);
     };
 
 
@@ -28,7 +27,6 @@ const CustomCountryCodePicker = ({ onPhoneChange }) => {
                     withCallingCodeButton
                     onSelect={onSelect}
                 />
-                <Text>{countryCode}</Text>
                 <TextInput
                     placeholder="Phone Number"
                     keyboardType="phone-pad"
@@ -52,6 +50,7 @@ const styles = StyleSheet.create({
         height: 40, // adjust height as needed
         justifyContent: 'center',
         paddingHorizontal: 10,
+        flexDirection: 'row',
     },
     input: {
         flex: 1,
