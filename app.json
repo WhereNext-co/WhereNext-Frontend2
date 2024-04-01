@@ -13,18 +13,42 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.capstone.wherenext",
+      "config": {
+        "googleMapsApiKey": "AIzaSyAFn7D3VcmDtWXNJXoHyz44MVNMEj1sLZs"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "package": "com.capstone.wherenext",
+      "config": {
+        "googleMapsApiKey": "AIzaSyDxrDAmzSoIWHZZyvwAHGA9qK2a7Z18FII"
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-router"],
-    "scheme": "WhereNext-Frontend2-scheme"
+    "plugins": [
+      ["expo-router"],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow WhereNext to use your location."
+        }
+      ]
+    ],
+    "scheme": "WhereNext-Frontend2-scheme",
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "ca7c7020-61e8-4a29-b0f2-5b1c81a940a4"
+      }
+    }
   }
 }
