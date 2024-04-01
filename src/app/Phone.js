@@ -1,17 +1,28 @@
 import { View, Text, TextInput,  StyleSheet,Pressable,} from "react-native";
-import { Link } from "expo-router";
 import React  from "react";
 import CountryCodePicker from '../components/componentspung/Countrycodepicker/Countrycodepicker';
+import Backbutton from '../components/componentspung/turnbackbutton/Backbutton';
+import { router } from "expo-router";
+
 export default function Login() {
-    const [value, onChangeText] = React.useState('Useless Multiline Placeholder');
+    const handlePress = () => {
+      router.push('/OTP')
+    };
+    const handlePress2 = () => {
+      router.push('/Introduce')
+    };
     return(
-    <View style={styles.container}>
-        <Text style={{textAlign :"center",
-          textAlignVertical:"center",
-          fontSize:30, 
-          color:'white'}}>We want to make sure {'\n'} you're unique</Text>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
+        <View style={{ position: 'absolute', top: 20, left: 20 }}>
+        <Backbutton style={{}} onPress={handlePress2}/>
+        </View>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <CountryCodePicker />
+          <Text style={{textAlign :"center",
+          textAlignVertical:"bottom",
+          fontSize:30,
+          padding:20, 
+          color:'white'}}>We want to make sure {'\n'} you're unique</Text>
+          <CountryCodePicker press={handlePress}/>
         </View>
         
     

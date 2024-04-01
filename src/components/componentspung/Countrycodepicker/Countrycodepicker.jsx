@@ -3,10 +3,11 @@ import { View, TextInput ,Text  } from 'react-native';
 import CountryPicker from 'react-native-country-picker-modal';
 import { StyleSheet } from "react-native";
 
-import SlideButton from '../Button/Button';
+import Button from '../Button/Button';
+import { Link } from 'expo-router';
 
 
-const CountryCodePicker = () => {
+const CountryCodePicker = (press) => {
     const [countryCode, setCountryCode] = useState('');
     const [phone, setPhone] = useState('');
   
@@ -14,13 +15,12 @@ const CountryCodePicker = () => {
       cca2: 'US',
       callingCode: '1',
     });
-  
     const onSelect = (country) => {
         setCountry(country);
         setCountryCode(`+${country.callingCode}`);
         setSelected(true);
       };
-  
+    
     return (
       <View>
         <View style={styles.container}>
@@ -41,8 +41,8 @@ const CountryCodePicker = () => {
           onChangeText={(text) => setPhone(text)}
         />
         </View>
+        <Button label={"Next"} onPress={press.press}></Button>
         
-        <SlideButton label={"Next"} onPress={() => console.log(`${countryCode}${phone}`)}></SlideButton>
       </View>
     );
   };
