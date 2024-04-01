@@ -14,7 +14,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.wongsapat.wherenext",
+      "bundleIdentifier": "com.capstone.wherenext",
       "config": {
         "googleMapsApiKey": "AIzaSyAFn7D3VcmDtWXNJXoHyz44MVNMEj1sLZs"
       }
