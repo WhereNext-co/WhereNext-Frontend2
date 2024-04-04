@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import { TextInput, View, StyleSheet } from 'react-native';
 
-const MyTextInput = (placeholder) => {
-  const [textInputValue, setTextInputValue] = useState('');
-
-  const handleInputChange = (text) => {
-    setTextInputValue(text);
+const MyTextInput = ({placeholder,value,onPress}) => {
+  const [text, setText] = useState(value);
+  
+  const handleChangeText = (newText) => {
+    setText(newText);
+    onPress(newText);
   };
-
   return (
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        onChangeText={handleInputChange}
-        value={textInputValue}
+        onChangeText={handleChangeText}
+        value={text}
         placeholderTextColor="#b0b0b0"
-        placeholder={placeholder.placeholder}
+        placeholder={value ? '' : placeholder} // Show placeholder if value is empty
         selectionColor="gray" // Customize the handle color
       />
     </View>

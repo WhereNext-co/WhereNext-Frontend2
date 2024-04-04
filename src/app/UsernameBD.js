@@ -1,20 +1,21 @@
 import { View, Text, TextInput,  StyleSheet,Pressable,} from "react-native";
 import React  from "react";
-import Backbutton from '../components/componentspung/turnbackbutton/Backbutton';
-import { router } from "expo-router";
-import Button from '../components/componentspung/Button/Button';
+import Backbutton from '../components/componentspung/Button/turnbackbutton/Backbutton';
+import { router, useLocalSearchParams} from "expo-router";
+import Button from '../components/componentspung/Button/Button/Button';
 import Inputtext from '../components/componentspung/InputText/InputText';
-import Dropdown from '../components/componentspung/Dropdown/Dropdown';
+import Birthdate from '../components/componentspung/Birthdate/Birthdate';
 
 export default function Login() {
+    let {name,surname,username} = useLocalSearchParams();
     const handlePress = () => {
-      router.push('/UsernameBD')
+      router.push('/Location')
     };
     const handlePress2 = () => {
-      router.push('/Name')
+      router.push({pathname:'/Username',params:{name:name,surname:surname,username:username}})
     };
     return(
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey' }}>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
         <View style={{ position: 'absolute', top: 20, left: 20 }}>
         <Backbutton style={{}} onPress={handlePress2}/>
         </View>
@@ -23,12 +24,12 @@ export default function Login() {
           textAlignVertical:"bottom",
           fontSize:30,
           padding:20, 
-          color:'white'}}>Pick a Username that {'\n'} represents you.</Text>
+          color:'white'}}>What is your {'\n'} Birthday?</Text>
      
         </View>
         
         <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: 20}}>
-        <Dropdown> </Dropdown>
+        <Birthdate> </Birthdate>
         
         </View>
         

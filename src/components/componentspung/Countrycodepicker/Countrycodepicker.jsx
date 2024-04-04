@@ -3,7 +3,7 @@ import { View, TextInput ,Text  } from 'react-native';
 import CountryPicker from 'react-native-country-picker-modal';
 import { StyleSheet } from "react-native";
 
-import Button from '../Button/Button';
+import Button from '../Button/Button/Button';
 import { Link } from 'expo-router';
 
 

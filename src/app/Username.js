@@ -1,16 +1,22 @@
 import { View, Text, TextInput,  StyleSheet,Pressable,} from "react-native";
-import React  from "react";
-import Backbutton from '../components/componentspung/turnbackbutton/Backbutton';
-import { router } from "expo-router";
-import Button from '../components/componentspung/Button/Button';
+import React,{useState}   from "react";
+import Backbutton from '../components/componentspung/Button/turnbackbutton/Backbutton';
+import Button from '../components/componentspung/Button/Button/Button';
 import Inputtext from '../components/componentspung/InputText/InputText';
+import { router, useLocalSearchParams} from "expo-router";
 
 export default function Login() {
+    let {name,surname,username} = useLocalSearchParams();
     const handlePress = () => {
-      router.push('/UsernameBD')
+      router.push({pathname:'/UsernameBD',params:{name:name,surname:surname,username:usernameInputValue}})
     };
     const handlePress2 = () => {
-      router.push('/Name')
+      router.push({pathname:'/Name',params:{name:name,surname:surname}})
+    };
+    const [usernameInputValue, setUsernameInputValue] = useState(username);
+
+    const usernameInputChange = (text) => {
+      setUsernameInputValue(text);
     };
     return(
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
@@ -27,7 +33,7 @@ export default function Login() {
         </View>
         
         <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center',backgroundColor: 'black', marginBottom: 20}}>
-        <Inputtext placeholder='Username'/>
+        <Inputtext placeholder='Username' value={usernameInputValue} onPress={usernameInputChange}/>
         
         </View>
         
