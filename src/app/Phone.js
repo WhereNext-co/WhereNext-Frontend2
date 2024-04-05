@@ -1,5 +1,5 @@
-import { View, Text, TextInput,  StyleSheet,Pressable,} from "react-native";
-import React  from "react";
+import { View, Text, TextInput,  StyleSheet, ActivityIndicator, Button,} from "react-native";
+import React,{ useState, useEffect } from "react";
 import CountryCodePicker from '../components/componentspung/Countrycodepicker/Countrycodepicker';
 import Backbutton from '../components/componentspung/Button/turnbackbutton/Backbutton';
 

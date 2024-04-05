@@ -4,8 +4,7 @@ import { Stack } from "expo-router/stack";
 export default function AppLayout() {
   return (
     <Stack>
-      <Stack.Screen name="(app)" options={{ headerShown: false }} />
-      <Stack.Screen name="(sign_up)" options={{ headerShown: false }} />
+
 
     </Stack>
   );

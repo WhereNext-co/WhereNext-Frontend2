@@ -1,15 +1,23 @@
-import { View, Text, TextInput,  StyleSheet,Pressable,} from "react-native";
-import React  from "react";
+import { View, Text,StyleSheet, Platform} from "react-native";
+import React,{useState}  from "react";
 import Backbutton from '../components/componentspung/Button/turnbackbutton/Backbutton';
 import { router, useLocalSearchParams} from "expo-router";
 import Button from '../components/componentspung/Button/Button/Button';
-import Inputtext from '../components/componentspung/InputText/InputText';
 import Birthdate from '../components/componentspung/Birthdate/Birthdate';
 
 export default function Login() {
     let {name,surname,username} = useLocalSearchParams();
+    const [date, setDate] = useState(new Date());
+    const [showPicker, setShowPicker] = useState(true); // Show picker initially
+
+    const onChange = (event, selectedDate) => {
+      const currentDate = selectedDate || date;
+      setShowPicker(Platform.OS === 'ios');
+      setDate(currentDate);
+    };
+
     const handlePress = () => {
-      router.push('/Location')
+      router.push({pathname:'/Location',params:{name:name,surname:surname,username:username,birthdate:date}})
     };
     const handlePress2 = () => {
       router.push({pathname:'/Username',params:{name:name,surname:surname,username:username}})
@@ -29,7 +37,7 @@ export default function Login() {
         </View>
         
         <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: 20}}>
-        <Birthdate> </Birthdate>
+        <Birthdate  date={date} onchange={onChange} showPicker={showPicker} /> 
         
         </View>
         

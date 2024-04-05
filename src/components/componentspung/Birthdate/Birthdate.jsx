@@ -1,4 +1,4 @@
-import { View } from "react-native"
+/*import { View } from "react-native"
 import Dropdown from "../Dropdown/Dropdown"
 import { useState } from "react"
 let day=[{id:1,name:1},{id:2,name:2},{id:3,name:3}]
@@ -35,4 +35,27 @@ const Birthdate =()=>{
         
     )
 }
-export default Birthdate
+export default Birthdate*/
+import React, { useState } from 'react';
+import { View, Platform } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
+const MyDatePicker = ({date,onChange,showPicker}) => {
+  
+  return (
+    <View>
+      {showPicker && (
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          mode="date"
+          display="default"
+          onChange={onChange}
+          style={{backgroundColor:'white'}}
+        />
+      )}
+    </View>
+  );
+};
+
+export default MyDatePicker;

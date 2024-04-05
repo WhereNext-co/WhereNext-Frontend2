@@ -5,6 +5,7 @@ import { useRouter } from "expo-router";
 import Button from '../components/componentspung/Button/Button/Button';
 import OtpInput from '../components/componentspung/OTP/OTP';
 
+
 export default function Login() {
     const router=useRouter();
     const handlePress = () => {
@@ -18,20 +19,11 @@ export default function Login() {
         <View style={{ position: 'absolute', top: 20, left: 20 }}>
         <Backbutton style={{}} onPress={handlePress2}/>
         </View>
-        
-     
- 
-        
         <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center',backgroundColor: 'black', marginBottom: 20}}>
         <OtpInput></OtpInput>
         </View>
-        
         <Button label={"Send OTP"} onPress={handlePress} style={{}}></Button>
-        
-        
-
-    </View>
-    
+    </View>    
     ); 
 }
 const styles = StyleSheet.create({

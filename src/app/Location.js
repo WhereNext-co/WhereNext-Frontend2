@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, Alert } from 'react-native';
+import { Text, View, StyleSheet, Alert , Image} from 'react-native';
 import Backbutton from '../components/componentspung/Button/turnbackbutton/Backbutton';
 import { router } from "expo-router";
 import Button from '../components/componentspung/Button/Button/Button';
+import location from "../../assets/Pung/location.png";
+import { SvgUri } from 'react-native-svg';
 
 import * as Location from 'expo-location';
 
@@ -12,7 +14,7 @@ export default function LocationRequest() {
     router.push('/Termagree')
   };
   const handlePress2 = () => {
-    router.push('/Userprofile')
+    router.push('/UsernameBD')
   };
   const handlePermissionRequest = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -39,7 +41,13 @@ export default function LocationRequest() {
           color:'white'}}>Please turn on your {'\n'} location service.</Text>
      
       </View>
-      
+      <View>
+       
+        <Image
+        source={require('../../assets/Pung/location.png')}
+        style={{ width: 200, height: 200 ,backgroundColor:'white'}}
+      />
+      </View>
       <Button label={"Turn on location service"} onPress={handlePermissionRequest} />
       {errorMsg && <Text style={styles.error}>{errorMsg}</Text>}
     </View>
