@@ -1,9 +1,9 @@
 import { View, Text, TextInput,  StyleSheet,Pressable,} from "react-native";
 import React,{useState}  from "react";
-import Backbutton from '../components/componentspung/Button/turnbackbutton/Backbutton';
+import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
 import { router, useLocalSearchParams} from "expo-router";
-import Button from '../components/componentspung/Button/Button/Button';
-import Inputtext from '../components/componentspung/InputText/InputText';
+import Button from '../../components/componentspung/Button/Button/Button';
+import Inputtext from '../../components/componentspung/InputText/InputText';
 
 export default function Login({}) {
   const {name, surname} =useLocalSearchParams(); 

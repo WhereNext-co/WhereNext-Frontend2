@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import { router } from "expo-router";
 
-import SlideButton from '../components/componentspung/Button/SlideButton/Button';
+import SlideButton from '../../components/componentspung/Button/SlideButton/Button';
 
 
 export default function Login() {

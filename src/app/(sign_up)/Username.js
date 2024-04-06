@@ -1,26 +1,22 @@
-import { View, Text,StyleSheet, Platform} from "react-native";
-import React,{useState}  from "react";
-import Backbutton from '../components/componentspung/Button/turnbackbutton/Backbutton';
+import { View, Text, TextInput,  StyleSheet,Pressable,} from "react-native";
+import React,{useState}   from "react";
+import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
+import Button from '../../components/componentspung/Button/Button/Button';
+import Inputtext from '../../components/componentspung/InputText/InputText';
 import { router, useLocalSearchParams} from "expo-router";
-import Button from '../components/componentspung/Button/Button/Button';
-import Birthdate from '../components/componentspung/Birthdate/Birthdate';
 
 export default function Login() {
     let {name,surname,username} = useLocalSearchParams();
-    const [date, setDate] = useState(new Date());
-    const [showPicker, setShowPicker] = useState(true); // Show picker initially
-
-    const onChange = (event, selectedDate) => {
-      const currentDate = selectedDate || date;
-      setShowPicker(Platform.OS === 'ios');
-      setDate(currentDate);
-    };
-
     const handlePress = () => {
-      router.push({pathname:'/Location',params:{name:name,surname:surname,username:username,birthdate:date}})
+      router.push({pathname:'/UsernameBD',params:{name:name,surname:surname,username:usernameInputValue}})
     };
     const handlePress2 = () => {
-      router.push({pathname:'/Username',params:{name:name,surname:surname,username:username}})
+      router.push({pathname:'/Name',params:{name:name,surname:surname}})
+    };
+    const [usernameInputValue, setUsernameInputValue] = useState(username);
+
+    const usernameInputChange = (text) => {
+      setUsernameInputValue(text);
     };
     return(
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
@@ -32,12 +28,12 @@ export default function Login() {
           textAlignVertical:"bottom",
           fontSize:30,
           padding:20, 
-          color:'white'}}>What is your {'\n'} Birthday?</Text>
+          color:'white'}}>Pick a Username that {'\n'} represents you.</Text>
      
         </View>
         
-        <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: 20}}>
-        <Birthdate  date={date} onchange={onChange} showPicker={showPicker} /> 
+        <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center',backgroundColor: 'black', marginBottom: 20}}>
+        <Inputtext placeholder='Username' value={usernameInputValue} onPress={usernameInputChange}/>
         
         </View>
         

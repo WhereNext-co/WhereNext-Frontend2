@@ -1,22 +1,17 @@
 import { View, Text, TextInput,  StyleSheet,Pressable,} from "react-native";
-import React,{useState}   from "react";
-import Backbutton from '../components/componentspung/Button/turnbackbutton/Backbutton';
-import Button from '../components/componentspung/Button/Button/Button';
-import Inputtext from '../components/componentspung/InputText/InputText';
+import React  from "react";
+import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
 import { router, useLocalSearchParams} from "expo-router";
 
+import Button from '../../components/componentspung/Button/Button/Button';
+import ScrollDownComponent from "../../components/componentspung/scrolldown/scrolldown";
+
 export default function Login() {
-    let {name,surname,username} = useLocalSearchParams();
     const handlePress = () => {
-      router.push({pathname:'/UsernameBD',params:{name:name,surname:surname,username:usernameInputValue}})
+      router.push('/Start')
     };
     const handlePress2 = () => {
-      router.push({pathname:'/Name',params:{name:name,surname:surname}})
-    };
-    const [usernameInputValue, setUsernameInputValue] = useState(username);
-
-    const usernameInputChange = (text) => {
-      setUsernameInputValue(text);
+      router.push('/Userprofile')
     };
     return(
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
@@ -28,14 +23,11 @@ export default function Login() {
           textAlignVertical:"bottom",
           fontSize:30,
           padding:20, 
-          color:'white'}}>Pick a Username that {'\n'} represents you.</Text>
+          color:'white'}}>Terms and conditions {'\n'} Privacy Conditions</Text>
      
         </View>
         
-        <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center',backgroundColor: 'black', marginBottom: 20}}>
-        <Inputtext placeholder='Username' value={usernameInputValue} onPress={usernameInputChange}/>
-        
-        </View>
+        <ScrollDownComponent />
         
         <Button label={"Next"} onPress={handlePress} style={{}}></Button>
         

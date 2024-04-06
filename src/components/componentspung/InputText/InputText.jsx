@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { TextInput, View, StyleSheet } from 'react-native';
+import styles from './InputText.style';
 
 const MyTextInput = ({placeholder,value,onPress}) => {
   const [text, setText] = useState(value);
@@ -22,24 +23,6 @@ const MyTextInput = ({placeholder,value,onPress}) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    backgroundColor:'#fff',
-    borderWidth: 0,
-    borderColor: '#ccc',
-    borderRadius: 20,
-    padding: 10,
-    marginHorizontal: 10
-  },
-  input: {
-    
-    width: '100%',
-    color: 'black', // Text color
-  },
-});
+
 
 export default MyTextInput;

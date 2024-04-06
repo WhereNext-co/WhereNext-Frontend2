@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ViewBase } from 'react-native';
-
+import styles from './scrolldown.style';
 const ScrollDownComponent = () => {
   const [infoVisible1, setInfoVisible1] = useState(false);
   const [infoVisible2, setInfoVisible2] = useState(false);
@@ -42,33 +42,6 @@ const ScrollDownComponent = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-  button: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderWidth: 1,
-    borderColor: 'black',
-    marginBottom: 10,
-    width:300
-  },
-  buttonText: {
-    fontSize: 16,
-  },
-  scrollView: {
-    borderWidth: 1,
-    borderColor: 'black',
-    marginTop: 10,
-    maxHeight: 200,
-    width: '100%',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-  },
-});
+
 
 export default ScrollDownComponent;

@@ -1,40 +1,29 @@
 import { View, Text, TextInput,  StyleSheet,Pressable,} from "react-native";
 import React  from "react";
-import Backbutton from '../components/componentspung/Button/turnbackbutton/Backbutton';
-import { router, useLocalSearchParams} from "expo-router";
+import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
+import { useRouter } from "expo-router";
+import Button from '../../components/componentspung/Button/Button/Button';
+import OtpInput from '../../components/componentspung/OTP/OTP';
 
-import Button from '../components/componentspung/Button/Button/Button';
-import ScrollDownComponent from "../components/componentspung/scrolldown/scrolldown";
 
 export default function Login() {
+    const router=useRouter();
     const handlePress = () => {
-      router.push('/Start')
+      router.push({pathname:"/Name",params:{name:'',surname:''}})
     };
     const handlePress2 = () => {
-      router.push('/Userprofile')
+      router.push('Phone')
     };
     return(
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
         <View style={{ position: 'absolute', top: 20, left: 20 }}>
         <Backbutton style={{}} onPress={handlePress2}/>
         </View>
-        <View style={{ alignItems: 'center' , marginBottom: 20}}>
-          <Text style={{textAlign :"center",
-          textAlignVertical:"bottom",
-          fontSize:30,
-          padding:20, 
-          color:'white'}}>Terms and conditions {'\n'} Privacy Conditions</Text>
-     
+        <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center',backgroundColor: 'black', marginBottom: 20}}>
+        <OtpInput></OtpInput>
         </View>
-        
-        <ScrollDownComponent />
-        
-        <Button label={"Next"} onPress={handlePress} style={{}}></Button>
-        
-        
-
-    </View>
-    
+        <Button label={"Send OTP"} onPress={handlePress} style={{}}></Button>
+    </View>    
     ); 
 }
 const styles = StyleSheet.create({

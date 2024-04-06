@@ -1,8 +1,13 @@
-import { View, Text, TextInput,  StyleSheet, ActivityIndicator, Button,} from "react-native";
+import { View, Text, TextInput,  StyleSheet, ActivityIndicator,} from "react-native";
 import React,{ useState, useEffect } from "react";
-import CountryCodePicker from '../components/componentspung/Countrycodepicker/Countrycodepicker';
-import Backbutton from '../components/componentspung/Button/turnbackbutton/Backbutton';
-
+import CountryCodePicker from '../../components/componentspung/Countrycodepicker/Countrycodepicker';
+import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
+import Button from '../../components/componentspung/Button/Button/Button';
+import { FIREBASE_AUTH } from "../../../firebaseConfig";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 import { router } from "expo-router";
 
 export default function Login() {
@@ -24,6 +29,7 @@ export default function Login() {
           padding:20, 
           color:'white'}}>We want to make sure {'\n'} you're unique</Text>
           <CountryCodePicker press={handlePress}/>
+          <Button label={"Next"} onPress={handlePress} style={{}}></Button>
         </View>
         
     

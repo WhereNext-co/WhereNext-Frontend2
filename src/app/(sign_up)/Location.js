@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, Alert , Image} from 'react-native';
-import Backbutton from '../components/componentspung/Button/turnbackbutton/Backbutton';
+import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
 import { router } from "expo-router";
-import Button from '../components/componentspung/Button/Button/Button';
-import location from "../../assets/Pung/location.png";
+import Button from '../../components/componentspung/Button/Button/Button';
 import { SvgUri } from 'react-native-svg';
 
 import * as Location from 'expo-location';
@@ -44,7 +43,7 @@ export default function LocationRequest() {
       <View>
        
         <Image
-        source={require('../../assets/Pung/location.png')}
+        source={require('../../../assets/Pung/location.png')}
         style={{ width: 200, height: 200 ,backgroundColor:'white'}}
       />
       </View>
