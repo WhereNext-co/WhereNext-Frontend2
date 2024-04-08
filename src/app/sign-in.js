@@ -82,7 +82,7 @@ export default function SignIn() {
     }
   };
 
-  const dummyOTP = "123456"; // Dummy OTP for testing
+  const dummyOTP = "123456"; // Dummy OTP for default sign up
 
   const signUpHandler = async () => {
     // Sign up handler
