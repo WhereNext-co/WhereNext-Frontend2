@@ -11,7 +11,7 @@ import SlideButton from '../../components/componentspung/Button/SlideButton/Butt
 export default function Login() {
 
   const handlePress = () => {
-    router.push('/Phone')
+    router.push('/Name')
   };
   const handlePress2 = () => {
     router.push('/sign-in')

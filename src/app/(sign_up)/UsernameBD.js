@@ -17,7 +17,7 @@ export default function Login() {
     };
 
     const handlePress = () => {
-      router.push({pathname:'/Location',params:{name:name,surname:surname,username:username,birthdate:date}})
+      router.push({pathname:'/Userprofile',params:{name:name,surname:surname,username:username,birthdate:date}})
     };
     const handlePress2 = () => {
       router.push({pathname:'/Username',params:{name:name,surname:surname,username:username}})

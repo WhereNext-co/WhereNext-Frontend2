@@ -13,7 +13,7 @@ export default function LocationRequest() {
     router.push('/Termagree')
   };
   const handlePress2 = () => {
-    router.push('/UsernameBD')
+    router.push('/OTP')
   };
   const handlePermissionRequest = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();

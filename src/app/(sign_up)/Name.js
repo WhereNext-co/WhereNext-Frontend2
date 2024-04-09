@@ -11,7 +11,7 @@ export default function Login({}) {
       router.push({pathname:'/Username',params:{name:nameInputValue,surname:surnameInputValue,username:''}})
     };
     const handlePress2 = () => {
-      router.push('/OTP')
+      router.push('/Introduce')
     };
 
     const [nameInputValue, setNameInputValue] = useState(name);

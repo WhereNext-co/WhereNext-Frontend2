@@ -8,6 +8,32 @@ import { router, useLocalSearchParams} from "expo-router";
 export default function Login() {
     let {name,surname,username} = useLocalSearchParams();
     const handlePress = () => {
+      fetch('http://192.168.1.100:5000/users/check-username', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json', 
+          // Add any other headers here
+        },
+        body: JSON.stringify({
+          userName: usernameInputValue,
+        }),
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log(data);
+          router.replace({pathname:'/UsernameBD',params:{name:name,surname:surname,username:usernameInputValue}})
+        })
+        .catch(error => {
+          console.error('There was a problem with your fetch operation:', error);
+        });
+      //
+    };
+    const handlePress3 = () => {
       router.push({pathname:'/UsernameBD',params:{name:name,surname:surname,username:usernameInputValue}})
     };
     const handlePress2 = () => {
@@ -37,7 +63,7 @@ export default function Login() {
         
         </View>
         
-        <Button label={"Next"} onPress={handlePress} style={{}}></Button>
+        <Button label={"Next"} onPress={handlePress3} style={{}}></Button>
         
         
 
