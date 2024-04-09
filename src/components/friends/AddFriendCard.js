@@ -1,7 +1,9 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import FeatherIcon from 'react-native-vector-icons/Feather';
-const AddFriendCard = ({ img, name, id, onPress, status }) => {
+import { MaterialIcons } from '@expo/vector-icons';
+import { FontAwesome6 } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+const AddFriendCard = ({ img, name, onPress, status }) => {
     return (
         <TouchableOpacity onPress={onPress}>
             <View style={styles.card}>
@@ -24,23 +26,39 @@ const AddFriendCard = ({ img, name, id, onPress, status }) => {
 
                                 {
                 status === 'NotFriend' ? (
-                    <Text>NotFriend</Text>
-                ) : status === 'Pending' ? (
-                    <Text>NotFriend</Text>
+                    <View style={styles.cardAction}> 
+                        <FontAwesome6 //Add
+                            name="add" 
+                            size={24} 
+                            color="black"
+                        />
+                    </View>
+                ) : status === 'PendingInvite' ? (
+                    <View style={styles.cardAction}> 
+                        <MaterialIcons //Pending Invite
+                            name="pending" 
+                            size={24} 
+                            color="black"
+                        />
+                    </View>
                 ) : status === 'Friend' ? (
-                    <Text>NotFriend</Text>
-                ) : (
-                    <Text>NotFriend</Text>
+                    <View style={styles.cardAction}> 
+                        <MaterialIcons //Remove
+                            name="person-remove" 
+                            size={24} 
+                            color="black"
+                        />
+                    </View>
+                ) : status === 'PendingReceive'(
+                    <View style={styles.cardAction}> 
+                        <AntDesign //Pending Receive
+                            name="checkcircleo" 
+                            size={24} 
+                            color="black"
+                        />
+                    </View>
                 )
                 }
-
-                <View style={styles.cardAction}> 
-                    <FeatherIcon // Right arrow icon displayed at the end of the card.
-                        color="#9ca3af"
-                        name="chevron-right"
-                        size={22}
-                    />
-                </View>
             </View>
         </TouchableOpacity>
     );

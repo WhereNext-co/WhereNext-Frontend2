@@ -16,23 +16,26 @@ export default function AddFriendModal() {
   const [contacts, setContacts] = useState([ //default friends
     {
       img: '',
-      name: 'Guy Chelsea',
-      id:'0xfjri3995',
+      name: 'Guy Naga',
       status:'Friend'
     },
 
     {
       img: '',
-      name: 'Mearz Wong',
-      id:'03djccnjfj',
-      status:'Pending'
+      name: 'Pung Demon',
+      status:'PendingInvite'
     },
 
     {
       img: '',
-      name: 'Mearz Wong',
-      id:'03djccnjfj',
+      name: 'New Dragon',
       status:'NotFriend'
+    },
+
+    {
+      img: '',
+      name: 'Mearz Murloc',
+      status:'PendingReceive'
     },
   ]);
   const [search, setSearch] = useState('');
@@ -41,8 +44,7 @@ export default function AddFriendModal() {
   useEffect(() => {
     setFilteredContacts(
       contacts.filter((contact) =>
-        contact.name.toLowerCase().includes(search.toLowerCase()) ||
-        contact.id.toLowerCase().includes(search.toLowerCase())
+        contact.name.toLowerCase().includes(search.toLowerCase()) 
       )
     );
   }, [search, contacts]);
