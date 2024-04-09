@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-const FriendCard = ({ img, name, id, onPress }) => {
+const AddFriendCard = ({ img, name, id, onPress, status }) => {
     return (
         <TouchableOpacity onPress={onPress}>
             <View style={styles.card}>
@@ -22,6 +22,18 @@ const FriendCard = ({ img, name, id, onPress }) => {
                     <Text style={styles.cardTitle}>{name}</Text>
                 </View>
 
+                                {
+                status === 'NotFriend' ? (
+                    <Text>NotFriend</Text>
+                ) : status === 'Pending' ? (
+                    <Text>NotFriend</Text>
+                ) : status === 'Friend' ? (
+                    <Text>NotFriend</Text>
+                ) : (
+                    <Text>NotFriend</Text>
+                )
+                }
+
                 <View style={styles.cardAction}> 
                     <FeatherIcon // Right arrow icon displayed at the end of the card.
                         color="#9ca3af"
@@ -34,7 +46,7 @@ const FriendCard = ({ img, name, id, onPress }) => {
     );
 };
 
-export default FriendCard;
+export default AddFriendCard;
 
 const styles = StyleSheet.create({
     /** Card */

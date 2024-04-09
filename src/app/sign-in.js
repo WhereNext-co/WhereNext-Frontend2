@@ -40,17 +40,51 @@ export default function SignIn() {
 
   const phoneChangeHandler = (phoneNumber) => {
     setPhone(phoneNumber);
-    setEmailPhoneFormat(`${phoneNumber}@wherenext.com`);
+    setEmailPhoneFormat(`${countryCode}${phoneNumber}@wherenext.com`);
   };
 
   const countryCodeChangeHandler = (countryCode) => {
     setCountryCode(`+${countryCode}`);
   };
 
-  const verifyPhoneHandler = () => {
-    //No logic to check for phoneNum yet
-    setVerifyValidPhone(true);
-    alert("OTP Sent!");
+  const verifyPhoneHandler = async () => {
+    setLoading(true);
+    try {
+      // Send telephone number to API
+      await sendPhoneNumberToAPI(`${countryCode}${phone}`);
+      setVerifyValidPhone(true);
+      alert("OTP Sent!");
+    } catch (error) {
+      console.error("Error sending phone number to API:", error);
+      // Handle error condition, e.g., show error message to user
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const sendPhoneNumberToAPI = async (phoneNumber) => {
+    try {
+      const response = await fetch('http://192.168.100.198:5000/auth/updateFirebaseUserPassword', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ telNo : phoneNumber }), // Send telephone number in JSON format
+      });
+      if (!response.ok) {
+        throw new Error('Failed to send phone number to API');
+      }
+          // If response is successful, parse the JSON response
+    const data = await response.json();
+    console.log(data); // Log the response data
+
+    // Handle the response data as needed
+    const { message, telNo } = data;
+    console.log("Message:", message);
+    console.log("Telephone Number:", telNo);
+  } catch (error) {
+    throw new Error('Error sending phone number to API In sendPhoneNum', error);
+  }
   };
 
   const OTPHandler = (OTP) => {

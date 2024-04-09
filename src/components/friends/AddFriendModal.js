@@ -8,36 +8,40 @@ import {
   ScrollView,
   Image,
   TextInput,
-  Button,
-  Modal
 } from 'react-native';
-import FriendCard from '../../components/friends/FriendCard';
-import AddFriendModal from '../../components/friends/AddFriendModal';
+import AddFriendCard from './AddFriendCard';
 
 
-export default function Friends() {
+export default function AddFriendModal() {
   const [contacts, setContacts] = useState([ //default friends
     {
       img: '',
       name: 'Guy Chelsea',
-      id:'0xfjri3995'
+      id:'0xfjri3995',
+      status:'Friend'
     },
 
     {
       img: '',
       name: 'Mearz Wong',
-      id:'03djccnjfj'
+      id:'03djccnjfj',
+      status:'Pending'
+    },
+
+    {
+      img: '',
+      name: 'Mearz Wong',
+      id:'03djccnjfj',
+      status:'NotFriend'
     },
   ]);
-
   const [search, setSearch] = useState('');
   const [filteredContacts, setFilteredContacts] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     setFilteredContacts(
       contacts.filter((contact) =>
-        contact.name.toLowerCase().includes(search.toLowerCase())||
+        contact.name.toLowerCase().includes(search.toLowerCase()) ||
         contact.id.toLowerCase().includes(search.toLowerCase())
       )
     );
@@ -60,30 +64,15 @@ export default function Friends() {
           placeholder="Search"
           style={styles.searchInput}
         />
-    <Button title="Open Add Friend Modal" onPress={() => setModalVisible(true)} />
-    <View style={styles.container}>
-      <Button title="Open Add Friend Modal" onPress={() => setModalVisible(true)} />
-
-      <Modal
-        animationType="slide" // You can choose animation type as per your preference
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <AddFriendModal />
-          <Button title="Close Modal" onPress={() => setModalVisible(false)} />
-        </View>
-      </Modal>
-    </View>
 
       <ScrollView>
         {filteredContacts.map((contact) => (
-          <FriendCard
+          <AddFriendCard
             key={contact.id}
             img={contact.img}
             name={contact.name}
             onPress={() => console.log(`Friend at index pressed`)}
+            status={contact.status}
           />
         ))}
       </ScrollView>
@@ -97,16 +86,5 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 1,
     paddingLeft: 10,
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background for modal
   },
 });
