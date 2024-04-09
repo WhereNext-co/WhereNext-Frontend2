@@ -34,6 +34,15 @@ export default function index() {
         }}
       >
         To Sign Up page
+      </Text><Text
+        onPress={() => {
+          // signIn();
+          // Navigate after signing in. You may want to tweak this to ensure sign-in is
+          // successful before navigating.
+          router.push("./Userprofile");
+        }}
+      >
+        Userprofile
       </Text>
     </View>
   );

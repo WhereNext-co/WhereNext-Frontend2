@@ -1,48 +1,51 @@
 import { View, Text, TextInput,  StyleSheet,Pressable,} from "react-native";
-import React,{useState}   from "react";
+import React,{useState,useEffect}   from "react";
 import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
 import Button from '../../components/componentspung/Button/Button/Button';
 import Inputtext from '../../components/componentspung/InputText/InputText';
 import { router, useLocalSearchParams} from "expo-router";
+import axios from 'axios';
 
 export default function Login() {
     let {name,surname,username} = useLocalSearchParams();
     const handlePress = () => {
-      fetch('http://192.168.1.100:5000/users/check-username', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json', 
-          // Add any other headers here
-        },
-        body: JSON.stringify({
-          userName: usernameInputValue,
-        }),
+      axios.post('http://192.168.1.100:5000/users/check-username', {
+        userName: usernameInputValue,
       })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
-        .then(data => {
-          console.log(data);
-          router.replace({pathname:'/UsernameBD',params:{name:name,surname:surname,username:usernameInputValue}})
-        })
-        .catch(error => {
-          console.error('There was a problem with your fetch operation:', error);
-        });
+      .then(response => {
+        console.log(response.data);
+        usernameValidChange(response.data.exists)
+        showErrorChange(response.data.exists)
+        console.log(usernameValid);
+        
+      })
+      .catch(error => {
+        console.error('There was a problem with your Axios request:', error);
+      });
+          
+        
       //
-    };
-    const handlePress3 = () => {
-      router.push({pathname:'/UsernameBD',params:{name:name,surname:surname,username:usernameInputValue}})
     };
     const handlePress2 = () => {
       router.push({pathname:'/Name',params:{name:name,surname:surname}})
     };
     const [usernameInputValue, setUsernameInputValue] = useState(username);
-
+    const [usernameValid, setUsernameValid] = useState(true);
+    const [showError, setShowError] = useState(false);
+    useEffect(() => {
+      if (!usernameValid) {
+        // Check if OTP length is 6
+        router.replace({pathname:'/UsernameBD',params:{name:name,surname:surname,username:usernameInputValue}});
+      }
+    }, [usernameValid]);
     const usernameInputChange = (text) => {
       setUsernameInputValue(text);
+    };
+    const usernameValidChange = (text) => {
+      setUsernameValid(text);
+    };
+    const showErrorChange = (text) => {
+      setShowError(text);
     };
     return(
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
@@ -63,8 +66,8 @@ export default function Login() {
         
         </View>
         
-        <Button label={"Next"} onPress={handlePress3} style={{}}></Button>
-        
+        <Button label={"Next"} onPress={handlePress} style={{}}></Button>
+        {showError && (<Text style={{color:'white'}}>Username already used</Text>)}
         
 
     </View>

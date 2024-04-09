@@ -38,7 +38,7 @@ export default function Login({}) {
         </View>
         
         <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center',backgroundColor: 'black',marginBottom: 20}}>
-        <Inputtext placeholder='Name' value={nameInputValue} onPress={nameInputChange}/>
+        <Inputtext placeholder='Mr./Ms. Name' value={nameInputValue} onPress={nameInputChange}/>
         <Inputtext placeholder='Surname' value={surnameInputValue} onPress={surnameInputChange}/>
         
         </View>
