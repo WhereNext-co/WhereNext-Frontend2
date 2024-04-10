@@ -70,7 +70,7 @@ export default function AddFriendModal() {
       <ScrollView>
         {filteredContacts.map((contact) => (
           <AddFriendCard
-            key={contact.id}
+            key={contact.name}
             img={contact.img}
             name={contact.name}
             onPress={() => console.log(`Friend at index pressed`)}

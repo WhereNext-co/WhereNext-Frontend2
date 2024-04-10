@@ -15,10 +15,10 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-
-// import { useSession } from "../ctx";
+import { AuthContext, useAuth } from "../context/authContext";
 
 export default function SignIn() {
+  const { login, register, isAuthenticated } = useAuth();
   const [phone, setPhone] = useState("");
   const [countryCode, setCountryCode] = useState("+66"); // Default country code is +66 (Thailand)
   const [emailphoneFormat, setEmailPhoneFormat] = useState("");
@@ -32,8 +32,6 @@ export default function SignIn() {
   console.log(phone);
   console.log("--Phone with CC--");
   console.log(`${countryCode}${phone}`);
-  console.log("--Email Format--");
-  console.log(emailphoneFormat);
   console.log("--Input OTP--");
   console.log(password);
   console.log("<------>");
@@ -64,27 +62,31 @@ export default function SignIn() {
 
   const sendPhoneNumberToAPI = async (phoneNumber) => {
     try {
-      const response = await fetch('http://192.168.100.198:5000/auth/updateFirebaseUserPassword', {
-        method: 'POST',
+      const apiURL = process.env.LOGIN_API;
+      const response = await fetch(LOGIN_API, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ telNo : phoneNumber }), // Send telephone number in JSON format
+        body: JSON.stringify({ telNo: phoneNumber }), // Send telephone number in JSON format
       });
       if (!response.ok) {
-        throw new Error('Failed to send phone number to API');
+        throw new Error("Failed to send phone number to API");
       }
-          // If response is successful, parse the JSON response
-    const data = await response.json();
-    console.log(data); // Log the response data
+      // If response is successful, parse the JSON response
+      const data = await response.json();
+      console.log(data); // Log the response data
 
-    // Handle the response data as needed
-    const { message, telNo } = data;
-    console.log("Message:", message);
-    console.log("Telephone Number:", telNo);
-  } catch (error) {
-    throw new Error('Error sending phone number to API In sendPhoneNum', error);
-  }
+      // Handle the response data as needed
+      const { message, telNo } = data;
+      console.log("Message:", message);
+      console.log("Telephone Number:", telNo);
+    } catch (error) {
+      throw new Error(
+        "Error sending phone number to API In sendPhoneNum",
+        error
+      );
+    }
   };
 
   const OTPHandler = (OTP) => {
@@ -102,11 +104,7 @@ export default function SignIn() {
     // Sign in handler
     setLoading(true);
     try {
-      const response = await signInWithEmailAndPassword(
-        auth,
-        emailphoneFormat,
-        password
-      ); //Use dummy OTP to sign in
+      await login(emailphoneFormat, password);
       alert("Success");
       router.replace("/(app)/home"); // Navigate to home page
     } catch (error) {
@@ -122,12 +120,7 @@ export default function SignIn() {
     // Sign up handler
     setLoading(true);
     try {
-      const response = await createUserWithEmailAndPassword(
-        auth,
-        emailphoneFormat,
-        dummyOTP
-      ); //Use dummy OTP to create account
-      alert(`Account created for ${dummyOTP}`); // Debug
+      await register(emailphoneFormat, dummyOTP);
     } catch (error) {
       alert("Create Account failed");
     } finally {
@@ -152,6 +145,10 @@ export default function SignIn() {
             <>
               <Button title="Send OTP" onPress={verifyPhoneHandler} />
               <Button title="Create Account" onPress={signUpHandler} />
+              <Button
+                title="Go to Home"
+                onPress={() => router.replace("./(app)/home")}
+              />
             </>
           )}
         </>
@@ -159,18 +156,3 @@ export default function SignIn() {
     </View>
   );
 }
-
-/*
-        <Text
-          onPress={() => {
-            // signIn();
-            // Navigate after signing in. You may want to tweak this to ensure sign-in is
-            // successful before navigating.
-            router.replace("/");
-          }}
-        >
-        Sign In
-        </Text>
-*/
-
-//   const { signIn } = useSession();
