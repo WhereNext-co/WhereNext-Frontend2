@@ -1,6 +1,7 @@
 import { router } from "expo-router";
 import { View, Text } from "react-native";
 import React from "react";
+import { router } from "expo-router";
 
 export default function index() {
   return (
@@ -24,6 +25,26 @@ export default function index() {
         }}
       >
         To Sign In page
+      </Text>
+      <Text
+        onPress={() => {
+          // signIn();
+          // Navigate after signing in. You may want to tweak this to ensure sign-in is
+          // successful before navigating.
+          router.push("./Introduce");
+        }}
+      >
+        To Sign Up page
+      </Text>
+      <Text
+        onPress={() => {
+          // signIn();
+          // Navigate after signing in. You may want to tweak this to ensure sign-in is
+          // successful before navigating.
+          router.push("./Userprofile");
+        }}
+      >
+        Userprofile
       </Text>
     </View>
   );
