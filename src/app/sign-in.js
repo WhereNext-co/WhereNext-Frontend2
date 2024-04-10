@@ -64,27 +64,33 @@ export default function SignIn() {
 
   const sendPhoneNumberToAPI = async (phoneNumber) => {
     try {
-      const response = await fetch('http://192.168.100.198:5000/auth/updateFirebaseUserPassword', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ telNo : phoneNumber }), // Send telephone number in JSON format
-      });
+      const response = await fetch(
+        "http://157.230.246.108/auth/updateFirebaseUserPassword",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ telNo: phoneNumber }), // Send telephone number in JSON format
+        }
+      );
       if (!response.ok) {
-        throw new Error('Failed to send phone number to API');
+        throw new Error("Failed to send phone number to API");
       }
-          // If response is successful, parse the JSON response
-    const data = await response.json();
-    console.log(data); // Log the response data
+      // If response is successful, parse the JSON response
+      const data = await response.json();
+      console.log(data); // Log the response data
 
-    // Handle the response data as needed
-    const { message, telNo } = data;
-    console.log("Message:", message);
-    console.log("Telephone Number:", telNo);
-  } catch (error) {
-    throw new Error('Error sending phone number to API In sendPhoneNum', error);
-  }
+      // Handle the response data as needed
+      const { message, telNo } = data;
+      console.log("Message:", message);
+      console.log("Telephone Number:", telNo);
+    } catch (error) {
+      throw new Error(
+        "Error sending phone number to API In sendPhoneNum",
+        error
+      );
+    }
   };
 
   const OTPHandler = (OTP) => {
