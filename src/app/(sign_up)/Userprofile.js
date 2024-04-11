@@ -1,45 +1,71 @@
-import React, { useState } from 'react';
-import { View, Button, Image, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Button, Image, StyleSheet ,Text,Alert} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
+import { StatusBar } from 'expo-status-bar';
+import { listFiles, uploadToFirebase } from '../../../firebaseConfig';
+import MyFilesList from './MyList';
 
 export default function GalleryPicker() {
-  const [image, setImage] = useState(null);
+  const [permission,requestPermission] = ImagePicker.useCameraPermissions();
+  const [files,setFiles]= useState([])
 
-  const pickImage = async () => {
-    console.log('Button pressed, opening image picker...');
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
+
+  useEffect(()=> {
+    listFiles().then((listResp)=>{
+      const files = listResp.map((value)=>{
+        return {name:value.fullPath}
+      })
+      setFiles(files)
     });
-  
-    if (!result.cancelled) {
-      console.log('Image selected:', result.uri);
-      const fileName = result.uri.split('/').pop();
-      const newPath = FileSystem.cacheDirectory + fileName;
-  
-      try {
-        await FileSystem.copyAsync({
-          from: result.uri,
-          to: newPath,
-        });
-        console.log('Copied image to cache:', newPath);
-        setImage(newPath);
-      } catch (error) {
-        console.error('Error copying image:', error);
-      }
-    } else {
-      console.log('Image selection cancelled.');
+  },[])
+
+  console.log(files)
+  /**
+   * 
+   */
+  const takePhoto = async () => {
+    try{
+    const cameraResp = await ImagePicker.launchCameraAsync({
+      allowsEditing:true,
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      quality:1
+    })
+    if (!cameraResp.canceled) {
+      const { uri} = cameraResp.assets[0]
+      const fileName = uri.split('/').pop()
+      const uploadResp = await uploadToFirebase(uri, fileName)
+      console.log(uploadResp)
+
+      listFiles().then((listResp)=>{
+        const files = listResp.map((value)=>{
+          return {name:value.fullPath}
+        })
+        setFiles(files)
+      });
     }
-  };
+  } 
+    catch (e) {
+      Alert.alert("Error Uploading Image " + e.message)
+  }
+}
+  if (permission?.status !== ImagePicker.PermissionStatus.GRANTED) {
+    return (
+      <View style={styles.container}>
+        <Text>Permission Not Granted - {permission?.status}</Text>
+        <StatusBar style="auto"/>
+        <Button title="Request Permission" onPress={requestPermission} />
+      </View>)
+  }
   
-  console.log('Rendering component...');
   return (
     <View style={styles.container}>
-      <Button title="Choose Picture" onPress={pickImage} />
-      {image && <Image source={{ uri: image }} style={styles.image} />}
+      <Text>Working With Firebase and Image Picker</Text>
+      <MyFilesList files={files}/>
+      <StatusBar style="auto"/>
+      <Button title="Take picture" onPress={takePhoto} />
+      
+
     </View>
   );
 }
