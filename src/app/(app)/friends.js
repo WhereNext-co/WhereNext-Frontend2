@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import FriendCard from "../../components/friends/FriendCard";
 import AddFriendModal from "../../components/friends/AddFriendModal";
+import axios from "axios";
 
 export default function Friends() {
   const [contacts, setContacts] = useState([
@@ -46,10 +47,14 @@ export default function Friends() {
 
   /*
   useEffect(() => {
-    fetch('https://your-backend-url/contacts')
-      .then(response => response.json())
-      .then(data => setContacts(data))
-      .catch(error => console.error(error));
+    axios.get('API_URL/contacts')
+      .then(response => {
+        setContacts(response.data);
+        setFilteredContacts(response.data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
   }, []);
   */
 

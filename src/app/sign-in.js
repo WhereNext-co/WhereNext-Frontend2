@@ -10,12 +10,8 @@ import {
 import React, { useState, useEffect } from "react";
 import CustomCountryCodePicker from "../components/CustomCountryCodePicker";
 import OTP from "../components/OTP";
-import { FIREBASE_AUTH } from "../../firebaseConfig";
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-} from "firebase/auth";
 import { AuthContext, useAuth } from "../context/authContext";
+import axios from "axios";
 
 export default function SignIn() {
   const { login, register, isAuthenticated } = useAuth();
@@ -25,7 +21,6 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [verifyValidPhone, setVerifyValidPhone] = useState(false);
-  const auth = FIREBASE_AUTH;
 
   //Debug
   console.log("<--Phone w/o CC-->");
@@ -63,29 +58,12 @@ export default function SignIn() {
   const sendPhoneNumberToAPI = async (phoneNumber) => {
     try {
       const apiURL = process.env.LOGIN_API;
-      const response = await fetch(apiURL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ telNo: phoneNumber }), // Send telephone number in JSON format
-      });
-      if (!response.ok) {
-        throw new Error("Failed to send phone number to API");
-      }
-      // If response is successful, parse the JSON response
-      const data = await response.json();
-      console.log(data); // Log the response data
+      const response = await axios.post(apiURL, { telNo: phoneNumber });
 
-      // Handle the response data as needed
-      const { message, telNo } = data;
-      console.log("Message:", message);
-      console.log("Telephone Number:", telNo);
+      const { message, telNo } = response.data;
+      // Do something with the response data if needed
     } catch (error) {
-      throw new Error(
-        "Error sending phone number to API In sendPhoneNum",
-        error
-      );
+      console.error("Failed to send phone number to API:", error);
     }
   };
 

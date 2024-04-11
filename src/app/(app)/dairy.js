@@ -11,6 +11,7 @@ import {
   Button,
 } from "react-native";
 import LocationCard from "../../components/dairy/LocationCard";
+import axios from "axios";
 
 function Active({ locations }) {
   const activeLocations = locations.filter(
@@ -113,6 +114,20 @@ export default function Dairy() {
     },
     // More locations here...
   ]);
+
+  /*
+    useEffect(() => {
+    axios.get('API_URL/locations')
+      .then(response => {
+        setLocations(response.data);
+        setFilteredLocations(response.data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }, []);
+  */
+
   const [search, setSearch] = useState("");
   const [filteredLocations, setFilteredLocations] = useState([]);
 

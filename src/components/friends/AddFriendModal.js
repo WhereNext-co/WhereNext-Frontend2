@@ -38,6 +38,19 @@ export default function AddFriendModal() {
       status: "PendingReceive",
     },
   ]);
+
+  /*
+    useEffect(() => {
+    axios.get('API_URL/contacts')
+      .then(response => {
+        setContacts(response.data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }, []);
+  */
+
   const [search, setSearch] = useState("");
   const [filteredContacts, setFilteredContacts] = useState([]);
 
