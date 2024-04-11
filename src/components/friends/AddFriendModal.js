@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -8,43 +8,43 @@ import {
   ScrollView,
   Image,
   TextInput,
-} from 'react-native';
-import AddFriendCard from './AddFriendCard';
-
+} from "react-native";
+import AddFriendCard from "./AddFriendCard";
 
 export default function AddFriendModal() {
-  const [contacts, setContacts] = useState([ //default friends
+  const [contacts, setContacts] = useState([
+    //default friends
     {
-      img: '',
-      name: 'Guy Naga',
-      status:'Friend'
+      img: "",
+      name: "Guy Naga",
+      status: "Friend",
     },
 
     {
-      img: '',
-      name: 'Pung Demon',
-      status:'PendingInvite'
+      img: "",
+      name: "Pung Demon",
+      status: "PendingInvite",
     },
 
     {
-      img: '',
-      name: 'New Dragon',
-      status:'NotFriend'
+      img: "",
+      name: "New Dragon",
+      status: "NotFriend",
     },
 
     {
-      img: '',
-      name: 'Mearz Murloc',
-      status:'PendingReceive'
+      img: "",
+      name: "Mearz Murloc",
+      status: "PendingReceive",
     },
   ]);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [filteredContacts, setFilteredContacts] = useState([]);
 
   useEffect(() => {
     setFilteredContacts(
       contacts.filter((contact) =>
-        contact.name.toLowerCase().includes(search.toLowerCase()) 
+        contact.name.toLowerCase().includes(search.toLowerCase())
       )
     );
   }, [search, contacts]);
@@ -60,12 +60,12 @@ export default function AddFriendModal() {
 
   return (
     <SafeAreaView>
-        <TextInput
-          value={search}
-          onChangeText={setSearch}
-          placeholder="Search"
-          style={styles.searchInput}
-        />
+      <TextInput
+        value={search}
+        onChangeText={setSearch}
+        placeholder="Search"
+        style={styles.searchInput}
+      />
 
       <ScrollView>
         {filteredContacts.map((contact) => (
@@ -73,7 +73,10 @@ export default function AddFriendModal() {
             key={contact.name}
             img={contact.img}
             name={contact.name}
-            onPress={() => console.log(`Friend at index pressed`)}
+            onAddPress={() => console.log(`Add Friend handler`)}
+            onPendingPress={() => console.log(`Cancel Friend Request handler`)}
+            onRemovePress={() => console.log(`Remove Friend handler`)}
+            onAcceptPress={() => console.log(`Accept Friend Request handler`)}
             status={contact.status}
           />
         ))}
@@ -85,7 +88,7 @@ export default function AddFriendModal() {
 const styles = StyleSheet.create({
   searchInput: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderWidth: 1,
     paddingLeft: 10,
   },

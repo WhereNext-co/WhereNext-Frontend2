@@ -63,7 +63,7 @@ export default function SignIn() {
   const sendPhoneNumberToAPI = async (phoneNumber) => {
     try {
       const apiURL = process.env.LOGIN_API;
-      const response = await fetch(LOGIN_API, {
+      const response = await fetch(apiURL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

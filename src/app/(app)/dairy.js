@@ -14,7 +14,7 @@ import LocationCard from "../../components/dairy/LocationCard";
 
 function Active({ locations }) {
   const activeLocations = locations.filter(
-    (location) => location.placeStatus === "active"
+    (location) => location.meetingStatus === "active"
   );
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -27,7 +27,7 @@ function Active({ locations }) {
           onPress={() => {
             // Handle the press event here...
           }}
-          placeStatus={location.placeStatus}
+          meetingStatus={location.meetingStatus}
         />
       ))}
     </ScrollView>
@@ -36,7 +36,7 @@ function Active({ locations }) {
 
 function Past({ locations }) {
   const pastLocations = locations.filter(
-    (location) => location.placeStatus === "past"
+    (location) => location.meetingStatus === "past"
   );
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -49,7 +49,7 @@ function Past({ locations }) {
           onPress={() => {
             // Handle the press event here...
           }}
-          placeStatus={location.placeStatus}
+          meetingStatus={location.meetingStatus}
         />
       ))}
     </ScrollView>
@@ -71,7 +71,7 @@ function Drafts({ locations }) {
           onPress={() => {
             // Handle the press event here...
           }}
-          placeStatus={location.placeStatus}
+          meetingStatus={location.meetingStatus}
         />
       ))}
     </ScrollView>
@@ -80,7 +80,7 @@ function Drafts({ locations }) {
 
 function Pending({ locations }) {
   const pendingLocations = locations.filter(
-    (location) => location.placeStatus === "pending"
+    (location) => location.meetingStatus === "pending"
   );
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -93,7 +93,7 @@ function Pending({ locations }) {
           onPress={() => {
             // Handle the press event here...
           }}
-          placeStatus={location.placeStatus}
+          meetingStatus={location.meetingStatus}
         />
       ))}
     </ScrollView>
@@ -101,13 +101,15 @@ function Pending({ locations }) {
 }
 
 export default function Dairy() {
+  const [selectedTab, setSelectedTab] = useState("Active");
   const [locations, setLocations] = useState([
     {
       locationName: "The Complete",
       locationDetail: "Rachaprarop, Ratchathewi, Bangkok 10400",
+      locationID: "123456",
       img: "",
       users: ["Guy Chelsea"],
-      placeStatus: "active", // This can be 'active', 'pending', 'past', or 'draft'
+      meetingStatus: "active", // This can be 'active', 'pending', 'past', or 'draft'
     },
     // More locations here...
   ]);
@@ -124,18 +126,22 @@ export default function Dairy() {
 
   return (
     <SafeAreaView>
-      <View style={styles.navContainer}>
-        <Button>Active</Button>
-        <Button>Past</Button>
-        <Button>Drafts</Button>
-      </View>
-
       <TextInput
         value={search}
         onChangeText={setSearch}
         placeholder="Search"
         style={styles.searchInput}
       />
+
+      <View style={styles.navContainer}>
+        <Button title="Active" onPress={() => setSelectedTab("Active")} />
+        <Button title="Past" onPress={() => setSelectedTab("Past")} />
+        <Button title="Drafts" onPress={() => setSelectedTab("Drafts")} />
+      </View>
+
+      {selectedTab === "Active" && <Active locations={locations} />}
+      {selectedTab === "Past" && <Past locations={locations} />}
+      {selectedTab === "Drafts" && <Drafts locations={locations} />}
     </SafeAreaView>
   );
 }
@@ -151,7 +157,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between", // Optional: adjust based on your layout needs
     alignItems: "center", // Optional: adjust based on your layout needs
-    position: "absolute",
     padding: 10,
   },
 });

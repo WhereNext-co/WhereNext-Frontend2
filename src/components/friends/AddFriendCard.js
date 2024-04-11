@@ -3,7 +3,15 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-const AddFriendCard = ({ img, name, onPress, status }) => {
+const AddFriendCard = ({
+  img,
+  name,
+  onAddPress,
+  onPendingPress,
+  onRemovePress,
+  onAcceptPress,
+  status,
+}) => {
   const icon_size = 31;
   return (
     <View style={styles.card}>
@@ -24,8 +32,8 @@ const AddFriendCard = ({ img, name, onPress, status }) => {
       <View /*The part where name is displayed*/ style={styles.cardBody}>
         <Text style={styles.cardTitle}>{name}</Text>
       </View>
-      <TouchableOpacity onPress={onPress}>
-        {status === "NotFriend" ? (
+      {status === "NotFriend" ? (
+        <TouchableOpacity onPress={onAddPress}>
           <View style={styles.cardAction}>
             <FontAwesome6 //Add
               name="add"
@@ -33,7 +41,9 @@ const AddFriendCard = ({ img, name, onPress, status }) => {
               color="black"
             />
           </View>
-        ) : status === "PendingInvite" ? (
+        </TouchableOpacity>
+      ) : status === "PendingInvite" ? (
+        <TouchableOpacity onPress={onPendingPress}>
           <View style={styles.cardAction}>
             <MaterialIcons //Pending Invite
               name="pending"
@@ -41,7 +51,9 @@ const AddFriendCard = ({ img, name, onPress, status }) => {
               color="black"
             />
           </View>
-        ) : status === "Friend" ? (
+        </TouchableOpacity>
+      ) : status === "Friend" ? (
+        <TouchableOpacity onPress={onRemovePress}>
           <View style={styles.cardAction}>
             <MaterialIcons //Remove
               name="person-remove"
@@ -49,7 +61,9 @@ const AddFriendCard = ({ img, name, onPress, status }) => {
               color="black"
             />
           </View>
-        ) : status === "PendingReceive" ? (
+        </TouchableOpacity>
+      ) : status === "PendingReceive" ? (
+        <TouchableOpacity onPress={onAcceptPress}>
           <View style={styles.cardAction}>
             <AntDesign //Pending Receive
               name="checkcircleo"
@@ -57,10 +71,10 @@ const AddFriendCard = ({ img, name, onPress, status }) => {
               color="black"
             />
           </View>
-        ) : (
-          <></>
-        )}
-      </TouchableOpacity>
+        </TouchableOpacity>
+      ) : (
+        <></>
+      )}
     </View>
   );
 };
