@@ -59,28 +59,32 @@ export default function AddFriendModal() {
   */
 
   return (
-    <SafeAreaView>
-      <TextInput
-        value={search}
-        onChangeText={setSearch}
-        placeholder="Search"
-        style={styles.searchInput}
-      />
+    <SafeAreaView style={styles.modalContainer}>
+      <View style={styles.modalContent}>
+        <TextInput
+          value={search}
+          onChangeText={setSearch}
+          placeholder="Search"
+          style={styles.searchInput}
+        />
 
-      <ScrollView>
-        {filteredContacts.map((contact) => (
-          <AddFriendCard
-            key={contact.name}
-            img={contact.img}
-            name={contact.name}
-            onAddPress={() => console.log(`Add Friend handler`)}
-            onPendingPress={() => console.log(`Cancel Friend Request handler`)}
-            onRemovePress={() => console.log(`Remove Friend handler`)}
-            onAcceptPress={() => console.log(`Accept Friend Request handler`)}
-            status={contact.status}
-          />
-        ))}
-      </ScrollView>
+        <ScrollView>
+          {filteredContacts.map((contact) => (
+            <AddFriendCard
+              key={contact.name}
+              img={contact.img}
+              name={contact.name}
+              onAddPress={() => console.log(`Add Friend handler`)}
+              onPendingPress={() =>
+                console.log(`Cancel Friend Request handler`)
+              }
+              onRemovePress={() => console.log(`Remove Friend handler`)}
+              onAcceptPress={() => console.log(`Accept Friend Request handler`)}
+              status={contact.status}
+            />
+          ))}
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -91,5 +95,17 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     borderWidth: 1,
     paddingLeft: 10,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)", // semi-transparent background
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10, // rounded corners
+    width: "80%", // take up 80% of the screen width
   },
 });

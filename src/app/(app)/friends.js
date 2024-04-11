@@ -70,22 +70,19 @@ export default function Friends() {
           title="Open Add Friend Modal"
           onPress={() => setModalVisible(true)}
         />
+      </View>
 
-        <Modal
-          animationType="slide" // You can choose animation type as per your preference
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => setModalVisible(false)}
-        >
-          <View style={styles.modalContainer}>
+      <Modal animationType="slide" transparent={true} visible={modalVisible}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
             <AddFriendModal />
             <Button
               title="Close Modal"
               onPress={() => setModalVisible(false)}
             />
           </View>
-        </Modal>
-      </View>
+        </View>
+      </Modal>
 
       <ScrollView>
         {filteredContacts.map((contact) => (
@@ -118,5 +115,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background for modal
+  },
+  modalContent: {
+    flex: 1,
+    position: "absolute",
+    padding: 20,
+    borderRadius: 10, // rounded corners
+    width: "80%", // take up 80% of the screen width
+    backgroundColor: "white",
+    alignItems: "center", // center the children horizontally
   },
 });
