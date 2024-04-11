@@ -45,10 +45,9 @@ export default function SignIn() {
     try {
       // Send telephone number to API
       await sendPhoneNumberToAPI(`${countryCode}${phone}`);
-      setVerifyValidPhone(true);
-      alert("OTP Sent!");
     } catch (error) {
       console.error("Error sending phone number to API:", error);
+      alert("Failed to send phone number to API");
       // Handle error condition, e.g., show error message to user
     } finally {
       setLoading(false);
@@ -57,11 +56,15 @@ export default function SignIn() {
 
   const sendPhoneNumberToAPI = async (phoneNumber) => {
     try {
-      const apiURL = process.env.LOGIN_API;
-      const response = await axios.post(apiURL, { telNo: phoneNumber });
-
+      const response = await axios.post(
+        "http://where-next.tech/auth/updateFirebaseUserPassword",
+        { telNo: phoneNumber }
+      );
       const { message, telNo } = response.data;
+
       // Do something with the response data if needed
+      setVerifyValidPhone(true);
+      alert("OTP Sent!");
     } catch (error) {
       console.error("Failed to send phone number to API:", error);
     }
