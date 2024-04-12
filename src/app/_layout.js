@@ -51,6 +51,7 @@ function AppLayout() {
     <UserLocationContext.Provider value={{ location, setLocation }}>
       <Stack>
         <Stack.Screen name="(app)" options={{ headerShown: false }} />
+        <Stack.Screen name="(sign_up)" options={{ headerShown: false }} />
       </Stack>
     </UserLocationContext.Provider>
   );

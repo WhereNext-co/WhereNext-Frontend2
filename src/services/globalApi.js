@@ -7,21 +7,8 @@ const ANDROID_API_KEY = "AIzaSyDxrDAmzSoIWHZZyvwAHGA9qK2a7Z18FII";
 
 // Determine which API key to use based on the platform
 const API_KEY = Platform.OS === "ios" ? IOS_API_KEY : ANDROID_API_KEY;
-const BASE_URL = "https://places.googleapis.com/v1/places:searchNearby";
-
-const requestData = {
-  includedTypes: ["restaurant"],
-  maxResultCount: 10,
-  locationRestriction: {
-    circle: {
-      center: {
-        latitude: 37.7937,
-        longitude: -122.3965,
-      },
-      radius: 500.0,
-    },
-  },
-};
+const NEARBY_URL = "https://places.googleapis.com/v1/places:searchNearby";
+const SEARCH_URL = "https://places.googleapis.com/v1/places:searchText";
 
 const headers = {
   "Content-Type": "application/json",
@@ -30,10 +17,10 @@ const headers = {
     "places.displayName,places.formattedAddress,places.types,places.websiteUri",
 };
 
-const nearByPlace = () => {
+const nearByPlace = async (requestData) => {
   console.log("API_KEY", API_KEY);
-  return axios
-    .post(BASE_URL, requestData, {
+  return (res = await axios
+    .post(NEARBY_URL, requestData, {
       headers,
     })
     .then((response) => {
@@ -42,8 +29,24 @@ const nearByPlace = () => {
     })
     .catch((error) => {
       console.error("Error fetching nearby places:", error);
-    });
+    }));
 };
+
+const searchPlace = async (requestData) => {
+  return (res = await axios
+    .post(SEARCH_URL, requestData, {
+      headers,
+    })
+    .then((response) => {
+      console.log("Search results:", response.data.places);
+      return response.data.places;
+    })
+    .catch((error) => {
+      console.error("Error fetching search results:", error);
+    }));
+};
+
 export default {
   nearByPlace,
+  searchPlace,
 };

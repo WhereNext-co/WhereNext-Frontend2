@@ -12,7 +12,7 @@ import { userLocationContext } from "../../context/userLocationContext";
 
 export default function TabLayout() {
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: "blue" }}>
+    <Tabs screenOptions={{ tabBarActiveTintColor: "blue", headerShown: false }}>
       <Tabs.Screen
         name="notification"
         options={{
@@ -27,7 +27,7 @@ export default function TabLayout() {
         options={{
           title: "Dairy",
           tabBarIcon: ({ color }) => (
-            <Dairy width={30} height={30} name="Friends" color={color} />
+            <Dairy width={30} height={30} name="Dairy" color={color} />
           ),
         }}
       />
@@ -36,7 +36,7 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
-            <Home width={30} height={30} name="Friends" color={color} />
+            <Home width={30} height={30} name="Home" color={color} />
           ),
         }}
       />
@@ -58,7 +58,6 @@ export default function TabLayout() {
           ),
         }}
       />
-      \
     </Tabs>
   );
 }

@@ -67,6 +67,7 @@ export default function SignIn() {
       alert("OTP Sent!");
     } catch (error) {
       console.error("Failed to send phone number to API:", error);
+
     }
   };
 

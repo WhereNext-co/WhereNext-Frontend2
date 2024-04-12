@@ -39,9 +39,15 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Allow WhereNext to use your location."
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos",
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera"
+        }
       ]
     ],
-    "scheme": "WhereNext-Frontend2-scheme",
     "extra": {
       "router": {
         "origin": false
@@ -49,6 +55,9 @@
       "eas": {
         "projectId": "ca7c7020-61e8-4a29-b0f2-5b1c81a940a4"
       }
-    }
+    },
+    "scheme": "WhereNext-Frontend2-scheme",
+    "platforms": ["ios", "android"],
+    "permissions": ["CAMERA_ROLL"]
   }
 }
