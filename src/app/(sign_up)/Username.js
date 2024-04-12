@@ -7,9 +7,9 @@ import { router, useLocalSearchParams} from "expo-router";
 import axios from 'axios';
 
 export default function Login() {
-    let {name,surname,username} = useLocalSearchParams();
+    let {title,name,surname,mail,username} = useLocalSearchParams();
     const handlePress = () => {
-      axios.post('http://192.168.1.100:5000/users/check-username', {
+      axios.post('http://wherenext.tech/users/check-username', {
         userName: usernameInputValue,
       })
       .then(response => {
@@ -27,7 +27,7 @@ export default function Login() {
       //
     };
     const handlePress2 = () => {
-      router.push({pathname:'/Name',params:{name:name,surname:surname}})
+      router.push({pathname:'/Mail',params:{title:title,name:name,surname:surname,mail:mail}})
     };
     const [usernameInputValue, setUsernameInputValue] = useState(username);
     const [usernameValid, setUsernameValid] = useState(true);
@@ -35,7 +35,7 @@ export default function Login() {
     useEffect(() => {
       if (!usernameValid) {
         // Check if OTP length is 6
-        router.replace({pathname:'/UsernameBD',params:{name:name,surname:surname,username:usernameInputValue}});
+        router.replace({pathname:'/UsernameBD',params:{title:title,name:name,surname:surname,mail:mail,username:usernameInputValue}});
       }
     }, [usernameValid]);
     const usernameInputChange = (text) => {

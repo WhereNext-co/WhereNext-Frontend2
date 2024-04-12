@@ -55,7 +55,7 @@ export default function Login() {
       }
     };
     const handlePress2 = () => {
-      router.push('/Introduce')
+      router.push('/Userprofile')
     };
     return(
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
