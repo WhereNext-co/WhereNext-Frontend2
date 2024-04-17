@@ -65,7 +65,7 @@ export default function SignIn() {
   const sendPhoneNumberToAPI = async (phoneNumber) => {
     try {
       const response = await fetch(
-        "http://157.230.246.108/auth/updateFirebaseUserPassword",
+        "http://where-next.tech/auth/updateFirebaseUserPassword",
         {
           method: "POST",
           headers: {

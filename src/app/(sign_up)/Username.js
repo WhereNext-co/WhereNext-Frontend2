@@ -10,7 +10,7 @@ export default function Login() {
   let { name, surname, username } = useLocalSearchParams();
   const handlePress = () => {
     axios
-      .post("http://157.230.246.108/users/check-username", {
+      .post("http://where-next.tech/users/check-username", {
         userName: usernameInputValue,
       })
       .then((response) => {

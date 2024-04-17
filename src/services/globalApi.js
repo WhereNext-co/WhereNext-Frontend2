@@ -14,7 +14,7 @@ const headers = {
   "Content-Type": "application/json",
   "X-Goog-Api-Key": API_KEY,
   "X-Goog-FieldMask":
-    "places.displayName,places.formattedAddress,places.types,places.websiteUri",
+    "places.displayName,places.formattedAddress,places.types,places.googleMapsUri,places.location,places.photos,places.primaryType,places.primaryTypeDisplayName,places.currentOpeningHours,places.currentSecondaryOpeningHours,places.rating,places.regularOpeningHours,places.regularSecondaryOpeningHours,places.userRatingCount",
 };
 
 const nearByPlace = async (requestData) => {
