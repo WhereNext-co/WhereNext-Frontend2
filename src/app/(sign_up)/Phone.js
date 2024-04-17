@@ -36,8 +36,36 @@ export default function Login() {
   const verifyPhoneHandler = () => {
     //No logic to check for phoneNum yet
 
+
+      } catch (error) {
+        setVerifyValidPhone(false);
+        alert("Create Account failed");
+      } finally {
+        setLoading(false);
+      }
+    };
+    const handlePress2 = () => {
+      router.push('/Userprofile')
+    };
+    return(
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
+        <View style={{ position: 'absolute', top: 20, left: 20 }}>
+        <Backbutton style={{}} onPress={handlePress2}/>
+        </View>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{textAlign :"center",
+          textAlignVertical:"bottom",
+          fontSize:30,
+          padding:20, 
+          color:'white'}}>We want to make sure {'\n'} you're unique</Text>
+          <CountryCodePicker onPhoneChange={phoneChangeHandler}
+                      onCountryCodeChange={countryCodeChangeHandler}/>
+          <Button label={"Next"} onPress={signUpHandler} style={{}}></Button>
+        </View>
+ 
     alert("OTP Sent!");
   };
+
 
   const dummyOTP = "123456"; // Dummy OTP for testing
 

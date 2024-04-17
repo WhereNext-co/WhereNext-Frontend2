@@ -1,45 +1,127 @@
-import React, { useState } from 'react';
-import { View, Button, Image, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Button, StyleSheet, Text, Alert, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
+import { StatusBar } from 'expo-status-bar';
+import { listFiles, uploadToFirebase, fbStorage } from '../../../firebaseConfig';
+import Buttonpung from '../../components/componentspung/Button/Button/Button';
+import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
 
 export default function GalleryPicker() {
-  const [image, setImage] = useState(null);
-
-  const pickImage = async () => {
-    console.log('Button pressed, opening image picker...');
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
+  const [permission, requestPermission] = ImagePicker.useCameraPermissions();
+  const [files, setFiles] = useState([]);
+  const [link,setLink]=useState('https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images%2F732A162A-5181-41A1-BDDC-3FACDBC8C706.png?alt=media&token=baa3a32e-2732-4086-ab60-8e3759ef32af');
+  const handlePress = () => {
+    router.push({pathname:'/Phone',params:{name:nameInputValue,surname:surnameInputValue,username:''}})
+  };
+  const handlePress2 = () => {
+    router.push('/UsernameBD')
+  };
+  useEffect(() => {
+    listFiles().then((listResp) => {
+      const files = listResp.map((value) => {
+        return { name: value.fullPath };
+      });
+      setFiles(files);
     });
-  
-    if (!result.cancelled) {
-      console.log('Image selected:', result.uri);
-      const fileName = result.uri.split('/').pop();
-      const newPath = FileSystem.cacheDirectory + fileName;
-  
-      try {
-        await FileSystem.copyAsync({
-          from: result.uri,
-          to: newPath,
+  }, []);
+  useEffect(() => {
+    console.log('Link updated:', link);
+
+  }, [link]);
+  const takePhoto = async () => {
+    try{
+    const cameraResp = await ImagePicker.launchCameraAsync({
+      allowsEditing:true,
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      quality:1
+    })
+    if (!cameraResp.canceled) {
+      const { uri} = cameraResp.assets[0]
+      const fileName = uri.split('/').pop()
+      const uploadResp = await uploadToFirebase(uri, fileName)
+      console.log(uploadResp)
+      const downloadUrl = uploadResp.downloadUrl;
+      setLink(downloadUrl)
+      listFiles().then((listResp)=>{
+        const files = listResp.map((value)=>{
+          return {name:value.fullPath}
+        })
+        setFiles(files)
+      });
+    }
+  } catch (e) {
+    Alert.alert("Error Uploading Image " + e.message)
+}
+} 
+  const takePhoto2 = async (source) => {
+    try {
+      const imageResp = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        quality: 1,
+        ...source,
+      });
+      if (!imageResp.cancelled) {
+        const { uri } = imageResp.assets[0];
+        const fileName = uri.split('/').pop();
+        const uploadResp = await uploadToFirebase(uri, fileName);
+        console.log(uploadResp);
+        const downloadUrl = uploadResp.downloadUrl;
+        setLink(downloadUrl)
+        listFiles().then((listResp) => {
+          const files = listResp.map((value) => {
+            return { name: value.fullPath };
+          });
+          setFiles(link);
         });
-        console.log('Copied image to cache:', newPath);
-        setImage(newPath);
-      } catch (error) {
-        console.error('Error copying image:', error);
       }
-    } else {
-      console.log('Image selection cancelled.');
+    } catch (e) {
+      Alert.alert('Error Uploading Image ' + e.message);
     }
   };
-  
-  console.log('Rendering component...');
+  const changeLink= (text) =>{
+    setLink(text)
+  }
+  if (permission?.status !== ImagePicker.PermissionStatus.GRANTED) {
+    return (
+      <View style={styles.container}>
+        <Text>Permission Not Granted - {permission?.status}</Text>
+        <StatusBar style="auto" />
+        <Button title="Request Permission" onPress={requestPermission} />
+      </View>
+    );
+  }
+
   return (
-    <View style={styles.container}>
-      <Button title="Choose Picture" onPress={pickImage} />
-      {image && <Image source={{ uri: image }} style={styles.image} />}
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
+        <View style={{ position: 'absolute', top: 20, left: 20 }}>
+        <Backbutton style={{}} onPress={handlePress2}/>
+        </View>
+        <View style={{ alignItems: 'center',marginBottom: 20 }}>
+          <Text style={{textAlign :"center",
+          textAlignVertical:"bottom",
+          fontSize:30,
+          padding:20, 
+          color:'white'}}>Working With Firebase and Image Picker {'\n'} your full name.</Text>
+     
+        </View>
+        
+        <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center',backgroundColor: 'black',marginBottom: 20}}>
+        {/*<MyFilesList files={files} />*/}
+        <StatusBar style="auto" />
+        <Image source={{ uri: link }} style={styles.image} />
+        <Button title="Take picture" onPress={() => takePhoto({})} />
+        <Button title="Pick from gallery" onPress={() => takePhoto2({ mediaType: 'photo' })} />
+        
+        </View>
+        
+        <Buttonpung label={"Next"} onPress={handlePress} style={{}}></Buttonpung>
+        
+        
+
+    
+    
+      
     </View>
   );
 }
@@ -51,7 +133,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    marginTop: 20,
     width: 200,
     height: 200,
     resizeMode: 'contain',

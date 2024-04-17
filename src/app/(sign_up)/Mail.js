@@ -1,43 +1,27 @@
 import { View, Text, TextInput,  StyleSheet,Pressable,} from "react-native";
-import React,{useState,useEffect}  from "react";
+import React,{useState}  from "react";
 import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
 import { router, useLocalSearchParams} from "expo-router";
 import Button from '../../components/componentspung/Button/Button/Button';
 import Inputtext from '../../components/componentspung/InputText/InputText';
 import Dropdown from "../../components/componentspung/Dropdown/Dropdown"
 
-let titledata=[{id:1,name:"Mr."},{id:2,name:"Ms."}]
 
 export default function Login({}) {
-  const {name, surname,title} =useLocalSearchParams(); 
-  const [selectedTitle, setSelectedTitle] = useState(null)
+  const {title,name, surname,mail} =useLocalSearchParams(); 
   const handlePress = () => {
-      router.push({pathname:'/Mail',params:{title:selectedTitle.name,name:nameInputValue,surname:surnameInputValue}})
+      router.push({pathname:'/Username',params:{title:title,name:name,surname:surname,mail:mailInputValue}})
     };
     const handlePress2 = () => {
-      router.push('/Introduce')
+      router.push({pathname:'/Name',params:{title:title,name:name,surname:surname}})
     };
-    useEffect(() => {
-      if (title == "Mr.") {
-        onSelectTitle({id:1,name:"Mr."})
-      } else if (title == "Ms.") {
-        onSelectTitle({id:2,name:"Ms."})
-      } else {
-        onSelectTitle(null)
-      }
-  
-    }, [title]);
-    const [nameInputValue, setNameInputValue] = useState(name);
-    const [surnameInputValue, setSurnameInputValue] = useState(surname);
-    const nameInputChange = (text) => {
-      setNameInputValue(text);
+    console.log(title)
+    const [mailInputValue, setMailInputValue] = useState(mail);
+    const mailInputChange = (text) => {
+        setMailInputValue(text);
     };
-    const surnameInputChange = (text) => {
-      setSurnameInputValue(text);
-    };
-    const onSelectTitle =(item)=>{
-      setSelectedTitle(item)
-  }
+ 
+   
  
     return(
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
@@ -54,9 +38,7 @@ export default function Login({}) {
         </View>
         
         <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center',backgroundColor: 'black',marginBottom: 20}}>
-        <Dropdown onSelect={onSelectTitle} value={selectedTitle} data={titledata} label= " title " />
-        <Inputtext placeholder='Name' value={nameInputValue} onPress={nameInputChange}/>
-        <Inputtext placeholder='Surname' value={surnameInputValue} onPress={surnameInputChange}/>
+        <Inputtext placeholder='Mail' value={mailInputValue} onPress={mailInputChange}/>
         
         </View>
         

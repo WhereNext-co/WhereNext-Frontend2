@@ -7,10 +7,11 @@ import { router, useLocalSearchParams } from "expo-router";
 import axios from "axios";
 
 export default function Login() {
-  let { name, surname, username } = useLocalSearchParams();
-  const handlePress = () => {
-    axios
-      .post("http://where-next.tech/users/check-username", {
+
+    let {title,name,surname,mail,username} = useLocalSearchParams();
+    const handlePress = () => {
+      axios.post('http://wherenext.tech/users/check-username', {
+
         userName: usernameInputValue,
       })
       .then((response) => {
@@ -22,6 +23,52 @@ export default function Login() {
       .catch((error) => {
         console.error("There was a problem with your Axios request:", error);
       });
+   
+      //
+    };
+    const handlePress2 = () => {
+      router.push({pathname:'/Mail',params:{title:title,name:name,surname:surname,mail:mail}})
+    };
+    const [usernameInputValue, setUsernameInputValue] = useState(username);
+    const [usernameValid, setUsernameValid] = useState(true);
+    const [showError, setShowError] = useState(false);
+    useEffect(() => {
+      if (!usernameValid) {
+        // Check if OTP length is 6
+        router.replace({pathname:'/UsernameBD',params:{title:title,name:name,surname:surname,mail:mail,username:usernameInputValue}});
+      }
+    }, [usernameValid]);
+    const usernameInputChange = (text) => {
+      setUsernameInputValue(text);
+    };
+    const usernameValidChange = (text) => {
+      setUsernameValid(text);
+    };
+    const showErrorChange = (text) => {
+      setShowError(text);
+    };
+    return(
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
+        <View style={{ position: 'absolute', top: 20, left: 20 }}>
+        <Backbutton style={{}} onPress={handlePress2}/>
+        </View>
+        <View style={{ alignItems: 'center' , marginBottom: 20}}>
+          <Text style={{textAlign :"center",
+          textAlignVertical:"bottom",
+          fontSize:30,
+          padding:20, 
+          color:'white'}}>Pick a Username that {'\n'} represents you.</Text>
+     
+        </View>
+        
+        <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center',backgroundColor: 'black', marginBottom: 20}}>
+        <Inputtext placeholder='Username' value={usernameInputValue} onPress={usernameInputChange}/>
+        
+        </View>
+        
+        <Button label={"Next"} onPress={handlePress} style={{}}></Button>
+        {showError && (<Text style={{color:'white'}}>Username already used</Text>)}
+ 
 
     //
   };
