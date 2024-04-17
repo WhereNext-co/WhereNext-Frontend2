@@ -3,10 +3,28 @@ import React, { useState, useEffect } from "react";
 // import { SessionProvider } from "../ctx";
 import * as Location from "expo-location";
 import { UserLocationContext } from "../context/userLocationContext";
+import { useSegments, router } from "expo-router";
+import { AuthContextProvider, useAuth } from "../context/authContext";
 
-export default function AppLayout() {
+function AppLayout() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+
+  const { isAuthenticated } = useAuth();
+  const segments = useSegments();
+
+  useEffect(() => {
+    //Check if user is authenticated or not
+    if (typeof isAuthenticated == "undefined") return;
+    const inApp = segments[0] == "(app)";
+    if (isAuthenticated && !inApp) {
+      //To home
+      router.replace("home");
+    } else if (isAuthenticated == false) {
+      //To signIn
+      router.replace("sign-in");
+    }
+  }, [isAuthenticated]);
 
   useEffect(() => {
     (async () => {
@@ -28,6 +46,7 @@ export default function AppLayout() {
   } else if (location) {
     text = JSON.stringify(location);
   }
+
   return (
     <UserLocationContext.Provider value={{ location, setLocation }}>
       <Stack>
@@ -35,5 +54,12 @@ export default function AppLayout() {
         <Stack.Screen name="(sign_up)" options={{ headerShown: false }} />
       </Stack>
     </UserLocationContext.Provider>
+  );
+}
+export default function RootLayout() {
+  return (
+    <AuthContextProvider>
+      <AppLayout />
+    </AuthContextProvider>
   );
 }
