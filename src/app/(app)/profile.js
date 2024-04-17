@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import Circle from "../../components/componentspung/Circle/Circle"
+import MultipleSectors from "../../components/componentspung/Circle/Circle"
 import Button from '../../components/componentspung/Button/Button/Button';
 import { useState } from "react";
 export default function Tab() {
@@ -7,6 +7,7 @@ export default function Tab() {
   const handlePress = () => {
     
   }
+  
   return (
     <View style={{flex: 1, justifyContent: 'flex-start', alignItems: 'center', backgroundColor: '#14072b'}}>
       <View style={{ alignItems: 'center',marginTop: 50,backgroundColor:'black',marginBottom: 40 }}>
@@ -29,7 +30,7 @@ export default function Tab() {
           color:'white'}}>You have ... events today</Text>
         </View>
         <View style={{ marginBottom: 80 }}>
-          <Circle color="red" timeRanges={events} />
+          <MultipleSectors color="red" timeRanges={events} />
         </View>
         <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: '#14072b', marginBottom: 160}}>
   <Button label={"Add Schedule"} onPress={handlePress} style={{marginRight: 10}}></Button>
