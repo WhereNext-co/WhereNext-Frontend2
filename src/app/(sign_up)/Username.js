@@ -9,7 +9,7 @@ import axios from 'axios';
 export default function Login() {
     let {title,name,surname,mail,username} = useLocalSearchParams();
     const handlePress = () => {
-      axios.post('http://wherenext.tech/users/check-username', {
+      axios.post('http://where-next.tech/users/check-username', {
         userName: usernameInputValue,
       })
       .then(response => {

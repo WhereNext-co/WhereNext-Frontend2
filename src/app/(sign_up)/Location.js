@@ -1,19 +1,43 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, Alert , Image} from 'react-native';
 import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
-import { router } from "expo-router";
 import Button from '../../components/componentspung/Button/Button/Button';
 import { SvgUri } from 'react-native-svg';
+import { router, useLocalSearchParams} from "expo-router";
 
 import * as Location from 'expo-location';
 
 export default function LocationRequest() {
+  let {name,surname,username,title,mail,birthdate,profile} = useLocalSearchParams();
+
   const [errorMsg, setErrorMsg] = useState(null);
   const handlePress = () => {
-    router.push('/Termagree')
+    router.push({
+      pathname: '/Termagree',
+      params: {
+        title: title,
+        name: name,
+        surname: surname,
+        mail: mail,
+        username: username,
+        birthdate:birthdate,
+        profile:profile
+      }
+    });
   };
   const handlePress2 = () => {
-    router.push('/OTP')
+    router.push({
+      pathname: '/Userprofile',
+      params: {
+        title: title,
+        name: name,
+        surname: surname,
+        mail: mail,
+        username: username,
+        birthdate:birthdate,
+        profile:profile
+      }
+    });
   };
   const handlePermissionRequest = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -27,7 +51,7 @@ export default function LocationRequest() {
   };
 
   return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#14072b' }}>
     
       <View style={{ position: 'absolute', top: 20, left: 20 }}>
         <Backbutton style={{}} onPress={handlePress2}/>
@@ -42,10 +66,11 @@ export default function LocationRequest() {
       </View>
       <View>
        
-        <Image
-        source={require('../../../assets/Pung/location.png')}
-        style={{ width: 200, height: 200 ,backgroundColor:'white'}}
-      />
+       <Image source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images%2Fa.png?alt=media&token=2ef877f7-1b2a-4f83-a206-41af195eb208' }} 
+       style={{width: 200,
+               height: 200,
+               resizeMode: 'contain',}} />
+    
       </View>
       <Button label={"Turn on location service"} onPress={handlePermissionRequest} />
       {errorMsg && <Text style={styles.error}>{errorMsg}</Text>}
