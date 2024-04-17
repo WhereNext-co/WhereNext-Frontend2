@@ -1,6 +1,6 @@
+import { router } from "expo-router";
 import { View, Text } from "react-native";
 import React from "react";
-import { router } from "expo-router";
 import { fbApp } from "../../firebaseConfig";
 
 export default function index() {
@@ -35,7 +35,8 @@ export default function index() {
         }}
       >
         To Sign Up page
-      </Text><Text
+      </Text>
+      <Text
         onPress={() => {
           // signIn();
           // Navigate after signing in. You may want to tweak this to ensure sign-in is
