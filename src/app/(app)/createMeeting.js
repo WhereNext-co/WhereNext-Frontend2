@@ -9,12 +9,21 @@ export default function CreateMeeting() {
   });
 
   const onDayPress = (day) => {
-    setMarkedDates({
-      ...markedDates,
-      [day.dateString]: { selected: true, marked: true, selectedColor: "blue" },
-    });
+    if (markedDates[day.dateString]) {
+      const newMarkedDates = { ...markedDates };
+      delete newMarkedDates[day.dateString];
+      setMarkedDates(newMarkedDates);
+    } else {
+      setMarkedDates({
+        ...markedDates,
+        [day.dateString]: {
+          selected: true,
+          marked: true,
+          selectedColor: "blue",
+        },
+      });
+    }
   };
-
   const [startTime, setStartTime] = useState("0:00");
   const [endTime, setEndTime] = useState("0:00");
 
