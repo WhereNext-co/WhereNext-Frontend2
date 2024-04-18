@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  Button,
   StyleSheet,
   View,
   Text,
@@ -8,36 +9,21 @@ import {
   ScrollView,
   Image,
   TextInput,
+  AccessibilityInfo,
 } from "react-native";
 import AddFriendCard from "./AddFriendCard";
+import { remove, set } from "firebase/database";
 
 export default function AddFriendModal() {
-  const [contacts, setContacts] = useState([
+  const [contacts, setContacts] = useState(
     //default friends
     {
       img: "",
       name: "Guy Naga",
       status: "Friend",
-    },
-
-    {
-      img: "",
-      name: "Pung Demon",
-      status: "PendingInvite",
-    },
-
-    {
-      img: "",
-      name: "New Dragon",
-      status: "NotFriend",
-    },
-
-    {
-      img: "",
-      name: "Mearz Murloc",
-      status: "PendingReceive",
-    },
-  ]);
+    }
+  );
+  const [friendstatus, setFriendStatus] = useState("");
 
   /*
     useEffect(() => {
@@ -52,24 +38,90 @@ export default function AddFriendModal() {
   */
 
   const [search, setSearch] = useState("");
-  const [filteredContacts, setFilteredContacts] = useState([]);
+  // const [filteredContacts, setFilteredContacts] = useState([]);
+  const onSearchHandler = () => {
+    const user = firebase.auth().currentUser;
+    axios
+      .get(`http://where-next.tech/users/friends/friendinfo`, {
+        uid: user.uid,
+        friendName: search,
+      })
+      .then((response) => {
+        setContacts(response.data.friend);
+        setFriendStatus(response.data.friendStatus);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
 
-  useEffect(() => {
-    setFilteredContacts(
-      contacts.filter((contact) =>
-        contact.name.toLowerCase().includes(search.toLowerCase())
-      )
-    );
-  }, [search, contacts]);
+  const addFriendHandler = (contact) => {
+    const user = firebase.auth().currentUser;
+    axios
+      .post("http://where-next.tech/users/friendrequest", {
+        uid: user.uid,
+        friendName: contact.name,
+      })
+      .then((response) => {
+        console.log(response.data);
+        setContacts([...contacts, friend]);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
 
-  /*
-  useEffect(() => {
-    fetch('https://your-backend-url/contacts')
-      .then(response => response.json())
-      .then(data => setContacts(data))
-      .catch(error => console.error(error));
-  }, []);
-  */
+  const cancelFriendRequestHandler = (contact) => {
+    const user = firebase.auth().currentUser;
+    axios
+      .delete("http://where-next.tech/users/friendrequest/cancel", {
+        uid: user.uid,
+        friendName: contact.name,
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  const removeFriendHandler = (contact) => {
+    const user = firebase.auth().currentUser;
+    axios
+      .delete("http://where-next.tech/users/friends", {
+        uid: user.uid,
+        friendName: contact.name,
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  const AcceptFriendHandler = (contact) => {
+    const user = firebase.auth().currentUser;
+    axios
+      .put("http://where-next.tech/users/friendrequest", {
+        uid: user.uid,
+        friendName: contact.name,
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+  // useEffect(() => {
+  //   setFilteredContacts(
+  //     contacts.filter((contact) =>
+  //       contact.name.toLowerCase().includes(search.toLowerCase())
+  //     )
+  //   );
+  // }, [search, contacts]);
 
   return (
     <SafeAreaView style={styles.modalContainer}>
@@ -80,23 +132,17 @@ export default function AddFriendModal() {
           placeholder="Search"
           style={styles.searchInput}
         />
-
-        <ScrollView>
-          {filteredContacts.map((contact) => (
-            <AddFriendCard
-              key={contact.name}
-              img={contact.img}
-              name={contact.name}
-              onAddPress={() => console.log(`Add Friend handler`)}
-              onPendingPress={() =>
-                console.log(`Cancel Friend Request handler`)
-              }
-              onRemovePress={() => console.log(`Remove Friend handler`)}
-              onAcceptPress={() => console.log(`Accept Friend Request handler`)}
-              status={contact.status}
-            />
-          ))}
-        </ScrollView>
+        <AddFriendCard
+          key={contact.Uid}
+          img={contact.ProfilePicture}
+          name={contact.Name}
+          onAddPress={addFriendHandler}
+          onPendingPress={cancelFriendRequestHandler}
+          onRemovePress={removeFriendHandler}
+          onAcceptPress={AcceptFriendHandler}
+          status={friendstatus}
+        />
+        <Button onSearchPress={onSearchHandler}></Button>
       </View>
     </SafeAreaView>
   );
