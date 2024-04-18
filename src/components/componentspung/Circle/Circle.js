@@ -1,54 +1,6 @@
-/*import React from 'react';
-import { StyleSheet, View } from 'react-native';
-
-const Circlea = ({ color, timeRanges,progressWidth=30}) => {
-  return (
-    <View style={[styles.container, { padding: 20 }]}>
-      <View style={[styles.background, { borderColor: "#283053" }]} />
-      <View
-        style={[
-          styles.progress,
-          { borderColor: color, width: progressWidth, transform: [{ rotate: `45deg` }] },
-        ]}
-      />
-    </View>
-  );
-};  
-
-const height = 300;
-Circlea.defaultProps = {
-  progressWidth: height * 0.5, // Default progress width is half the height of the circle
-};
-const styles = StyleSheet.create({
-  container: {
-    width: height,
-    height: height,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  background: {
-    width: '100%',
-    height: '100%',
-    borderRadius: height / 2,
-    borderWidth: 25,
-    opacity: 1
-  },progress: {
-    width: '100%',
-    height: '100%',
-    borderRadius: height / 2,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderBottomColor: 'transparent',
-    borderWidth: 25,
-    position: 'absolute',
-    transform: [{ rotate: `45deg` }]
-  }
-});
-
-export default Circlea;*/
 import React from 'react';
 import { View, StyleSheet, Image } from 'react-native';
-import { Svg, Path, Circle } from 'react-native-svg';
+import { Svg, Path, Circle, Defs, Stop ,LinearGradient} from 'react-native-svg';
 
 const styles = StyleSheet.create({
   container: {
@@ -76,7 +28,13 @@ const MultipleSectors = ({ timeRanges, color }) => {
   return (
     <View style={styles.container}>
       <Svg height={300} width={300}>
-        <Circle cx="150" cy="150" r="150" fill="blue" />
+      <Defs>
+      <LinearGradient id="redGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <Stop offset="0%" stopColor="red" />
+            <Stop offset="100%" stopColor="white" />
+          </LinearGradient>
+        </Defs>
+        {/*<Circle cx="150" cy="150" r="150" fill="blue" />*/}
         {angles.map((angle, index) => {
           const radius = 150;
           const x1 = radius * Math.cos((angle.startAngle * Math.PI) / 180);
@@ -92,8 +50,8 @@ const MultipleSectors = ({ timeRanges, color }) => {
             Z
           `;
 
-          return <Path key={index} d={pathData} fill={color} />;
-        })}{angles.map((angle, index) => {
+          return <Path key={index} d={pathData} fill={'url(#redGradient)'}></ Path>
+        })}{/*angles.map((angle, index) => {
           const radius = 150;
           const miniradius=15;
           const x1 = (radius-miniradius) * Math.cos((angle.startAngle * Math.PI) / 180);
@@ -106,7 +64,7 @@ const MultipleSectors = ({ timeRanges, color }) => {
           const y1 = (radius-miniradius) * Math.sin((angle.endAngle * Math.PI) / 180);
           return <Circle key={index} cx={radius + x1} cy={radius + y1} r={miniradius} fill="red" />
         })}
-        <Circle cx="150" cy="150" r={circleRadius} fill="#14072b" />
+        {<Circle cx="150" cy="150" r={circleRadius} fill="#14072b" />
         <Image source={{ uri: link }} 
         style={{
         width: imageRadius * 2,
@@ -114,7 +72,7 @@ const MultipleSectors = ({ timeRanges, color }) => {
         borderRadius: imageRadius,
         marginLeft: 32,
         marginTop: 32,
-  }} />
+  }} />*/}
       </Svg>
     </View>
   );
