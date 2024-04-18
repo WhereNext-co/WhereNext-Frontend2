@@ -16,23 +16,16 @@ import { UserLocationContext } from "../../../context/userLocationContext";
 import colors from "../../../shared/colors";
 import Back from "../../../../assets/home/search/back";
 import SlidingUpPanel from "rn-sliding-up-panel";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { set } from "firebase/database";
 
 export default function Tab() {
   const { location, setLocation } = useContext(UserLocationContext);
   const [searchText, setSearchText] = useState(""); // State to hold the search text
+  const [searchDetails, setSearchDetails] = useState(null); // State to hold the search details
   const [searchResults, setSearchResults] = useState(null); // State to hold the search results
+  const [nearbyPlaces, setNearbyPlaces] = useState([]); // State to hold the nearby places
   const [searching, setSearching] = useState(false);
-
-  const demo = [
-    {
-      id: "1",
-      name: "Earnest Green",
-    },
-    {
-      id: "2",
-      name: "Winston Orn",
-    },
-  ];
 
   useEffect(() => {
     getNearbyPlaces();
@@ -41,6 +34,10 @@ export default function Tab() {
   const placeType = ["restaurant", "liquor_store", "convenience_store"];
 
   const getSearchPlaces = async (requestData) => {
+    if (!requestData.textQuery) {
+      setSearchResults([]);
+      return;
+    }
     try {
       await globalApi.searchPlace(requestData).then((response) => {
         console.log("res", response);
@@ -66,6 +63,7 @@ export default function Tab() {
         },
       },
     });
+    setNearbyPlaces(res);
   };
 
   const handleSearchFocus = () => {
@@ -84,10 +82,17 @@ export default function Tab() {
 
   if (searching) {
     return (
-      <View style={styles.container}>
+      <View className="flex flex-col">
         <Stack.Screen options={{ headerShown: false }} />
         <View style={styles.headerContainer}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={reversehandleSearchFocus}
+          >
+            <Back width={30} height={30} name="back" color="black" />
+          </TouchableOpacity>
           <TextInput
+            className="basis-11/12"
             placeholder="Search here"
             placeholderTextColor={colors.gray}
             style={styles.searchBar}
@@ -97,26 +102,35 @@ export default function Tab() {
             }} // Call handleSearch on text change
             value={searchText} // Pass the current search text value
           />
-
-          <TouchableOpacity onPress={reversehandleSearchFocus}>
-            <Back width={30} height={30} name="back" />
-          </TouchableOpacity>
-          {/* {searchResults && (
-            <FlatList
-              data={searchResults}
-              renderItem={(place) => place.displayName.text}
-            />
-          )} */}
+        </View>
+        <View className="pt-36">
           <FlatList
             data={searchResults}
             renderItem={({ item }) => (
-              <TouchableOpacity>
-                <Text style={styles.item}>{item.displayName.text}</Text>
-                <Text style={styles.item}>{item.formattedAddress}</Text>
+              <TouchableOpacity
+                style={styles.itemContainer}
+                onPress={() => {
+                  setSearchText(item.displayName.text);
+                  setSearchDetails(item);
+                  setSearching(false);
+                }}
+              >
+                <Text style={styles.item} className="font-bold text-xl">
+                  {item.displayName.text}
+                </Text>
+                <Text className="text-slate-500">{item.formattedAddress}</Text>
                 {item.regularOpeningHours !== undefined &&
                 item.regularOpeningHours.openNow !== undefined ? (
-                  <Text style={styles.item}>
-                    {item.regularOpeningHours.openNow ? "Opened" : "Closed"}
+                  <Text
+                    style={[
+                      styles.item,
+                      item.regularOpeningHours.openNow
+                        ? styles.open
+                        : styles.closed,
+                    ]}
+                    className="font-semibold text-lg"
+                  >
+                    {item.regularOpeningHours.openNow ? "Open" : "Closed"}
                   </Text>
                 ) : null}
               </TouchableOpacity>
@@ -140,7 +154,10 @@ export default function Tab() {
         />
       </View>
 
-      <GoogleMapHomeView />
+      <GoogleMapHomeView
+        selectedPlace={searchDetails}
+        nearbyPlaces={nearbyPlaces}
+      />
     </View>
   );
 }
@@ -159,6 +176,9 @@ const styles = StyleSheet.create({
     right: 0,
     zIndex: 1,
     paddingHorizontal: 16,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
   mapContainer: {
     flex: 1,
@@ -177,6 +197,23 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5, // This property adds shadow on Android
+    flexGrow: 1,
   },
-  place: {},
+  itemContainer: {
+    backgroundColor: "#fff", // white background
+    padding: 10, // padding inside the box
+    // marginVertical: 1, // margin at the top and bottom for each box
+    borderWidth: 1, // border width
+    borderColor: "#ddd", // grey border color
+  },
+  item: {
+    fontSize: 16,
+    color: "#333",
+  },
+  open: {
+    color: "green",
+  },
+  closed: {
+    color: "red",
+  },
 });
