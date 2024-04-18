@@ -8,10 +8,12 @@ import {
   ScrollView,
   Image,
   TextInput,
+  Button,
 } from "react-native";
 import AddFriendCard from "./AddFriendCard";
+import Modal from "react-native-modal";
 
-export default function AddFriendModal() {
+export default function AddFriendModal({ handleOpen }) {
   const [contacts, setContacts] = useState([
     //default friends
     {
@@ -53,8 +55,18 @@ export default function AddFriendModal() {
 
   const [search, setSearch] = useState("");
   const [filteredContacts, setFilteredContacts] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const showAddFriendModal = () => {
+    setModalVisible(true);
+  };
+
+  const hideAddFriendModal = () => {
+    setModalVisible(false);
+  };
 
   useEffect(() => {
+    // Assuming contacts is the array of contacts you want to search through
     setFilteredContacts(
       contacts.filter((contact) =>
         contact.name.toLowerCase().includes(search.toLowerCase())
@@ -62,43 +74,40 @@ export default function AddFriendModal() {
     );
   }, [search, contacts]);
 
-  /*
-  useEffect(() => {
-    fetch('https://your-backend-url/contacts')
-      .then(response => response.json())
-      .then(data => setContacts(data))
-      .catch(error => console.error(error));
-  }, []);
-  */
-
   return (
-    <SafeAreaView style={styles.modalContainer}>
-      <View style={styles.modalContent}>
-        <TextInput
-          value={search}
-          onChangeText={setSearch}
-          placeholder="Search"
-          style={styles.searchInput}
-        />
+    <View>
+      <Button title="Open Add Friend Modal" onPress={showAddFriendModal} />
+      <Modal isVisible={modalVisible} onBackdropPress={hideAddFriendModal}>
+        <View style={styles.modalContent}>
+          <TextInput
+            value={search}
+            onChangeText={setSearch}
+            placeholder="Search"
+            style={styles.searchInput}
+          />
 
-        <ScrollView>
-          {filteredContacts.map((contact) => (
-            <AddFriendCard
-              key={contact.name}
-              img={contact.img}
-              name={contact.name}
-              onAddPress={() => console.log(`Add Friend handler`)}
-              onPendingPress={() =>
-                console.log(`Cancel Friend Request handler`)
-              }
-              onRemovePress={() => console.log(`Remove Friend handler`)}
-              onAcceptPress={() => console.log(`Accept Friend Request handler`)}
-              status={contact.status}
-            />
-          ))}
-        </ScrollView>
-      </View>
-    </SafeAreaView>
+          <ScrollView>
+            {filteredContacts.map((contact) => (
+              <AddFriendCard
+                key={contact.name}
+                img={contact.img}
+                name={contact.name}
+                onAddPress={() => console.log(`Add Friend handler`)}
+                onPendingPress={() =>
+                  console.log(`Cancel Friend Request handler`)
+                }
+                onRemovePress={() => console.log(`Remove Friend handler`)}
+                onAcceptPress={() =>
+                  console.log(`Accept Friend Request handler`)
+                }
+                status={contact.status}
+              />
+            ))}
+          </ScrollView>
+          <Button title="Close" onPress={hideAddFriendModal} />
+        </View>
+      </Modal>
+    </View>
   );
 }
 
@@ -111,14 +120,11 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.5)", // semi-transparent background
   },
   modalContent: {
-    backgroundColor: "white",
     padding: 20,
+    backgroundColor: "white",
     borderRadius: 10, // rounded corners
-    width: "80%", // take up 80% of the screen width
   },
 });

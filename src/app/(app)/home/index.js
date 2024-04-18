@@ -14,7 +14,7 @@ import { UserLocationContext } from "../../../context/userLocationContext";
 import colors from "../../../shared/colors";
 import Back from "../../../../assets/home/search/back";
 
-export default function Tab() {
+export default function MapView() {
   const { location, setLocation } = useContext(UserLocationContext);
   const [searchText, setSearchText] = useState(""); // State to hold the search text
   const [searchResults, setSearchResults] = useState(null); // State to hold the search results
