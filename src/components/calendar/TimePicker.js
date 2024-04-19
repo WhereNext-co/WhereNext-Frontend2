@@ -2,12 +2,11 @@ import React, { useState } from "react";
 import { Button, View, TextInput, StyleSheet, Text } from "react-native";
 import Modal from "react-native-modal";
 
-export default function TimePicker() {
+export default function TimePicker({ onDurationChange }) {
   const [isPickerVisible, setPickerVisible] = useState(false);
   const [selectedDays, setSelectedDays] = useState("");
   const [selectedHours, setSelectedHours] = useState("");
   const [selectedMinutes, setSelectedMinutes] = useState("");
-  const [totalDuration, setTotalDuration] = useState("");
 
   const showPicker = () => {
     setPickerVisible(true);
@@ -22,12 +21,7 @@ export default function TimePicker() {
     const hoursInMinutes = parseInt(selectedHours) * 60;
     const minutes = parseInt(selectedMinutes);
     const totalDurationInMinutes = daysInMinutes + hoursInMinutes + minutes;
-
-    console.log(
-      `${selectedDays} Days ${selectedHours} Hours ${selectedMinutes} Minutes`
-    );
-    setTotalDuration(`${totalDuration}`);
-    console.log(`${totalDurationInMinutes}`);
+    onDurationChange(totalDurationInMinutes);
     hidePicker();
   };
 

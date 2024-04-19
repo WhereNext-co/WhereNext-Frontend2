@@ -10,19 +10,19 @@ import {
   TextInput,
   Button,
 } from "react-native";
-import FriendCard from "./InviteFriendCard";
+import FriendCard from "../../../components/friends/FriendCard";
 import axios from "axios";
 import Modal from "react-native-modal";
 
-export default function Friends({ onFriendChange }) {
-  // State variables
+export default function Friends() {
   const [contacts, setContacts] = useState([
-    // Default friends
+    //default friends
     {
       img: "",
       name: "Guy Chelsea",
       id: "0xfjri3995",
     },
+
     {
       img: "",
       name: "Mearz Wong",
@@ -32,24 +32,7 @@ export default function Friends({ onFriendChange }) {
 
   const [search, setSearch] = useState("");
   const [filteredContacts, setFilteredContacts] = useState([]);
-  const [selectedFriends, setSelectedFriends] = useState([]);
 
-  // Event handler for selecting/deselecting friends
-  const handlePress = (friend) => {
-    if (selectedFriends.includes(friend.id)) {
-      setSelectedFriends(selectedFriends.filter((id) => id !== friend.id));
-    } else {
-      setSelectedFriends([...selectedFriends, friend.id]);
-    }
-    console.log(`From child component: ${selectedFriends}`);
-  };
-
-  //On invite button press
-  const onInvite = () => {
-    onFriendChange(selectedFriends);
-  };
-
-  // Filter contacts based on search input
   useEffect(() => {
     setFilteredContacts(
       contacts.filter(
@@ -60,10 +43,8 @@ export default function Friends({ onFriendChange }) {
     );
   }, [search, contacts]);
 
-  // Render the component
   return (
     <SafeAreaView>
-      {/* Search input */}
       <TextInput
         value={search}
         onChangeText={setSearch}
@@ -71,26 +52,20 @@ export default function Friends({ onFriendChange }) {
         style={styles.searchInput}
       />
 
-      {/* List of friends */}
       <ScrollView>
         {filteredContacts.map((contact) => (
           <FriendCard
             key={contact.id}
             img={contact.img}
             name={contact.name}
-            onPress={() => handlePress(contact)}
-            isSelected={selectedFriends.includes(contact.id)}
+            onPress={() => console.log(`Friend at index pressed`)}
           />
         ))}
       </ScrollView>
-
-      {/* Invite button */}
-      <Button title="Invite" onPress={onInvite} />
     </SafeAreaView>
   );
 }
 
-// Styles
 const styles = StyleSheet.create({
   searchInput: {
     height: 40,

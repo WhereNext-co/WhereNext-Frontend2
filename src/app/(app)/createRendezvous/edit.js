@@ -71,8 +71,7 @@ export default function CreateMeeting() {
         throw new Error('HTTP error ' + response.status);
       } */
         console.log("Rendezvous created:", rendezvous);
-        router.replace("./createRendezvous/scheduleSync");
-        alert("Rendezvous created successfully!");
+        router.replace("./createRendezvous/scheduleSyncFriend");
       } catch (error) {
         console.error("Failed to create rendezvous:", error);
       }
