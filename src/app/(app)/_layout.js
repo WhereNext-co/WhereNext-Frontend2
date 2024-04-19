@@ -14,7 +14,7 @@ export default function TabLayout() {
   return (
     <Tabs screenOptions={{ tabBarActiveTintColor: "blue", headerShown: false }}>
       <Tabs.Screen
-        name="createMeeting"
+        name="createRendezvous"
         options={{
           title: "Rendezvous",
           tabBarIcon: ({ color }) => (

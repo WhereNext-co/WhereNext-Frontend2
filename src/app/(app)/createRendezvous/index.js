@@ -1,17 +1,15 @@
-/*import React, { useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
-import CustomCalendar from "../../components/calendar/CustomCalendar";
-import TimePicker from "../../components/calendar/TimePicker";
-import InviteFriend from "../../components/calendar/InviteFriend";
+import CustomCalendar from "../../../components/calendar/CustomCalendar";
+import TimePicker from "../../../components/calendar/TimePicker";
+import InviteFriend from "../../../components/calendar/InviteFriend";
 import { SafeAreaView } from "react-native-safe-area-context";
-import ConfirmationModal from "../../components/calendar/ConfirmationModal";
+import { Stack } from "expo-router";
 
 export default function CreateMeeting() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [rendezvousName, setRendezvousName] = useState("");
-  const [isConfirmModalVisible, setConfirmModalVisible] = useState(false);
-  const [isScheduleSyncVisisble, setScheduleSyncVisible] = useState(false);
 
   const handleStartDateChange = (date) => {
     setStartDate(date);
@@ -24,8 +22,6 @@ export default function CreateMeeting() {
   const handleRendezvousName = (text) => {
     setRendezvousName(text);
   };
-
-  const [duration, setDuration] = useState("0:00");
 
   const [rendezvous, setRendezvous] = useState({
     hostuid: "",
@@ -67,15 +63,14 @@ export default function CreateMeeting() {
       });
 
       try {
-        const response = await axios.post(
+        /* const response = await axios.post(
         'https://your-api-url.com/create',
         rendezvous
       );
 
       if (response.status !== 200) {
         throw new Error('HTTP error ' + response.status);
-      } 
-        setConfirmModalVisible(true);
+      } */
         console.log("Rendezvous created:", rendezvous);
         alert("Rendezvous created successfully!");
       } catch (error) {
@@ -86,6 +81,7 @@ export default function CreateMeeting() {
   return (
     <SafeAreaView>
       <View>
+        <Stack.Screen options={{ headerShown: false }} />
         <TextInput
           value={rendezvousName}
           onChangeText={handleRendezvousName}
@@ -95,20 +91,15 @@ export default function CreateMeeting() {
           onEndDateChange={handleEndDateChange}
           onStartDateChange={handleStartDateChange}
         />
-        <TimePicker time={duration} setTime={setDuration} title={duration} />
-        <Text>Duration: {duration}</Text>
+        <TimePicker />
+        <Text>Duration: </Text>
         <Text>
           {startDate ? startDate.toString() : "NULL"}
           {endDate ? endDate.toString() : "NULL"}
         </Text>
         <InviteFriend />
         <Button title="Schedule Sync" onPress={handleScheduleSync} />
-        <ConfirmationModal
-          isVisible={isConfirmModalVisible}
-          users={rendezvous.InvitedUsers}
-          onCancel={() => setConfirmModalVisible(false)}
-        />
       </View>
     </SafeAreaView>
   );
-}*/
+}

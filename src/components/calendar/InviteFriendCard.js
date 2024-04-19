@@ -25,14 +25,6 @@ const FriendCard = ({ img, name, id, onPress, isSelected }) => {
         <View /*The part where name is displayed*/ style={styles.cardBody}>
           <Text style={styles.cardTitle}>{name}</Text>
         </View>
-
-        <View style={styles.cardAction}>
-          <FeatherIcon // Right arrow icon displayed at the end of the card.
-            color="#9ca3af"
-            name="chevron-right"
-            size={22}
-          />
-        </View>
       </View>
     </TouchableOpacity>
   );

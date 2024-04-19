@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { Button, View, Text, Platform, StyleSheet } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import { Button, View, TextInput, StyleSheet, Text } from "react-native";
 import Modal from "react-native-modal";
 
-export default function TimePicker({ time, setTime, title }) {
+export default function TimePicker() {
   const [isPickerVisible, setPickerVisible] = useState(false);
-  const [selectedTime, setSelectedTime] = useState(new Date());
+  const [selectedDays, setSelectedDays] = useState("");
+  const [selectedHours, setSelectedHours] = useState("");
+  const [selectedMinutes, setSelectedMinutes] = useState("");
+  const [totalDuration, setTotalDuration] = useState("");
 
   const showPicker = () => {
     setPickerVisible(true);
@@ -16,34 +18,48 @@ export default function TimePicker({ time, setTime, title }) {
   };
 
   const handleConfirm = () => {
-    const hours = selectedTime.getHours();
-    const minutes = selectedTime.getMinutes();
-    const formattedHours = hours < 10 ? `0${hours}` : `${hours}`;
-    const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
-    setTime(`${formattedHours}:${formattedMinutes}`);
-    hidePicker();
-  };
+    const daysInMinutes = parseInt(selectedDays) * 24 * 60;
+    const hoursInMinutes = parseInt(selectedHours) * 60;
+    const minutes = parseInt(selectedMinutes);
+    const totalDurationInMinutes = daysInMinutes + hoursInMinutes + minutes;
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || selectedTime;
-    setSelectedTime(currentDate);
+    console.log(
+      `${selectedDays} Days ${selectedHours} Hours ${selectedMinutes} Minutes`
+    );
+    setTotalDuration(`${totalDuration}`);
+    console.log(`${totalDurationInMinutes}`);
+    hidePicker();
   };
 
   return (
     <View>
-      <Button title={time || title} onPress={showPicker} />
-      <Modal isVisible={isPickerVisible} onBackdropPress={hidePicker}>
-        <View style={styles.modalContainer}>
-          <DateTimePicker
-            value={selectedTime}
-            mode="time"
-            is24Hour={true}
-            display="default"
-            onChange={onChange}
+      <Button title="Choose Time" onPress={showPicker} />
+      <Modal isVisible={isPickerVisible}>
+        <View style={styles.container}>
+          <Text>Enter time:</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={setSelectedDays}
+            value={selectedDays}
+            placeholder="Days"
+            keyboardType="numeric"
           />
-          <View style={styles.confirmButton}>
-            <Button title="Confirm" onPress={handleConfirm} />
-          </View>
+          <TextInput
+            style={styles.input}
+            onChangeText={setSelectedHours}
+            value={selectedHours}
+            placeholder="Hours"
+            keyboardType="numeric"
+          />
+          <TextInput
+            style={styles.input}
+            onChangeText={setSelectedMinutes}
+            value={selectedMinutes}
+            placeholder="Minutes"
+            keyboardType="numeric"
+          />
+          <Button title="Confirm" onPress={handleConfirm} />
+          <Button title="Cancel" onPress={hidePicker} />
         </View>
       </Modal>
     </View>
@@ -51,26 +67,16 @@ export default function TimePicker({ time, setTime, title }) {
 }
 
 const styles = StyleSheet.create({
-  searchInput: {
+  container: {
+    backgroundColor: "white",
+    padding: 20,
+  },
+  input: {
     height: 40,
     borderColor: "gray",
     borderWidth: 1,
+    marginTop: 10,
+    marginBottom: 10,
     paddingLeft: 10,
-  },
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalContainer: {
-    backgroundColor: "white",
-    padding: 20,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    height: "50%",
-  },
-  confirmButton: {
-    marginTop: "60%", // Add this line
   },
 });
