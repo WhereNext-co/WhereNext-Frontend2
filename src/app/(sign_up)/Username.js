@@ -7,10 +7,10 @@ import { router, useLocalSearchParams } from "expo-router";
 import axios from "axios";
 
 export default function Login() {
-  let { name, surname, username } = useLocalSearchParams();
+  let { title, name, surname, mail, username } = useLocalSearchParams();
   const handlePress = () => {
     axios
-      .post("http://157.230.246.108/users/check-username", {
+      .post("http://wherenext.tech/users/check-username", {
         userName: usernameInputValue,
       })
       .then((response) => {
@@ -27,8 +27,8 @@ export default function Login() {
   };
   const handlePress2 = () => {
     router.push({
-      pathname: "/Name",
-      params: { name: name, surname: surname },
+      pathname: "/Mail",
+      params: { title: title, name: name, surname: surname, mail: mail },
     });
   };
   const [usernameInputValue, setUsernameInputValue] = useState(username);
@@ -39,7 +39,13 @@ export default function Login() {
       // Check if OTP length is 6
       router.replace({
         pathname: "/UsernameBD",
-        params: { name: name, surname: surname, username: usernameInputValue },
+        params: {
+          title: title,
+          name: name,
+          surname: surname,
+          mail: mail,
+          username: usernameInputValue,
+        },
       });
     }
   }, [usernameValid]);

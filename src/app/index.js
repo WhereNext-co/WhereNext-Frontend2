@@ -1,6 +1,7 @@
 import { router } from "expo-router";
 import { View, Text } from "react-native";
 import React from "react";
+import { fbApp } from "../../firebaseConfig";
 
 export default function index() {
   return (
