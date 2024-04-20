@@ -1,3 +1,4 @@
+//เผื่อไว้
 import { View, Text, TextInput,  StyleSheet,Pressable,} from "react-native";
 import React,{useState}  from "react";
 import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
@@ -33,7 +34,7 @@ export default function Login({}) {
           textAlignVertical:"bottom",
           fontSize:30,
           padding:20, 
-          color:'white'}}>Please tell us {'\n'} your full name.</Text>
+          color:'white'}}>Please tell us {'\n'} your mail.</Text>
      
         </View>
         

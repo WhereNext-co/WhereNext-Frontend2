@@ -7,11 +7,35 @@ import Button from '../../components/componentspung/Button/Button/Button';
 import ScrollDownComponent from "../../components/componentspung/scrolldown/scrolldown";
 
 export default function Login() {
-    const handlePress = () => {
-      router.push('/Start')
+  let {name,surname,username,title,mail,birthdate,profile} = useLocalSearchParams();
+    
+  const handlePress = () => {
+      router.push({
+        pathname: '/Phone',
+        params: {
+          title: title,
+          name: name,
+          surname: surname,
+          mail: mail,
+          username: username,
+          birthdate:birthdate,
+          profile:profile
+        }
+      });
     };
     const handlePress2 = () => {
-      router.push('/Userprofile')
+      router.push({
+        pathname: '/Location',
+        params: {
+          title: title,
+          name: name,
+          surname: surname,
+          mail: mail,
+          username: username,
+          birthdate:birthdate,
+          profile:profile
+        }
+      });
     };
     return(
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
