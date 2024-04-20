@@ -10,9 +10,10 @@ import {
   TextInput,
   Button,
 } from "react-native";
-import FriendCard from "../../../components/friends/FriendCard";
+import DesiredFriendCard from "../../../components/calendar/DesiredFriendCard";
 import axios from "axios";
 import Modal from "react-native-modal";
+import { router } from "expo-router";
 
 export default function Friends() {
   const [contacts, setContacts] = useState([
@@ -28,10 +29,25 @@ export default function Friends() {
       name: "Mearz Wong",
       id: "03djccnjfj",
     },
+    {
+      img: "",
+      name: "John Doe",
+      id: "12345",
+    },
+    {
+      img: "",
+      name: "Jane Doe",
+      id: "15556",
+    },
   ]);
 
   const [search, setSearch] = useState("");
   const [filteredContacts, setFilteredContacts] = useState([]);
+  const [selectedFriends, setSelectedFriends] = useState([]);
+
+  const sendInvitesHandler = () => {
+    router.push("./confirmation");
+  };
 
   useEffect(() => {
     setFilteredContacts(
@@ -54,14 +70,24 @@ export default function Friends() {
 
       <ScrollView>
         {filteredContacts.map((contact) => (
-          <FriendCard
+          <DesiredFriendCard
             key={contact.id}
             img={contact.img}
             name={contact.name}
-            onPress={() => console.log(`Friend at index pressed`)}
+            selected={selectedFriends.includes(contact.id)}
+            onPress={() => {
+              if (selectedFriends.includes(contact.id)) {
+                setSelectedFriends(
+                  selectedFriends.filter((id) => id !== contact.id)
+                );
+              } else {
+                setSelectedFriends([...selectedFriends, contact.id]);
+              }
+            }}
           />
         ))}
       </ScrollView>
+      <Button title="Send Invites" onPress={sendInvitesHandler}></Button>
     </SafeAreaView>
   );
 }

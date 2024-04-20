@@ -39,7 +39,7 @@ import { LinearGradient } from "expo-linear-gradient";
 export default function MapView() {
   const { location, setLocation } = useContext(UserLocationContext);
   const [searchText, setSearchText] = useState(""); // State to hold the search text
-  const [searchDetails, setSearchDetails] = useState(null); // State to hold the search details
+  const { searchDetails, setSearchDetails } = useContext(UserLocationContext); // State to hold the search details
   const [searchResults, setSearchResults] = useState(null); // State to hold the search results
   const [nearbyPlaces, setNearbyPlaces] = useState([]); // State to hold the nearby places
   const [searching, setSearching] = useState(false);
@@ -55,7 +55,16 @@ export default function MapView() {
     getNearbyPlaces();
   }, [location]); // Add location as a dependency to useEffect
 
-  const placeType = ["restaurant", "convenience_store"];
+  const placeType = [
+    "restaurant",
+    "convenience_store",
+    "art_gallery",
+    "museum",
+    "cafe",
+    "bakery",
+    "book_store",
+    "department_store",
+  ];
 
   const getSearchPlaces = async (requestData) => {
     if (!requestData.textQuery) {
@@ -116,6 +125,10 @@ export default function MapView() {
 
   const handleSearchChange = (newText) => {
     getSearchPlaces({ textQuery: newText });
+  };
+
+  const createRendezvousHandler = () => {
+    router.push("createRendezvous");
   };
 
   if (searching) {
@@ -216,7 +229,7 @@ export default function MapView() {
           <Text className="font-semibold text-2xl">
             {searchDetails?.displayName.text}
           </Text>
-          <Pressable>
+          <Pressable onPress={createRendezvousHandler}>
             <LinearGradient
               colors={["#2acbf9", "#9aeeb0"]}
               start={{ x: 0, y: 0.5 }}
