@@ -32,7 +32,7 @@ export default function scheduleSync() {
   };
 
   const onEdit = () => {
-    router.replace("./createRendezvous/edit");
+    router.replace("./edit");
   };
 
   return (

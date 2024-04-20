@@ -23,7 +23,7 @@ export default function confirmation() {
   });
 
   const onConfirm = () => {
-    router.replace("/rendezvousInfo");
+    router.replace("./rendezvousInfo");
   };
 
   const onEdit = () => {

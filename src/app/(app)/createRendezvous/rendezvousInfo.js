@@ -7,8 +7,8 @@ export default function confirmation() {
     hostuid: "",
     name: "",
     type: "",
-    starttime: startDate,
-    endtime: endDate,
+    starttime: "",
+    endtime: "",
     status: "Draft",
     InvitedUsers: [
       { img: "", name: "" },
