@@ -10,6 +10,8 @@ import Dropdown from "../../components/componentspung/Dropdown/Dropdown"
 import { getCalendars } from "expo-localization";
 import axios from 'axios';
 import globalApi from "../../services/globalApi";
+import { Use } from "react-native-svg";
+import { se } from "date-fns/locale";
 
 export default function Tab() {
   const [events, setEvents] = useState([]);
@@ -19,8 +21,6 @@ export default function Tab() {
   const [isEnabled, setIsEnabled] = useState(false);
   const [startdate, setStartdate] = useState(new Date());
   const [enddate, setEnddate] = useState(new Date());
-  const [starttime, setStarttime] = useState(new Date());
-  const [endtime, setEndtime] = useState(new Date());
   const [showPicker, setShowPicker] = useState(Platform.OS === 'ios'); // Show picker initially for iOS
   const [selectedTitle, setSelectedTitle] = useState(null)
   const [loading, setLoading] = useState(true);
@@ -29,7 +29,7 @@ export default function Tab() {
   const [searchText, setSearchText] = useState(""); // State to hold the search text
   const [searchDetails, setSearchDetails] = useState(null); // State to hold the search details
   const [searching, setSearching] = useState(true);
- 
+  const [pic,setPic]=useState(null)
 
   const dateday = new Date();
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -51,6 +51,16 @@ if (hour >= 5 && hour < 12) {
 } else {
     timeOfDay = 'Night';
 }
+useEffect(() => {
+  if (searchDetails!=null) {
+    if (searchDetails.photos == undefined){
+      setPic('https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images%2F732A162A-5181-41A1-BDDC-3FACDBC8C706.png?alt=media&token=baa3a32e-2732-4086-ab60-8e3759ef32af')
+    } else  {
+      setPic(`https://places.googleapis.com/v1/${searchDetails.photos[0].name}/media?maxHeightPx=400&maxWidthPx=400&key=AIzaSyAFn7D3VcmDtWXNJXoHyz44MVNMEj1sLZs`)
+    }
+  }
+}, [searchDetails]);
+
 const getSearchPlaces = async (requestData) => {
   if (!requestData.textQuery) {
     setSearchResults([]);
@@ -77,6 +87,7 @@ const handlePlaceSelection = (place) => {
 }
   addEvent = (data) => {
     let eventList = events;
+    let eventnumb = eventnum
     data.map((item) => {
     console.log("item:",item.starttime,item.endtime)
       let starthour = new Date(item.starttime).getHours();
@@ -88,6 +99,7 @@ const handlePlaceSelection = (place) => {
     });
     console.log(eventList)
     setEvents(eventList);
+    setEventnum(eventnumb+data.length)
   }
 
   let type=[{id:1,name:"Work"},{id:2,name:"Life"},{id:3,name:"Quick"}]
@@ -95,6 +107,7 @@ const handlePlaceSelection = (place) => {
   const enddate1 = new Date();
 
   startdate1.setHours(0, 0, 0, 0);
+  console.log("start",startdate1);
   let a = startdate1.toISOString();
   enddate1.setHours(23, 59, 59, 999);
   let b = enddate1.toISOString();
@@ -108,8 +121,13 @@ const handlePlaceSelection = (place) => {
       })
       .then(response => {
         console.log("output",response.data);
+        if (response.data.scheduleList != null) {
         addEvent(response.data.scheduleList)
-        setEventnum(response.data.scheduleList.length)
+        }
+        if (response.data.Rendezvous != null) {
+          addEvent(response.data.Rendezvous)
+        }
+        
       })
       .catch(error => {
         console.error('There was a problem with your Axios request:', error);
@@ -125,7 +143,7 @@ const handlePlaceSelection = (place) => {
   const onChangeTime = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowPicker(Platform.OS === 'ios');
-    setStarttime(currentDate);
+    setStartdate(currentDate);
   };const onChangeDatee = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowPicker(Platform.OS === 'ios');
@@ -133,7 +151,7 @@ const handlePlaceSelection = (place) => {
   };const onChangeTimee = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowPicker(Platform.OS === 'ios');
-    setEndtime(currentDate);
+    setEnddate(currentDate);
   };
   const handlePress = () => {
     router.push("../(sign_up)/edit");
@@ -142,31 +160,31 @@ const handlePlaceSelection = (place) => {
     router.push("../(calendar)/calendar");
   }
   const handlePress3 = () => {
-    console.log(startdate,enddate,starttime,endtime)
     a=startdate.toISOString()
     b=enddate.toISOString()
-    c=starttime.toISOString()
-    d=endtime.toISOString()
-    console.log("starttime",a.slice(0,11)+c.slice(11))
-    console.log("endtime",b.slice(0,11)+d.slice(11))
+    
+    console.log("name",title)
+    console.log("type",selectedTitle.name)
+    console.log("starttime",a)
+    console.log("endtime",b)
     console.log("placename",searchText)
-    console.log("placegoogleplaceid",searchDetails)
-    console.log("placelocation",searchDetails)
-    console.log("placemaplink",searchDetails)
-    console.log("placephotolink",searchDetails)
+    console.log("placegoogleplaceid",searchDetails.id)
+    console.log("placelocation",searchDetails.formattedAddress)
+    console.log("placemaplink",searchDetails.googleMapsUri)
+    console.log("placephotolink",pic)
 
     axios.post('http://where-next.tech/schedules/create-personalschedule', {
-      useruid:"bbb",
+      hostuid:"bbb",
       name:title,
-      type:selectedTitle[name],
-      starttime: a.slice(0,11)+c.slice(11),
-      endtime: b.slice(0,11)+d.slice(11),
+      type:selectedTitle.name,
+      starttime: a,
+      endtime: b,
       status:'Active',
       placename:searchText,
-      placegoogleplaceid:searchDetails,
-      placelocation:searchDetails,
-      placemaplink:searchDetails,
-      placephotolink:searchDetails
+      placegoogleplaceid:searchDetails.id,
+      placelocation:searchDetails.formattedAddress,
+      placemaplink:searchDetails.googleMapsUri,
+      placephotolink:pic
     })
     .then(response => {
       console.log("output",response.data);
@@ -231,7 +249,7 @@ const handlePlaceSelection = (place) => {
           )}{!isEnabled && (
             <View><DateTimePicker
               testID="dateTimePicker"
-              value={starttime}
+              value={startdate}
               mode="time"
               is24Hour={true}
               display="default"
@@ -252,7 +270,7 @@ const handlePlaceSelection = (place) => {
           )}{!isEnabled && (
             <View><DateTimePicker
               testID="dateTimePicker"
-              value={endtime}
+              value={enddate}
               mode="time"
               is24Hour={true}
               display="default"

@@ -34,19 +34,51 @@ export default function Login() {
     useEffect(() => {
       console.log(password,uid,emailPhoneFormat)
       if (password!="" ) {
-        router.replace({pathname:'/OTP',params: {
-          title: title,
-          name: name,
-          surname: surname,
-          mail: emailPhoneFormat,
-          username: username,
-          birthdate:birthdate,
-          profile:profile,
-          phone:phone,
-          countryCode:countryCode,
-          password:password,
-          uid:uid
-        }})
+      //   axios.post('http://where-next.tech/users/check-username', {
+      //     uid:uid,  
+      //     userName: username,
+      //     title: title,
+      //     name: name+' '+surname,
+      //     mail: emailPhoneFormat,
+      //     birthdate:birthdate,
+      //     region:countryCode,
+      //     telNo:phone,
+      //     profilePicture:profile,
+      //     bio:'Change this in settings',
+          
+      // })
+      // .then(response => {
+      //   console.log(response.data);
+      //   router.replace({pathname:'/OTP',params: {
+      //     title: title,
+      //     name: name,
+      //     surname: surname,
+      //     mail: emailPhoneFormat,
+      //     username: username,
+      //     birthdate:birthdate,
+      //     profile:profile,
+      //     phone:phone,
+      //     countryCode:countryCode,
+      //     password:password,
+      //     uid:uid
+      //   }})
+      // })
+      // .catch(error => {
+      //   console.error('There was a problem with your Axios request:', error);
+      // });
+      router.replace({pathname:'/OTP',params: {
+            title: title,
+            name: name,
+            surname: surname,
+            mail: emailPhoneFormat,
+            username: username,
+            birthdate:birthdate,
+            profile:profile,
+            phone:phone,
+            countryCode:countryCode,
+            password:password,
+            uid:uid
+          }})
       }
       
     } ,[emailPhoneFormat]);

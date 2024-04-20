@@ -1,41 +1,53 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Calendar } from 'react-native-big-calendar';
 import { View, Text } from 'react-native';
 import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
 import { router } from 'expo-router';
-const allDayEvents = [
-  {
-    title: 'Meeting',
-    start: new Date(2024, 4, 6, 10, 0),
-    end: new Date(2024, 4, 6, 10, 30),
-  },
-  {
-    title: 'Coffee break',
-    start: new Date(2024, 4, 6, 15, 45),
-    end: new Date(2024, 4, 7, 16, 30),
-  },{
-    title: 'Coffee break',
-    start: new Date(2024, 4, 7, 15, 45),
-    end: new Date(2024, 4, 8, 16, 30),
-  },{
-    title: 'Coffee break',
-    start: new Date(2024, 4, 8, 15, 45),
-    end: new Date(2024, 4, 8, 16, 30),
-  },
-  // Add more all-day events as needed
-];
+import axios from "axios";
+
 
 const MyCalendar = () => {
-  const initialDate = new Date();
-  const initialNextMonth = new Date(initialDate.getFullYear(), initialDate.getMonth() -1, 1);
-  const [currentMonth, setCurrentMonth] = useState(new Date(initialNextMonth));
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [eventList, setEventList] = useState([]);
+  const [loading, setLoading] = useState(false);
   console.log('Current month:',currentMonth.getMonth());
+  addEvent = (data) => {
+    let events = eventList;
+    data.map((item) => {
+    console.log("item:",item.name,item.starttime,item.endtime)
+
+      events.push({title: item.name,
+      start: new Date(item.starttime),
+      end: new Date(item.endtime),});
+    });
+    console.log(eventList)
+    setEventList(eventList);
+  }
+  useEffect(() => {
+    axios.post('http://where-next.tech/schedules/get-allschedule', {
+        useruid:"bbb"
+      })
+      .then(response => {
+        console.log("output",response.data);
+        if (response.data.scheduleList != null) {
+        addEvent(response.data.scheduleList)
+        }
+        if (response.data.Rendezvous != null) {
+          addEvent(response.data.Rendezvous)
+        }
+        setLoading(true);
+      })
+      .catch(error => {
+        console.error('There was a problem with your Axios request:', error);
+      })
+  }
+  ,[])
   const handlePress2 = () => {
     router.push('../(app)/profile')
   };
   const handleSwipeEnd = (direction) => {
     const initialDate2 = new Date(direction);
-    const initialNextMonth2 = new Date(initialDate2.getFullYear(), initialDate2.getMonth() -1, 1);
+    const initialNextMonth2 = new Date(initialDate2.getFullYear(), initialDate2.getMonth(), 1);
     setCurrentMonth(new Date(initialNextMonth2));
     console.log('direction:',direction,direction.getMonth());
   };
@@ -50,13 +62,13 @@ const MyCalendar = () => {
         
       </View>
       <View style={{height:"80%"}}>
-        <Calendar
-          events={allDayEvents}
+        {loading &&<Calendar
+          events={eventList}
           height={300}
           mode='month'
           onSwipeEnd={handleSwipeEnd}
           dayHeaderStyle={{ backgroundColor: 'lightgrey' }}
-        />
+        />}
       </View>
     </View>
   );
