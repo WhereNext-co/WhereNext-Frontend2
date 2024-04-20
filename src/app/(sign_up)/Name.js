@@ -105,6 +105,7 @@ export default function Login({}) {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   // Styles that are unchanged from previous step are hidden for brevity.
 
