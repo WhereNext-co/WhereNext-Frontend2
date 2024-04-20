@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
         width:90,
         marginLeft: 8 
     },
-    transform:{transform: [{rotate: showOption? '180deg':'0deg'}]
+    transform:{transform: [{ rotate: '180deg' }]
     },
     scrollview:{
         backgroundColor:'white',
