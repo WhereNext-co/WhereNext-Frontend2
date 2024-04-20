@@ -74,13 +74,13 @@ export default function GoogleMapHomeView({
         onMapReady={() => setIsMapReady(true)}
       >
         {shouldRenderMarker &&
-          selectedPlace !== null &&
+          selectedPlace &&
           selectedPlace.photos &&
-          selectedPlace.photos[0] &&
-          selectedPlace.photos[0].name && (
+          selectedPlace.photos[0] && (
             <Marker
-              title={selectedPlace.displayName.text}
+              key={selectedPlace.id}
               coordinate={selectedPlace.location}
+              onPress={() => handlePlaceSelection(selectedPlace)}
             >
               <View style={styles.markerContainer}>
                 <Image
@@ -93,15 +93,14 @@ export default function GoogleMapHomeView({
               </View>
             </Marker>
           )}
-        {shouldRenderMarker &&
-          selectedPlace !== null &&
-          !selectedPlace.photos && (
-            <Marker
-              title={selectedPlace.displayName.text}
-              coordinate={selectedPlace.location}
-            />
-          )}
-        {nearbyPlaces !== null &&
+        {shouldRenderMarker && selectedPlace && !selectedPlace.photos && (
+          <Marker
+            key={selectedPlace.id}
+            coordinate={selectedPlace.location}
+            onPress={() => handlePlaceSelection(selectedPlace)}
+          />
+        )}
+        {nearbyPlaces &&
           nearbyPlaces.map(
             (place) =>
               place.photos &&
@@ -109,7 +108,6 @@ export default function GoogleMapHomeView({
               place.photos[0].name && (
                 <Marker
                   key={place.id}
-                  title={place.displayName.text}
                   coordinate={place.location}
                   onPress={() => handlePlaceSelection(place)}
                 >
