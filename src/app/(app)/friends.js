@@ -14,28 +14,43 @@ import FriendCard from "../../components/friends/FriendCard";
 import AddFriendModal from "../../components/friends/AddFriendModal";
 import axios from "axios";
 import Modal from "react-native-modal";
+import firebase from "firebase/auth";
 
 export default function Friends() {
   const [contacts, setContacts] = useState([
     //default friends
     {
-      img: "",
-      name: "Guy Chelsea",
-      id: "0xfjri3995",
+      Name: "Guy Chelsea",
+      Uid: "0xfjri3995",
+      ProfilePicture: "",
     },
 
     {
-      img: "",
-      name: "Mearz Wong",
-      id: "03djccnjfj",
+      Name: "Mearz Wong",
+      Uid: "03djccnjfj",
+      ProfilePicture: "",
     },
   ]);
 
   const [search, setSearch] = useState("");
-  const [filteredContacts, setFilteredContacts] = useState([]);
+  const [filteredContacts, setFilteredContacts] = useState([
+    //default friends
+    {
+      Name: "Guy Chelsea",
+      Uid: "0xfjri3995",
+      ProfilePicture: "",
+    },
+
+    {
+      Name: "Mearz Wong",
+      Uid: "03djccnjfj",
+      ProfilePicture: "",
+    },
+  ]);
   const [modalVisible, setModalVisible] = useState(false);
   // const { user } = useContext(AuthContext);
 
+  /*
   useEffect(() => {
     // friend lists from API
     const user = firebase.auth().currentUser;
@@ -58,6 +73,7 @@ export default function Friends() {
       )
     );
   }, [search, contacts]);
+  */
 
   /*
   useEffect(() => {

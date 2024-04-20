@@ -9,20 +9,20 @@ import {
   ScrollView,
   Image,
   TextInput,
-  Button,
   AccessibilityInfo,
 } from "react-native";
 import AddFriendCard from "./AddFriendCard";
 import Modal from "react-native-modal";
 import { remove, set } from "firebase/database";
+import firebase from "firebase/auth";
 
-export default function AddFriendModal({ handleOpen }) {
+export default function AddFriendModal() {
   const [contacts, setContacts] = useState(
     //default friends
     {
-      img: "",
-      name: "Guy Naga",
-      status: "Friend",
+      ProfilePicture: "",
+      Uid: "123456",
+      Name: "Guy Chelsea",
     }
   );
   const [friendstatus, setFriendStatus] = useState("");
@@ -43,6 +43,7 @@ export default function AddFriendModal({ handleOpen }) {
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
 
+  /*
   const onSearchHandler = () => {
     const user = firebase.auth().currentUser;
     axios
@@ -119,6 +120,27 @@ export default function AddFriendModal({ handleOpen }) {
         console.error("Error:", error);
       });
   };
+*/
+
+  const onSearchHandler = () => {
+    console.log("Search for: ", search);
+  };
+
+  const addFriendHandler = (contacts) => {
+    console.log("Add friend: ", contacts);
+  };
+
+  const cancelFriendRequestHandler = (contacts) => {
+    console.log("Cancel friend request: ", contacts);
+  };
+
+  const removeFriendHandler = (contacts) => {
+    console.log("Remove friend: ", contacts);
+  };
+
+  const AcceptFriendHandler = (contacts) => {
+    console.log("Accept friend: ", contacts);
+  };
 
   const showAddFriendModal = () => {
     setModalVisible(true);
@@ -151,9 +173,9 @@ export default function AddFriendModal({ handleOpen }) {
 
           <ScrollView>
             <AddFriendCard
-              key={contact.Uid}
-              img={contact.ProfilePicture}
-              name={contact.Name}
+              key={contacts.Uid}
+              img={contacts.ProfilePicture}
+              name={contacts.Name}
               onAddPress={addFriendHandler}
               onPendingPress={cancelFriendRequestHandler}
               onRemovePress={removeFriendHandler}
@@ -161,7 +183,7 @@ export default function AddFriendModal({ handleOpen }) {
               status={friendstatus}
             />
           </ScrollView>
-          <Button onSearchPress={onSearchHandler} />
+          <Button title="Search" onSearchPress={onSearchHandler} />
           <Button title="Close" onPress={hideAddFriendModal} />
         </View>
       </Modal>
