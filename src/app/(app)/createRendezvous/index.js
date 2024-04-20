@@ -145,10 +145,11 @@ export default function CreateMeeting() {
           {/* Invite Friend */}
           <InviteFriend onFriendChange={handleFriendChange} />
         </View>
-
-        {/* Schedule Sync Button */}
-        <Button title="Schedule Sync" onPress={handleScheduleSync} />
       </ScrollView>
+      {/* Schedule Sync Button */}
+      <View style={styles.floatingButton}>
+        <Button title="Schedule Sync" onPress={handleScheduleSync} />
+      </View>
     </SafeAreaView>
   );
 }
@@ -181,5 +182,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#000",
+  },
+  floatingButton: {
+    position: "absolute",
+    width: "100%",
+    bottom: 0,
+    padding: 10,
+    backgroundColor: "blue", // Change this color to match your design
   },
 });
