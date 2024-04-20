@@ -9,13 +9,16 @@ import {
   createUserWithEmailAndPassword,
 } from "firebase/auth";
 import { router, useLocalSearchParams} from "expo-router";
+import axios from 'axios';
+import { AuthContext, useAuth } from "../../context/authContext";
 
 
 export default function Login() {
+    const { login, register, isAuthenticated } = useAuth();
     let {name,surname,username,title,mail,birthdate,profile} = useLocalSearchParams();
     const [phone, setPhone] = useState("");
     const [countryCode, setCountryCode] = useState("+66"); // Default country code is +66 (Thailand)
-    const [emailphoneFormat, setEmailPhoneFormat] = useState("");
+    const [emailPhoneFormat, setEmailPhoneFormat] = useState("");
     const [loading, setLoading] = useState(false);
     const [password, setPassword] = useState("");
     const [uid, setUid] = useState("");
@@ -28,11 +31,33 @@ export default function Login() {
     const countryCodeChangeHandler = (countryCode) => {
       setCountryCode(`+${countryCode}`);
     };
-  
+    useEffect(() => {
+      console.log(password,uid,emailPhoneFormat)
+      if (password!="" ) {
+        router.replace({pathname:'/OTP',params: {
+          title: title,
+          name: name,
+          surname: surname,
+          mail: emailPhoneFormat,
+          username: username,
+          birthdate:birthdate,
+          profile:profile,
+          phone:phone,
+          countryCode:countryCode,
+          password:password,
+          uid:uid
+        }})
+      }
+      
+    } ,[emailPhoneFormat]);
     const verifyPhoneHandler = () => {
       //No logic to check for phoneNum yet
       
       alert("OTP Sent!");
+    };
+    const changeEmailPhoneFormat = (a) => {
+      console.log(a)
+      setEmailPhoneFormat(a);
     };
 
     //const dummyOTP = "123456"; Dummy OTP for testing
@@ -47,42 +72,31 @@ export default function Login() {
           dummyOTP
         ); //Use dummy OTP to create account
         alert(`Account created for ${dummyOTP}`); // Debug*/
-      try {
-        console.log(`${countryCode}${phone}`)  
+        setLoading(true);
+        try {
+        console.log(`1${countryCode}${phone}`)  
         axios.post('http://where-next.tech/auth/createFirebaseUser', {
-        telno: `${countryCode}${phone}`,
-      })
+        telNo: `${countryCode}${phone}`
+      } 
+    )
       .then(response => {
         console.log(response.data);
         setUid(response.data.uid)
         setPassword(response.data.password)
-        setEmailPhoneFormat(response.data.email);
+        changeEmailPhoneFormat(response.data.email);
 
         
       })
       .catch(error => {
         console.error('There was a problem with your Axios request:', error);
       });
-        
 
       } catch (error) {
         setVerifyValidPhone(false);
-        alert("Create Account failed");
+        alert("Create Account failed:"+error.message);
       } finally {
         setLoading(false);
-        /*router.replace({pathname:'/OTP',params: {
-          title: title,
-          name: name,
-          surname: surname,
-          mail: emailphoneFormat,
-          username: username,
-          birthdate:birthdate,
-          profile:profile,
-          phone:phone,
-          countryCode:countryCode,
-          password:password,
-          uid:uid
-        }})*/
+        
       }
     };
     const handlePress2 = () => {
