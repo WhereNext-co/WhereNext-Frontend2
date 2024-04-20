@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.capstone.wherenext",
@@ -33,7 +35,9 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      ["expo-router"],
+      [
+        "expo-router"
+      ],
       [
         "expo-location",
         {
@@ -46,7 +50,8 @@
           "photosPermission": "Allow $(PRODUCT_NAME) to access your photos",
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera"
         }
-      ]
+      ],
+      "expo-localization"
     ],
     "extra": {
       "router": {
@@ -57,7 +62,12 @@
       }
     },
     "scheme": "WhereNext-Frontend2-scheme",
-    "platforms": ["ios", "android"],
-    "permissions": ["CAMERA_ROLL"]
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "permissions": [
+      "CAMERA_ROLL"
+    ]
   }
 }
