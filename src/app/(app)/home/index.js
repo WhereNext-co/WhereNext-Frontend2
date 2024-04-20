@@ -10,14 +10,29 @@ import {
 } from "react-native";
 import GoogleMapHomeView from "../../../components/home/googleMapHomeView";
 import { Redirect, Tabs, Stack, router } from "expo-router";
-import { useState, useEffect, useContext } from "react";
+import {
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import globalApi from "../../../services/globalApi";
 import { UserLocationContext } from "../../../context/userLocationContext";
 import colors from "../../../shared/colors";
 import Back from "../../../../assets/home/search/back";
-import SlidingUpPanel from "rn-sliding-up-panel";
+import {
+  BottomSheetModal,
+  BottomSheetView,
+  BottomSheetModalProvider,
+  useBottomSheetModal,
+} from "@gorhom/bottom-sheet";
+import {
+  GestureHandlerRootView,
+  NativeViewGestureHandler,
+} from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { set } from "firebase/database";
 
 export default function Tab() {
   const { location, setLocation } = useContext(UserLocationContext);
@@ -26,6 +41,12 @@ export default function Tab() {
   const [searchResults, setSearchResults] = useState(null); // State to hold the search results
   const [nearbyPlaces, setNearbyPlaces] = useState([]); // State to hold the nearby places
   const [searching, setSearching] = useState(false);
+  const bottomSheetModalRef = useRef(null);
+  const searchRef = useRef();
+  const { dismiss, dismissAll } = useBottomSheetModal();
+
+  // variables
+  const snapPoints = useMemo(() => ["50%", "100%"], []);
 
   useEffect(() => {
     getNearbyPlaces();
@@ -49,6 +70,15 @@ export default function Tab() {
     }
   };
 
+  const handlePlaceSelection = (place) => {
+    setSearchText(place.displayName.text);
+    setSearchDetails(place);
+    setSearching(false);
+    setTimeout(() => {
+      bottomSheetModalRef.current.present();
+    }, 200);
+  };
+
   const getNearbyPlaces = async () => {
     const res = await globalApi.nearByPlace({
       includedTypes: placeType,
@@ -67,8 +97,13 @@ export default function Tab() {
   };
 
   const handleSearchFocus = () => {
+    bottomSheetModalRef.current.dismiss();
+    dismissAll();
     console.log("Search box focused");
     setSearching(true);
+    setTimeout(() => {
+      searchRef.current.focus();
+    }, 200);
   };
 
   const reversehandleSearchFocus = () => {
@@ -92,6 +127,7 @@ export default function Tab() {
             <Back width={30} height={30} name="back" color="black" />
           </TouchableOpacity>
           <TextInput
+            ref={searchRef}
             className="basis-11/12"
             placeholder="Search here"
             placeholderTextColor={colors.gray}
@@ -110,9 +146,7 @@ export default function Tab() {
               <TouchableOpacity
                 style={styles.itemContainer}
                 onPress={() => {
-                  setSearchText(item.displayName.text);
-                  setSearchDetails(item);
-                  setSearching(false);
+                  handlePlaceSelection(item);
                 }}
               >
                 <Text style={styles.item} className="font-bold text-xl">
@@ -157,12 +191,36 @@ export default function Tab() {
       <GoogleMapHomeView
         selectedPlace={searchDetails}
         nearbyPlaces={nearbyPlaces}
+        handlePlaceSelection={handlePlaceSelection}
       />
+
+      <BottomSheetModal
+        name="mymodal"
+        ref={bottomSheetModalRef}
+        snapPoints={snapPoints}
+        enablePanDownToClose={true}
+        enableDismissOnClose={true}
+      >
+        <BottomSheetView style={styles.drawerContentContainer}>
+          <Button title="Dismiss" onPress={dismissAll} />
+          <Text>Awesome 🎉</Text>
+        </BottomSheetView>
+      </BottomSheetModal>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  drawerContainer: {
+    flex: 1,
+    padding: 24,
+    justifyContent: "center",
+    backgroundColor: "grey",
+  },
+  drawerContentContainer: {
+    flex: 1,
+    alignItems: "center",
+  },
   container: {
     flex: 1,
     backgroundColor: "white",
