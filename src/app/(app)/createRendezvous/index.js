@@ -85,21 +85,27 @@ export default function CreateMeeting() {
         {/* Stack Screen */}
         <Stack.Screen options={{ headerShown: false }} />
 
-        {/* Rendezvous Name Input */}
-        <TextInput
-          value={rendezvousName}
-          onChangeText={handleRendezvousName}
-          placeholder="Rendezvous Name"
-        />
+        <View style={styles.textInput}>
+          {/* Rendezvous Name Input */}
+          <TextInput
+            value={rendezvousName}
+            onChangeText={handleRendezvousName}
+            placeholder="Rendezvous Name"
+          />
+        </View>
 
-        {/* Custom Calendar */}
-        <CustomCalendar
-          onEndDateChange={handleEndDateChange}
-          onStartDateChange={handleStartDateChange}
-        />
+        <View style={styles.calendar}>
+          {/* Custom Calendar */}
+          <CustomCalendar
+            onEndDateChange={handleEndDateChange}
+            onStartDateChange={handleStartDateChange}
+          />
+        </View>
 
-        {/* Time Picker */}
-        <TimePicker onDurationChange={handleDurationChange} />
+        <View>
+          {/* Time Picker */}
+          <TimePicker onDurationChange={handleDurationChange} />
+        </View>
 
         {/* Duration */}
         <Text>Duration: {duration}</Text>
@@ -108,8 +114,10 @@ export default function CreateMeeting() {
           {endDate ? endDate.toString() : "NULL"}
         </Text>
 
-        {/* Invite Friend */}
-        <InviteFriend onFriendChange={handleFriendChange} />
+        <View style={styles.inviteFriend}>
+          {/* Invite Friend */}
+          <InviteFriend onFriendChange={handleFriendChange} />
+        </View>
 
         {/* Schedule Sync Button */}
         <Button title="Schedule Sync" onPress={handleScheduleSync} />
@@ -117,3 +125,34 @@ export default function CreateMeeting() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  calendar: {
+    margin: 10,
+    padding: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#000",
+  },
+  textInput: {
+    height: 40,
+    borderColor: "#000",
+    borderWidth: 1,
+    borderRadius: 10,
+    margin: 10,
+    padding: 10,
+  },
+  inviteFriend: {
+    margin: 10,
+    padding: 20,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#000",
+  },
+});
