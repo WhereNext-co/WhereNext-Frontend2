@@ -5,8 +5,10 @@ import {
   TouchableOpacity,
   TextInput,
   FlatList,
-  Button,
+  Pressable,
   Text,
+  Image,
+  ScrollView,
 } from "react-native";
 import GoogleMapHomeView from "../../../components/home/googleMapHomeView";
 import { Redirect, Tabs, Stack, router } from "expo-router";
@@ -32,9 +34,9 @@ import {
   GestureHandlerRootView,
   NativeViewGestureHandler,
 } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 
-export default function Tab() {
+export default function MapView() {
   const { location, setLocation } = useContext(UserLocationContext);
   const [searchText, setSearchText] = useState(""); // State to hold the search text
   const [searchDetails, setSearchDetails] = useState(null); // State to hold the search details
@@ -44,15 +46,16 @@ export default function Tab() {
   const bottomSheetModalRef = useRef(null);
   const searchRef = useRef();
   const { dismiss, dismissAll } = useBottomSheetModal();
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   // variables
-  const snapPoints = useMemo(() => ["50%", "100%"], []);
+  // const snapPoints = useMemo(() => ["40%", "100%"], []);
 
   useEffect(() => {
     getNearbyPlaces();
-  }, []); // Add location as a dependency to useEffect
+  }, [location]); // Add location as a dependency to useEffect
 
-  const placeType = ["restaurant", "liquor_store", "convenience_store"];
+  const placeType = ["restaurant", "convenience_store"];
 
   const getSearchPlaces = async (requestData) => {
     if (!requestData.textQuery) {
@@ -197,13 +200,50 @@ export default function Tab() {
       <BottomSheetModal
         name="mymodal"
         ref={bottomSheetModalRef}
-        snapPoints={snapPoints}
         enablePanDownToClose={true}
         enableDismissOnClose={true}
+        snapPoints={["40%", "100%"]}
+        onChange={(index) => setIsSheetOpen(index === 1)}
+        handleIndicatorStyle={isSheetOpen ? styles.handleHidden : styles.handle}
       >
-        <BottomSheetView style={styles.drawerContentContainer}>
-          <Button title="Dismiss" onPress={dismissAll} />
-          <Text>Awesome 🎉</Text>
+        <BottomSheetView
+          style={
+            isSheetOpen
+              ? styles.drawerContainerWhenSheetOpen
+              : styles.drawerContainer
+          }
+        >
+          <Text className="font-semibold text-2xl">
+            {searchDetails?.displayName.text}
+          </Text>
+          <Pressable>
+            <LinearGradient
+              colors={["#2acbf9", "#9aeeb0"]}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+              style={styles.button}
+            >
+              <Text style={styles.buttonText}>Create Rendezvous</Text>
+            </LinearGradient>
+          </Pressable>
+          {searchDetails && searchDetails.photos && (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {searchDetails.photos.map((photo) => (
+                <Image
+                  key={photo.name}
+                  source={{
+                    uri: `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=400&maxWidthPx=400&key=AIzaSyAFn7D3VcmDtWXNJXoHyz44MVNMEj1sLZs`,
+                  }}
+                  style={{
+                    width: 200,
+                    height: 200,
+                    marginRight: 10,
+                    borderRadius: 16,
+                  }}
+                />
+              ))}
+            </ScrollView>
+          )}
         </BottomSheetView>
       </BottomSheetModal>
     </View>
@@ -211,15 +251,26 @@ export default function Tab() {
 }
 
 const styles = StyleSheet.create({
+  handle: {
+    width: 50,
+    borderRadius: 5,
+    alignSelf: "center",
+    marginTop: 10,
+    backgroundColor: colors.gray,
+  },
+  handleHidden: {
+    width: 0,
+    height: 0,
+  },
   drawerContainer: {
     flex: 1,
-    padding: 24,
-    justifyContent: "center",
-    backgroundColor: "grey",
+    paddingLeft: 24,
+    paddingTop: 12,
   },
-  drawerContentContainer: {
+  drawerContainerWhenSheetOpen: {
     flex: 1,
-    alignItems: "center",
+    paddingLeft: 24,
+    paddingTop: 60,
   },
   container: {
     flex: 1,
@@ -273,5 +324,28 @@ const styles = StyleSheet.create({
   },
   closed: {
     color: "red",
+  },
+
+  button: {
+    borderRadius: 25,
+    paddingVertical: 10,
+    marginVertical: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#fff",
+    // textTransform: "uppercase",
+    textShadowColor: "rgba(0, 0, 0, 0.4)",
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 3,
   },
 });

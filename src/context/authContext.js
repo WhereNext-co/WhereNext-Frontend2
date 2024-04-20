@@ -35,6 +35,10 @@ export const AuthContextProvider = ({ children }) => {
       );
       setUser(userCredential?.user);
       setIsAuthenticated(true);
+
+      // Get the Firebase ID token
+      const token = await userCredential.user.getIdToken();
+      console.log("Firebase ID token:", token);
     } catch (error) {
       console.error("Sign-in error:", error);
     }
