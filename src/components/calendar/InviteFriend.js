@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -10,20 +10,19 @@ import {
   TextInput,
   Button,
 } from "react-native";
-import FriendCard from "../../components/friends/FriendCard";
-import AddFriendModal from "../../components/friends/AddFriendModal";
+import FriendCard from "./InviteFriendCard";
 import axios from "axios";
 import Modal from "react-native-modal";
 
-export default function Friends() {
+export default function Friends({ onFriendChange }) {
+  // State variables
   const [contacts, setContacts] = useState([
-    //default friends
+    // Default friends
     {
       img: "",
       name: "Guy Chelsea",
       id: "0xfjri3995",
     },
-
     {
       img: "",
       name: "Mearz Wong",
@@ -33,23 +32,25 @@ export default function Friends() {
 
   const [search, setSearch] = useState("");
   const [filteredContacts, setFilteredContacts] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
-  // const { user } = useContext(AuthContext);
+  const [selectedFriends, setSelectedFriends] = useState([]);
 
-  useEffect(() => {
-    // friend lists from API
-    const user = firebase.auth().currentUser;
-    if (user) {
-      const uid = user.uid;
-      axios
-        .get(`http://where-next.tech/users/friends`, { uid: uid })
-        .then((response) => {
-          setContacts(response.data.friendList);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
+  // Event handler for selecting/deselecting friends
+  const handlePress = (friend) => {
+    if (selectedFriends.includes(friend.id)) {
+      setSelectedFriends(selectedFriends.filter((id) => id !== friend.id));
+    } else {
+      setSelectedFriends([...selectedFriends, friend.id]);
     }
+    console.log(`From child component: ${selectedFriends}`);
+  };
+
+  //On invite button press
+  const onInvite = () => {
+    onFriendChange(selectedFriends);
+  };
+
+  // Filter contacts based on search input
+  useEffect(() => {
     setFilteredContacts(
       contacts.filter(
         (contact) =>
@@ -59,21 +60,10 @@ export default function Friends() {
     );
   }, [search, contacts]);
 
-  /*
-  useEffect(() => {
-    axios.get('API_URL/contacts')
-      .then(response => {
-        setContacts(response.data);
-        setFilteredContacts(response.data);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  }, []);
-  */
-
+  // Render the component
   return (
     <SafeAreaView>
+      {/* Search input */}
       <TextInput
         value={search}
         onChangeText={setSearch}
@@ -81,22 +71,26 @@ export default function Friends() {
         style={styles.searchInput}
       />
 
-      <AddFriendModal />
-
+      {/* List of friends */}
       <ScrollView>
         {filteredContacts.map((contact) => (
           <FriendCard
-            key={contact.Uid}
-            img={contact.ProfilePicture}
-            name={contact.Name}
-            onPress={() => console.log(`Friend at index pressed`)}
+            key={contact.id}
+            img={contact.img}
+            name={contact.name}
+            onPress={() => handlePress(contact)}
+            isSelected={selectedFriends.includes(contact.id)}
           />
         ))}
       </ScrollView>
+
+      {/* Invite button */}
+      <Button title="Invite" onPress={onInvite} />
     </SafeAreaView>
   );
 }
 
+// Styles
 const styles = StyleSheet.create({
   searchInput: {
     height: 40,

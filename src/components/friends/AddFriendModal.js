@@ -9,12 +9,14 @@ import {
   ScrollView,
   Image,
   TextInput,
+  Button,
   AccessibilityInfo,
 } from "react-native";
 import AddFriendCard from "./AddFriendCard";
+import Modal from "react-native-modal";
 import { remove, set } from "firebase/database";
 
-export default function AddFriendModal() {
+export default function AddFriendModal({ handleOpen }) {
   const [contacts, setContacts] = useState(
     //default friends
     {
@@ -38,7 +40,9 @@ export default function AddFriendModal() {
   */
 
   const [search, setSearch] = useState("");
-  // const [filteredContacts, setFilteredContacts] = useState([]);
+  const [filteredContacts, setFilteredContacts] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+
   const onSearchHandler = () => {
     const user = firebase.auth().currentUser;
     axios
@@ -115,7 +119,17 @@ export default function AddFriendModal() {
         console.error("Error:", error);
       });
   };
+
+  const showAddFriendModal = () => {
+    setModalVisible(true);
+  };
+
+  const hideAddFriendModal = () => {
+    setModalVisible(false);
+  };
+
   // useEffect(() => {
+  //   // Assuming contacts is the array of contacts you want to search through
   //   setFilteredContacts(
   //     contacts.filter((contact) =>
   //       contact.name.toLowerCase().includes(search.toLowerCase())
@@ -124,27 +138,33 @@ export default function AddFriendModal() {
   // }, [search, contacts]);
 
   return (
-    <SafeAreaView style={styles.modalContainer}>
-      <View style={styles.modalContent}>
-        <TextInput
-          value={search}
-          onChangeText={setSearch}
-          placeholder="Search"
-          style={styles.searchInput}
-        />
-        <AddFriendCard
-          key={contact.Uid}
-          img={contact.ProfilePicture}
-          name={contact.Name}
-          onAddPress={addFriendHandler}
-          onPendingPress={cancelFriendRequestHandler}
-          onRemovePress={removeFriendHandler}
-          onAcceptPress={AcceptFriendHandler}
-          status={friendstatus}
-        />
-        <Button onSearchPress={onSearchHandler}></Button>
-      </View>
-    </SafeAreaView>
+    <View>
+      <Button title="Open Add Friend Modal" onPress={showAddFriendModal} />
+      <Modal isVisible={modalVisible} onBackdropPress={hideAddFriendModal}>
+        <View style={styles.modalContent}>
+          <TextInput
+            value={search}
+            onChangeText={setSearch}
+            placeholder="Search"
+            style={styles.searchInput}
+          />
+
+          <ScrollView>
+            <AddFriendCard
+              key={contact.Uid}
+              img={contact.ProfilePicture}
+              name={contact.Name}
+              onAddPress={addFriendHandler}
+              onPendingPress={cancelFriendRequestHandler}
+              onRemovePress={removeFriendHandler}
+              onAcceptPress={AcceptFriendHandler}
+              status={friendstatus}
+            />
+          </ScrollView>
+          <Button title="Close" onPress={hideAddFriendModal} />
+        </View>
+      </Modal>
+    </View>
   );
 }
 
@@ -157,14 +177,11 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.5)", // semi-transparent background
   },
   modalContent: {
-    backgroundColor: "white",
     padding: 20,
+    backgroundColor: "white",
     borderRadius: 10, // rounded corners
-    width: "80%", // take up 80% of the screen width
   },
 });
