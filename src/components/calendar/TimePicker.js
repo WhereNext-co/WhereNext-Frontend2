@@ -2,11 +2,16 @@ import React, { useState } from "react";
 import { Button, View, TextInput, StyleSheet, Text } from "react-native";
 import Modal from "react-native-modal";
 
-export default function TimePicker({ onDurationChange }) {
+export default function TimePicker({
+  onDurationChange,
+  onDayChange,
+  onHourChange,
+  onMinuteChange,
+}) {
   const [isPickerVisible, setPickerVisible] = useState(false);
-  const [selectedDays, setSelectedDays] = useState("");
-  const [selectedHours, setSelectedHours] = useState("");
-  const [selectedMinutes, setSelectedMinutes] = useState("");
+  const [selectedDays, setSelectedDays] = useState(0);
+  const [selectedHours, setSelectedHours] = useState(0);
+  const [selectedMinutes, setSelectedMinutes] = useState(0);
 
   const showPicker = () => {
     setPickerVisible(true);
@@ -17,6 +22,9 @@ export default function TimePicker({ onDurationChange }) {
   };
 
   const handleConfirm = () => {
+    onDayChange(selectedDays);
+    onHourChange(selectedHours);
+    onMinuteChange(selectedMinutes);
     const daysInMinutes = parseInt(selectedDays) * 24 * 60;
     const hoursInMinutes = parseInt(selectedHours) * 60;
     const minutes = parseInt(selectedMinutes);
@@ -27,7 +35,13 @@ export default function TimePicker({ onDurationChange }) {
 
   return (
     <View>
-      <Button title="Choose Time" onPress={showPicker} />
+      <View style={styles.durationContainer}>
+        <Text style={styles.pickDurationTitle}>Pick Duration</Text>
+        <Button
+          title={`${selectedDays}d ${selectedHours}h ${selectedMinutes}m`}
+          onPress={showPicker}
+        />
+      </View>
       <Modal isVisible={isPickerVisible}>
         <View style={styles.container}>
           <Text>Enter time:</Text>
@@ -35,6 +49,7 @@ export default function TimePicker({ onDurationChange }) {
             style={styles.input}
             onChangeText={setSelectedDays}
             value={selectedDays}
+            placeholderTextColor="#7d7d7c"
             placeholder="Days"
             keyboardType="numeric"
           />
@@ -42,6 +57,7 @@ export default function TimePicker({ onDurationChange }) {
             style={styles.input}
             onChangeText={setSelectedHours}
             value={selectedHours}
+            placeholderTextColor="#7d7d7c"
             placeholder="Hours"
             keyboardType="numeric"
           />
@@ -49,6 +65,7 @@ export default function TimePicker({ onDurationChange }) {
             style={styles.input}
             onChangeText={setSelectedMinutes}
             value={selectedMinutes}
+            placeholderTextColor="#7d7d7c"
             placeholder="Minutes"
             keyboardType="numeric"
           />
@@ -64,6 +81,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     padding: 20,
+    borderRadius: 10,
   },
   input: {
     height: 40,
@@ -72,5 +90,20 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     paddingLeft: 10,
+    borderRadius: 10,
+    color: "#000",
+  },
+  durationContainer: {
+    margin: 10,
+    padding: 20,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#000",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  pickDurationTitle: {
+    fontSize: 20,
   },
 });
