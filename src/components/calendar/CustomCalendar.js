@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { View, Text } from "react-native";
 import TimePicker from "./TimePicker";
 import CalendarPicker from "react-native-calendar-picker";
+import { AntDesign } from "@expo/vector-icons";
 
 export default function CustomCalendar({ onStartDateChange, onEndDateChange }) {
   const [selectedStartDate, setSelectedStartDate] = useState(null);
@@ -29,6 +30,11 @@ export default function CustomCalendar({ onStartDateChange, onEndDateChange }) {
         selectedDayColor="#7300e6"
         selectedDayTextColor="#FFFFFF"
         minDate={new Date()}
+        previousComponent={<AntDesign name="left" size={24} color="black" />}
+        nextComponent={<AntDesign name="right" size={24} color="black" />}
+        dayLabelsWrapper={{ borderTopWidth: 0, borderBottomWidth: 0 }}
+        todayBackgroundColor="#2ACBF9" // Change this to the color you want
+        todayTextStyle={{ color: "#FFFFFF" }} // Change this to the color you want
       />
     </View>
   );

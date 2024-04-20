@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  ScrollView,
+} from "react-native";
 import CustomCalendar from "../../../components/calendar/CustomCalendar";
 import TimePicker from "../../../components/calendar/TimePicker";
 import InviteFriend from "../../../components/calendar/InviteFriend";
@@ -13,6 +20,9 @@ export default function CreateMeeting() {
   const [endDate, setEndDate] = useState(null);
   const [rendezvousName, setRendezvousName] = useState("");
   const [duration, setDuration] = useState(0);
+  const [day, setDay] = useState(0);
+  const [hour, setHour] = useState(0);
+  const [minute, setMinute] = useState(0);
   const [friendUIDs, setFriendUIDs] = useState([]);
 
   // Event handlers
@@ -30,6 +40,18 @@ export default function CreateMeeting() {
 
   const handleDurationChange = (duration) => {
     setDuration(duration);
+  };
+
+  const handleDayChange = (day) => {
+    setDay(day);
+  };
+
+  const handleHourChange = (hour) => {
+    setHour(hour);
+  };
+
+  const handleMinuteChange = (minute) => {
+    setMinute(minute);
   };
 
   const handleFriendChange = (friendUIDList) => {
@@ -81,7 +103,7 @@ export default function CreateMeeting() {
 
   return (
     <SafeAreaView>
-      <View>
+      <ScrollView>
         {/* Stack Screen */}
         <Stack.Screen options={{ headerShown: false }} />
 
@@ -104,7 +126,12 @@ export default function CreateMeeting() {
 
         <View>
           {/* Time Picker */}
-          <TimePicker onDurationChange={handleDurationChange} />
+          <TimePicker
+            onDurationChange={handleDurationChange}
+            onDayChange={handleDayChange}
+            onHourChange={handleHourChange}
+            onMinuteChange={handleMinuteChange}
+          />
         </View>
 
         {/* Duration */}
@@ -121,7 +148,7 @@ export default function CreateMeeting() {
 
         {/* Schedule Sync Button */}
         <Button title="Schedule Sync" onPress={handleScheduleSync} />
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -135,7 +162,7 @@ const styles = StyleSheet.create({
   },
   calendar: {
     margin: 10,
-    padding: 10,
+    padding: 20,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#000",
