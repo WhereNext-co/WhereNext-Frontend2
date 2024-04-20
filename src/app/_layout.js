@@ -22,7 +22,7 @@ function AppLayout() {
       router.replace("home");
     } else if (isAuthenticated == false) {
       //To signIn
-      router.replace("sign-in");
+      router.replace("Introduce");
     }
   }, [isAuthenticated]);
 
