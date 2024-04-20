@@ -1,21 +1,52 @@
 import React, { useEffect, useState } from 'react';
-import { View, Button, StyleSheet, Text, Alert, Image } from 'react-native';
+import { View, Button, StyleSheet, Text, Alert, Image, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { StatusBar } from 'expo-status-bar';
 import { listFiles, uploadToFirebase, fbStorage } from '../../../firebaseConfig';
 import Buttonpung from '../../components/componentspung/Button/Button/Button';
 import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
+import { router, useLocalSearchParams} from "expo-router";
 
 export default function GalleryPicker() {
+  let {name,surname,username,title,mail,birthdate,profile} = useLocalSearchParams();
   const [permission, requestPermission] = ImagePicker.useCameraPermissions();
   const [files, setFiles] = useState([]);
-  const [link,setLink]=useState('https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images%2F732A162A-5181-41A1-BDDC-3FACDBC8C706.png?alt=media&token=baa3a32e-2732-4086-ab60-8e3759ef32af');
-  const handlePress = () => {
-    router.push({pathname:'/Phone',params:{name:nameInputValue,surname:surnameInputValue,username:''}})
+  const [link,setLink]=useState(profile ? profile : 'https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images%2F732A162A-5181-41A1-BDDC-3FACDBC8C706.png?alt=media&token=baa3a32e-2732-4086-ab60-8e3759ef32af');
+
+  const handleButtonPress = () => {
+    Alert.alert(
+      'Choose an option',
+      '',
+      [
+        {
+          text: 'Take a Picture',
+          onPress: () => takePhoto(),
+        },
+        {
+          text: 'Choose from Gallery',
+          onPress: () => takePhoto2({ mediaType: 'photo' }),
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+   const handlePress = () => {
+    router.push({
+      pathname: '/Location',
+      params: {
+        title: title,
+        name: name,
+        surname: surname,
+        mail: mail,
+        username: username,
+        birthdate:birthdate,
+        profile:link
+      }
+    });
   };
   const handlePress2 = () => {
-    router.push('/UsernameBD')
+    router.push({pathname:'/UsernameBD',params:{title:title,name:name,surname:surname,mail:mail,username:username,birthdate:birthdate}})
   };
+  console.log(birthdate)
   useEffect(() => {
     listFiles().then((listResp) => {
       const files = listResp.map((value) => {
@@ -86,14 +117,13 @@ export default function GalleryPicker() {
     return (
       <View style={styles.container}>
         <Text>Permission Not Granted - {permission?.status}</Text>
-        <StatusBar style="auto" />
         <Button title="Request Permission" onPress={requestPermission} />
       </View>
     );
   }
 
   return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#14072b' }}>
         <View style={{ position: 'absolute', top: 20, left: 20 }}>
         <Backbutton style={{}} onPress={handlePress2}/>
         </View>
@@ -102,18 +132,23 @@ export default function GalleryPicker() {
           textAlignVertical:"bottom",
           fontSize:30,
           padding:20, 
-          color:'white'}}>Working With Firebase and Image Picker {'\n'} your full name.</Text>
+          color:'white'}}>Now let's see your {'\n'} beautiful face.</Text>
      
         </View>
-        
-        <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center',backgroundColor: 'black',marginBottom: 20}}>
-        {/*<MyFilesList files={files} />*/}
-        <StatusBar style="auto" />
+  {/*<MyFilesList files={files} />*/}
+  <View style={styles.imageContainer}>
         <Image source={{ uri: link }} style={styles.image} />
-        <Button title="Take picture" onPress={() => takePhoto({})} />
-        <Button title="Pick from gallery" onPress={() => takePhoto2({ mediaType: 'photo' })} />
-        
+        <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} onPress={handleButtonPress} />
         </View>
+      </View>
+       {/* <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: 'black', marginBottom: 20 }}>
+  <View style={{ position: 'relative' }}>
+    <Image source={{ uri: link }} style={styles.image} />
+    <Button title="Take picture" onPress={() => takePhoto({})} style={styles.button} />
+    <Button title="Pick from gallery" onPress={() => takePhoto2({ mediaType: 'photo' })} style={styles.button} />
+  </View>
+  </View>*/}
         
         <Buttonpung label={"Next"} onPress={handlePress} style={{}}></Buttonpung>
         
@@ -131,10 +166,30 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'black',
+  },
+  imageContainer: {
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
   },
   image: {
     width: 200,
     height: 200,
-    resizeMode: 'contain',
+    borderRadius: 100, // Half of the width and height to make it a circle
+  },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+    flexDirection: 'column',
+  },
+  button: {
+    width: 40,
+    height: 40,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    marginBottom: 10,
+    borderRadius: 20, // Half of the width to make it a circle
   },
 });
