@@ -34,7 +34,7 @@ import {
 } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function Tab() {
+export default function MapView() {
   const { location, setLocation } = useContext(UserLocationContext);
   const [searchText, setSearchText] = useState(""); // State to hold the search text
   const [searchDetails, setSearchDetails] = useState(null); // State to hold the search details
