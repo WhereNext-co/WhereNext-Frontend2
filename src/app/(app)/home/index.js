@@ -27,6 +27,7 @@ import Back from "../../../../assets/home/search/back";
 import {
   BottomSheetModal,
   BottomSheetView,
+  BottomSheetScrollView,
   BottomSheetModalProvider,
   useBottomSheetModal,
 } from "@gorhom/bottom-sheet";
@@ -47,6 +48,7 @@ export default function MapView() {
   const searchRef = useRef();
   const { dismiss, dismissAll } = useBottomSheetModal();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const today = new Date().getDay();
 
   // variables
   // const snapPoints = useMemo(() => ["40%", "100%"], []);
@@ -100,7 +102,6 @@ export default function MapView() {
   };
 
   const handleSearchFocus = () => {
-    bottomSheetModalRef.current.dismiss();
     dismissAll();
     console.log("Search box focused");
     setSearching(true);
@@ -196,56 +197,130 @@ export default function MapView() {
         nearbyPlaces={nearbyPlaces}
         handlePlaceSelection={handlePlaceSelection}
       />
-
-      <BottomSheetModal
-        name="mymodal"
-        ref={bottomSheetModalRef}
-        enablePanDownToClose={true}
-        enableDismissOnClose={true}
-        snapPoints={["40%", "100%"]}
-        onChange={(index) => setIsSheetOpen(index === 1)}
-        handleIndicatorStyle={isSheetOpen ? styles.handleHidden : styles.handle}
-      >
-        <BottomSheetView
-          style={
-            isSheetOpen
-              ? styles.drawerContainerWhenSheetOpen
-              : styles.drawerContainer
+      {searchDetails && (
+        <BottomSheetModal
+          name="mymodal"
+          ref={bottomSheetModalRef}
+          enablePanDownToClose={true}
+          enableDismissOnClose={true}
+          snapPoints={["40%", "100%"]}
+          onChange={(index) => setIsSheetOpen(index === 1)}
+          handleIndicatorStyle={
+            isSheetOpen ? styles.handleHidden : styles.handle
           }
         >
-          <Text className="font-semibold text-2xl">
-            {searchDetails?.displayName.text}
-          </Text>
-          <Pressable>
-            <LinearGradient
-              colors={["#2acbf9", "#9aeeb0"]}
-              start={{ x: 0, y: 0.5 }}
-              end={{ x: 1, y: 0.5 }}
-              style={styles.button}
-            >
-              <Text style={styles.buttonText}>Create Rendezvous</Text>
-            </LinearGradient>
-          </Pressable>
-          {searchDetails && searchDetails.photos && (
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {searchDetails.photos.map((photo) => (
-                <Image
-                  key={photo.name}
-                  source={{
-                    uri: `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=400&maxWidthPx=400&key=AIzaSyAFn7D3VcmDtWXNJXoHyz44MVNMEj1sLZs`,
-                  }}
-                  style={{
-                    width: 200,
-                    height: 200,
-                    marginRight: 10,
-                    borderRadius: 16,
-                  }}
-                />
+          <BottomSheetScrollView
+            style={
+              isSheetOpen
+                ? styles.drawerContainerWhenSheetOpen
+                : styles.drawerContainer
+            }
+          >
+            <Text className="font-medium text-2xl">
+              {searchDetails?.displayName.text}
+            </Text>
+            <Pressable>
+              <LinearGradient
+                colors={["#2acbf9", "#9aeeb0"]}
+                start={{ x: 0, y: 0.5 }}
+                end={{ x: 1, y: 0.5 }}
+                style={styles.button}
+              >
+                <Text style={styles.buttonText}>Create Rendezvous</Text>
+              </LinearGradient>
+            </Pressable>
+            {searchDetails && searchDetails.photos && (
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {searchDetails.photos.map((photo) => (
+                  <Image
+                    key={photo.name}
+                    source={{
+                      uri: `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=400&maxWidthPx=400&key=AIzaSyAFn7D3VcmDtWXNJXoHyz44MVNMEj1sLZs`,
+                    }}
+                    style={{
+                      width: 200,
+                      height: 200,
+                      marginRight: 10,
+                      borderRadius: 16,
+                    }}
+                  />
+                ))}
+              </ScrollView>
+            )}
+
+            <Text>{searchDetails.shortFormattedAddress}</Text>
+            {searchDetails.rating ? (
+              <Text>{`Rating: ${searchDetails.rating} (${searchDetails.userRatingCount})`}</Text>
+            ) : (
+              <Text>No reviews</Text>
+            )}
+            {searchDetails.primaryTypeDisplayName && (
+              <Text>{searchDetails.primaryTypeDisplayName.text}</Text>
+            )}
+            {searchDetails.regularOpeningHours &&
+              searchDetails.regularOpeningHours.periods
+                .filter((p) => {
+                  return p.open.day === today;
+                })
+                .map((p) => (
+                  <>
+                    <Text>{`${String(p.open.hour).padStart(2, "0")}:${String(
+                      p.open.minute
+                    ).padStart(2, "0")} - ${String(p.close.hour).padStart(
+                      2,
+                      "0"
+                    )}:${String(p.close.minute).padStart(2, "0")}`}</Text>
+                  </>
+                ))}
+            {searchDetails.regularOpeningHours &&
+              searchDetails.regularOpeningHours.weekdayDescriptions.map((p) => (
+                <View>
+                  <Text>{p}</Text>
+                </View>
               ))}
-            </ScrollView>
-          )}
-        </BottomSheetView>
-      </BottomSheetModal>
+            {searchDetails.reservable && (
+              <Text>{`Reservation: ${
+                searchDetails.reservable ? "Available" : "Unavailable"
+              }`}</Text>
+            )}
+            {searchDetails.parkingOptions && (
+              <Text>{`Parking: ${
+                searchDetails.parkingOptions.freeParkingLot
+                  ? "Available for Free"
+                  : "Paid"
+              }`}</Text>
+            )}
+
+            {searchDetails.reviews &&
+              searchDetails.reviews.map((review) => (
+                <View>
+                  <Image
+                    key={review.name}
+                    source={{
+                      uri: review.authorAttribution.photoUri,
+                    }}
+                    style={{
+                      width: 40,
+                      height: 40,
+                      marginRight: 10,
+                      borderRadius: 16,
+                    }}
+                  />
+                  <Text>{review.authorAttribution.displayName}</Text>
+                  <Text>{review.relativePublishTimeDescription}</Text>
+                  <Text>{`Rating: ${review.rating}`}</Text>
+                  <Text>{`"${review.text.text}"`}</Text>
+                  <Text>{review.authorAttribution.photoUri}</Text>
+                </View>
+              ))}
+            {searchDetails.goodForGroups && (
+              <Text>{`Group: ${
+                searchDetails.goodForGroups ? "Recommended" : "Not Recommended"
+              }`}</Text>
+            )}
+          </BottomSheetScrollView>
+        </BottomSheetModal>
+      )}
     </View>
   );
 }
