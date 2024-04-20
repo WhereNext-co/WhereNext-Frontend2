@@ -32,7 +32,7 @@ const AddFriendCard = ({
       <View /*The part where name is displayed*/ style={styles.cardBody}>
         <Text style={styles.cardTitle}>{name}</Text>
       </View>
-      {status === "NotFriend" ? (
+      {status === "not friends" ? (
         <TouchableOpacity onPress={onAddPress}>
           <View style={styles.cardAction}>
             <FontAwesome6 //Add
@@ -42,7 +42,7 @@ const AddFriendCard = ({
             />
           </View>
         </TouchableOpacity>
-      ) : status === "PendingInvite" ? (
+      ) : status === "friend request already sent" ? (
         <TouchableOpacity onPress={onPendingPress}>
           <View style={styles.cardAction}>
             <MaterialIcons //Pending Invite
@@ -52,7 +52,7 @@ const AddFriendCard = ({
             />
           </View>
         </TouchableOpacity>
-      ) : status === "Friend" ? (
+      ) : status === "already friends" ? (
         <TouchableOpacity onPress={onRemovePress}>
           <View style={styles.cardAction}>
             <MaterialIcons //Remove
@@ -62,7 +62,7 @@ const AddFriendCard = ({
             />
           </View>
         </TouchableOpacity>
-      ) : status === "PendingReceive" ? (
+      ) : status === "friend request received" ? (
         <TouchableOpacity onPress={onAcceptPress}>
           <View style={styles.cardAction}>
             <AntDesign //Pending Receive
