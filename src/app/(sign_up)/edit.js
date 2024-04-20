@@ -1,11 +1,13 @@
 import { View, Text, TextInput,  StyleSheet,Pressable,Image, TouchableOpacity,Alert} from "react-native";
-import React,{useState}  from "react";
+import React,{useEffect, useState}  from "react";
 import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
 import { router, useLocalSearchParams} from "expo-router";
 import Button from '../../components/componentspung/Button/Button/Button';
 import { listFiles, uploadToFirebase, fbStorage } from '../../../firebaseConfig';
 import * as ImagePicker from 'expo-image-picker';
-
+import axios from 'axios';
+import { set } from "date-fns";
+import { se } from "date-fns/locale";
 
 export default function Login({}) {
   const [link,setLink]=useState('https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images%2F732A162A-5181-41A1-BDDC-3FACDBC8C706.png?alt=media&token=baa3a32e-2732-4086-ab60-8e3759ef32af');
@@ -14,9 +16,76 @@ export default function Login({}) {
   const [dInputValue, setDInputValue] = useState('');
   const [mInputValue, setMInputValue] = useState('');
   const [yInputValue, setYInputValue] = useState('');
+  const [birthdate, setBirthdate] = useState('');
   const [bioInputValue, setBioInputValue] = useState('');
+  const [email, setEmail] = useState('');
+  const [title,setTitle]=useState('');
+  const [region,setRegion]=useState('');
+  const [telNo,setTelNo]=useState('');
+  handleChangeBirthdate = (text) => {
+    setDInputValue(text.split('-')[2].split('T')[0])
+    setMInputValue(text.split('-')[1])
+    setYInputValue(text.split('-')[0])
+    setBirthdate(text.slice(10))
+    console.log(text.slice(10))
+  }
+
+  useEffect(() => {
+    axios.post('http://where-next.tech/users/get-profile', {
+        uid: "aaa",
+      })
+      .then(response => {
+        console.log("all",response.data);
+        console.log("Name",response.data.Name);
+        setNameInputValue(response.data.user.Name)
+        setSurnameInputValue(response.data.user.UserName)
+        handleChangeBirthdate(response.data.user.Birthdate)
+        setBioInputValue(response.data.user.Bio)
+        setLink(response.data.user.ProfilePicture)
+        setEmail(response.data.user.Email)
+        setTitle(response.data.user.Title)
+        setRegion(response.data.user.Region)
+        setTelNo(response.data.user.TelNo)
+      })
+      .catch(error => {
+        console.error('There was a problem with your Axios request:', error);
+      });
+  },[])
     const handlePress = () => {
-      router.push('/profile') 
+      if (dInputValue.length==1){
+        setDInputValue("0"+dInputValue)
+      }
+      if (mInputValue.length==1){
+        setMInputValue("0"+mInputValue)
+      }
+      if (yInputValue.length==1){
+        setYInputValue("0"+yInputValue)
+      }
+      axios.put('http://where-next.tech/users/profile', {
+        uid: "aaa",
+        userName:surnameInputValue,
+        email:email,
+        title:title,
+        name:nameInputValue,
+        Birthdate:yInputValue+"-"+mInputValue+"-"+dInputValue+birthdate,
+        region:region,
+        telNo:telNo,
+        profilePicture:link,
+        bio:bioInputValue
+
+      })
+      .then(response => {
+        console.log("all",response.data);
+      })
+      .catch(error => {
+        console.error('There was a problem with your Axios request:', error);
+      }).finally(() => {
+        router.push("../(app)/profile");
+      }
+      );
+    };
+    const handlePress2 = () => {
+      router.push("../(app)/profile");
     };
     const handleButtonPress = () => {
         Alert.alert(
@@ -93,7 +162,7 @@ export default function Login({}) {
     return(
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#14072b' }}>
         <View style={{ position: 'absolute', top: 20, left: 20, flexDirection:'row', }}>
-        <Backbutton style={{}} onPress={handlePress}/> 
+        <Backbutton style={{}} onPress={handlePress2}/> 
         <Text style={{
           fontSize:30,
           color:'white',
@@ -122,18 +191,19 @@ export default function Login({}) {
           fontSize:20,
           color:'white',
           justifyContent: 'center', alignItems: 'center'}}>Birth date</Text>
-        <TextInput placeholder='DD' value={dInputValue} keyboardType="numeric" onChangeText={setDInputValue} placeholderTextColor="#D8D8D8" style={{color:"red",marginLeft:20,fontSize:20}}/><Text style={{
+        <TextInput placeholder='DD'  maxLength={2} value={dInputValue} keyboardType="numeric" onChangeText={setDInputValue} placeholderTextColor="#D8D8D8" style={{color:"red",marginLeft:20,fontSize:20}}/><Text style={{
           fontSize:20,
-          color:'white'}}>/</Text><TextInput placeholder='MM' keyboardType="numeric" value={mInputValue} onChangeText={setMInputValue} placeholderTextColor="#D8D8D8" style={{color:"red",fontSize:20}}/><Text style={{
+          color:'white'}}>/</Text><TextInput maxLength={2} placeholder='MM' keyboardType="numeric" value={mInputValue} onChangeText={setMInputValue} placeholderTextColor="#D8D8D8" style={{color:"red",fontSize:20}}/><Text style={{
             fontSize:20,
             color:'white'}}>/</Text>
-          <TextInput placeholder='YYYY' keyboardType="numeric" value={yInputValue} onChangeText={setYInputValue} placeholderTextColor="#D8D8D8" style={{color:"red",fontSize:20}}/>
+          <TextInput placeholder='YYYY' maxLength={4} keyboardType="numeric" value={yInputValue} onChangeText={setYInputValue} placeholderTextColor="#D8D8D8" style={{color:"red",fontSize:20}}/>
         </View><View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center',padding: 20,borderBottomWidth:1,borderColor:'white'}}>
         <Text style={{
           fontSize:20,
           color:'white',
           justifyContent: 'center', alignItems: 'center'}}>Bio</Text>
-        <TextInput placeholder='Bio' value={bioInputValue} onChangeText={setBioInputValue} placeholderTextColor="#D8D8D8" style={{color:"red",marginLeft:20,fontSize:20}}/>
+        <TextInput multiline numberOfLines={4}
+        maxLength={40} placeholder='Bio' value={bioInputValue} onChangeText={setBioInputValue} placeholderTextColor="#D8D8D8" style={{color:"red",marginLeft:20,fontSize:20}}/>
         </View><View style={{justifyContent:'center',alignItems:'center'}}><Button label={"Next"} onPress={handlePress} style={{}}></Button></View>
         
     </View></View>

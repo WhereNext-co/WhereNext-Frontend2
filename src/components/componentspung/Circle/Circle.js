@@ -10,14 +10,21 @@ const styles = StyleSheet.create({
 });
 
 const timeRangesToAngles = (timeRanges) => {
-  const angles = [];
+  console.log("timerange:",timeRanges);
+  if (timeRanges==[]){
+    return [];
+  
+  } else if (timeRanges[0] == "00:00-24:00"){
+    console.log('true')
+    return [{startAngle:0,endAngle:180},{startAngle:180,endAngle:360}];
+  } else {const angles = [];
   timeRanges.forEach((timeRange) => {
     const [startHour, endHour] = timeRange.split('-').map((time) => parseInt(time.split(':')[0]));
     const startAngle = (startHour / 24) * 360;
     const endAngle = (endHour / 24) * 360;
     angles.push({ startAngle, endAngle });
   });
-  return angles;
+  return angles;}
 };
 
 const MultipleSectors = ({ timeRanges, color }) => {
