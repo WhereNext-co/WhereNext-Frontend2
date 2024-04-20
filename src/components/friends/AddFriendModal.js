@@ -129,7 +129,7 @@ export default function AddFriendModal({ handleOpen }) {
   };
 
   // useEffect(() => {
-  //   // Assuming contacts is the array of contacts you want to search through
+  // Assuming contacts is the array of contacts you want to search through
   //   setFilteredContacts(
   //     contacts.filter((contact) =>
   //       contact.name.toLowerCase().includes(search.toLowerCase())
@@ -161,6 +161,7 @@ export default function AddFriendModal({ handleOpen }) {
               status={friendstatus}
             />
           </ScrollView>
+          <Button onSearchPress={onSearchHandler} />
           <Button title="Close" onPress={hideAddFriendModal} />
         </View>
       </Modal>
