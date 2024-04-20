@@ -1,9 +1,15 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { UserLocationContext } from "../../context/userLocationContext";
-import { Image } from "react-native";
+import { View, Image, StyleSheet } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import Arrow from "../../../assets/home/map/arrow";
 
-export default function GoogleMapHomeView({ selectedPlace, nearbyPlaces }) {
+export default function GoogleMapHomeView({
+  selectedPlace,
+  nearbyPlaces,
+  handlePlaceSelection,
+}) {
   const [region, setRegion] = useState();
   const { location, setLocation } = useContext(UserLocationContext);
   const mapRef = useRef(null);
@@ -38,7 +44,7 @@ export default function GoogleMapHomeView({ selectedPlace, nearbyPlaces }) {
           center: newRegion,
           zoom: 16, // Adjust zoom level as needed
         },
-        { duration: 10000 } // Adjust duration as needed
+        { duration: 200 } // Adjust duration as needed
       );
     }
   };
@@ -57,20 +63,69 @@ export default function GoogleMapHomeView({ selectedPlace, nearbyPlaces }) {
       showsMyLocationButton={true}
       followsUserLocation={true}
     >
-      {selectedPlace !== null && (
-        <Marker
-          title={selectedPlace.displayName.text}
-          coordinate={selectedPlace.location}
-        />
-      )}
-      {nearbyPlaces !== null &&
-        nearbyPlaces.map((place) => (
+      {selectedPlace !== null &&
+        selectedPlace.photos &&
+        selectedPlace.photos[0] &&
+        selectedPlace.photos[0].name && (
           <Marker
-            key={place.id}
-            title={place.displayName.text}
-            coordinate={place.location}
-          />
-        ))}
+            title={selectedPlace.displayName.text}
+            coordinate={selectedPlace.location}
+          >
+            <View style={styles.markerContainer}>
+              <Image
+                source={{
+                  uri: `https://places.googleapis.com/v1/${selectedPlace.photos[0].name}/media?maxHeightPx=400&maxWidthPx=400&key=AIzaSyAFn7D3VcmDtWXNJXoHyz44MVNMEj1sLZs`,
+                }}
+                style={styles.picMarker}
+              />
+              <Arrow width="25" height="25" />
+            </View>
+          </Marker>
+        )}
+      {nearbyPlaces !== null &&
+        nearbyPlaces.map(
+          (place) =>
+            place.photos &&
+            place.photos[0] &&
+            place.photos[0].name && (
+              <Marker
+                key={place.id}
+                title={place.displayName.text}
+                coordinate={place.location}
+                onPress={() => handlePlaceSelection(place)}
+              >
+                <View style={styles.markerContainer}>
+                  <Image
+                    source={{
+                      uri: `https://places.googleapis.com/v1/${place.photos[0].name}/media?maxHeightPx=400&maxWidthPx=400&key=AIzaSyAFn7D3VcmDtWXNJXoHyz44MVNMEj1sLZs`,
+                    }}
+                    style={styles.picMarker}
+                  />
+                  <Arrow width="25" height="25" />
+                </View>
+              </Marker>
+            )
+        )}
     </MapView>
   );
 }
+
+const styles = StyleSheet.create({
+  markerContainer: {
+    alignItems: "center",
+    gap: 2,
+  },
+  picMarker: {
+    borderRadius: 10,
+    padding: 5,
+    width: 60,
+    height: 60,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+});

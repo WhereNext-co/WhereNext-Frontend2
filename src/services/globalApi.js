@@ -9,6 +9,8 @@ const ANDROID_API_KEY = "AIzaSyDxrDAmzSoIWHZZyvwAHGA9qK2a7Z18FII";
 const API_KEY = Platform.OS === "ios" ? IOS_API_KEY : ANDROID_API_KEY;
 const NEARBY_URL = "https://places.googleapis.com/v1/places:searchNearby";
 const SEARCH_URL = "https://places.googleapis.com/v1/places:searchText";
+const PLACEPHOTOREQUEST_URL =
+  "https://places.googleapis.com/v1/NAME/media?key=API_KEY&PARAMETERS";
 
 const headers = {
   "Content-Type": "application/json",
