@@ -6,6 +6,7 @@ import InviteFriend from "../../../components/calendar/InviteFriend";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, router } from "expo-router";
 import { set } from "date-fns";
+import { fr } from "date-fns/locale";
 
 export default function CreateMeeting() {
   // State variables
@@ -84,7 +85,6 @@ export default function CreateMeeting() {
       <View>
         {/* Stack Screen */}
         <Stack.Screen options={{ headerShown: false }} />
-
         <View style={styles.textInput}>
           {/* Rendezvous Name Input */}
           <TextInput
