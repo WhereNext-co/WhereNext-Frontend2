@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity,TextInput,Switch,Platform } from "react-native";
+import { View, Text, TouchableOpacity,TextInput,Switch,Platform ,FlatList,} from "react-native";
 import MultipleSectors from "../../components/componentspung/Circle/Circle";
 import Button from '../../components/componentspung/Button/Button/Button';
 import { useState, useRef, useEffect} from "react";
@@ -9,6 +9,7 @@ import { add, format } from 'date-fns';
 import Dropdown from "../../components/componentspung/Dropdown/Dropdown"
 import { getCalendars } from "expo-localization";
 import axios from 'axios';
+import globalApi from "../../services/globalApi";
 
 export default function Tab() {
   const [events, setEvents] = useState([]);
@@ -24,6 +25,12 @@ export default function Tab() {
   const [selectedTitle, setSelectedTitle] = useState(null)
   const [loading, setLoading] = useState(true);
   const [eventnum, setEventnum] = useState(0);
+  const [searchResults, setSearchResults] = useState(null); // State to hold the search results
+  const [searchText, setSearchText] = useState(""); // State to hold the search text
+  const [searchDetails, setSearchDetails] = useState(null); // State to hold the search details
+  const [searching, setSearching] = useState(true);
+ 
+
   const dateday = new Date();
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const dayName = days[dateday.getDay()];
@@ -44,7 +51,27 @@ if (hour >= 5 && hour < 12) {
 } else {
     timeOfDay = 'Night';
 }
-
+const getSearchPlaces = async (requestData) => {
+  if (!requestData.textQuery) {
+    setSearchResults([]);
+    return;
+  }
+  try {
+    await globalApi.searchPlace(requestData).then((response) => {
+      console.log("res", response);
+      setSearchResults(response);
+    });
+  } catch (error) {
+    console.error("Error fetching search results:", error);
+    setSearchResults([]);
+  }
+};
+const handlePlaceSelection = (place) => {
+  setSearchText(place.displayName.text);
+  setSearchDetails(place);
+  setSearching(false);
+ 
+};
   const onSelectTitle =(item)=>{
     setSelectedTitle(item)
 }
@@ -115,19 +142,34 @@ if (hour >= 5 && hour < 12) {
     router.push("../(calendar)/calendar");
   }
   const handlePress3 = () => {
+    console.log(startdate,enddate,starttime,endtime)
+    a=startdate.toISOString()
+    b=enddate.toISOString()
+    c=starttime.toISOString()
+    d=endtime.toISOString()
+    console.log("starttime",a.slice(0,11)+c.slice(11))
+    console.log("endtime",b.slice(0,11)+d.slice(11))
+    console.log("placename",searchText)
+    console.log("placegoogleplaceid",searchDetails)
+    console.log("placelocation",searchDetails)
+    console.log("placemaplink",searchDetails)
+    console.log("placephotolink",searchDetails)
+
     axios.post('http://where-next.tech/schedules/create-personalschedule', {
       useruid:"bbb",
       name:title,
-      location:location,
-      note:note,
-      starttime: startdate,
-      endtime: enddate,
-      type:selectedTitle
+      type:selectedTitle[name],
+      starttime: a.slice(0,11)+c.slice(11),
+      endtime: b.slice(0,11)+d.slice(11),
+      status:'Active',
+      placename:searchText,
+      placegoogleplaceid:searchDetails,
+      placelocation:searchDetails,
+      placemaplink:searchDetails,
+      placephotolink:searchDetails
     })
     .then(response => {
       console.log("output",response.data);
-      addEvent(response.data.scheduleList)
-      setEventnum(response.data.scheduleList.length)
     })
     .catch(error => {
       console.error('There was a problem with your Axios request:', error);
@@ -220,7 +262,55 @@ if (hour >= 5 && hour < 12) {
         </View>
       </View>
       <View style={{ width: '100%', borderBottomWidth: 1, borderColor: 'white' }}>
-        <TextInput placeholder='Add Location' value={location} onChangeText={setLocation} color={'white'} placeholderTextColor={'#B8B8B8'} fontSize={30} style={{ padding: 10 }} />
+        <TextInput placeholder='Add Location' value={searchText} onChangeText={(newText) => {
+              setSearchText(newText);
+              getSearchPlaces({ textQuery: newText });
+            }} color={'white'} placeholderTextColor={'#B8B8B8'} fontSize={30} style={{ padding: 10 }} />
+            {searching&&(<FlatList
+            data={searchResults}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#fff", // white background
+                  padding: 10, // padding inside the box
+                  // marginVertical: 1, // margin at the top and bottom for each box
+                  borderWidth: 1, // border width
+                  borderColor: "#ddd", // grey border color
+                }}
+                onPress={() => {
+                  handlePlaceSelection(item);
+                }}
+              >
+                <Text style={{
+    fontSize: 16,
+    color: "#333",
+  }}>
+                  {item.displayName.text}
+                </Text>
+                <Text>{item.formattedAddress}</Text>
+                {item.regularOpeningHours !== undefined &&
+                item.regularOpeningHours.openNow !== undefined ? (
+                  <Text
+                    style={[
+                      {
+                        fontSize: 16,
+                        color: "#333",
+                      },
+                      item.regularOpeningHours.openNow
+                        ?  {
+                          color: "green",
+                        }
+                        :  {
+                          color: "red",
+                        },
+                    ]}
+                  >
+                    {item.regularOpeningHours.openNow ? "Open" : "Closed"}
+                  </Text>
+                ) : null}
+              </TouchableOpacity>
+            )}
+          />)}
       </View>
       <View style={{ width: '100%', borderBottomWidth: 1, borderColor: 'white' }}>
         <TextInput placeholder='Add note' value={note} onChangeText={setNote} color={'white'} placeholderTextColor={'#B8B8B8'} fontSize={30} style={{ padding: 10 }} />
