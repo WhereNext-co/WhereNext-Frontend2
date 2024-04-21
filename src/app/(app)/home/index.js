@@ -395,7 +395,7 @@ export default function MapView() {
               </TouchableOpacity>
             )}
 
-            <View className="flex flex-row items-center pl-6 mb-1">
+            <View className="flex flex-row items-center pl-6 my-1">
               <Pin width={30} height={30} className="mr-2" />
               <Text>{searchDetails.shortFormattedAddress}</Text>
             </View>
