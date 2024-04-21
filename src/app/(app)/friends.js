@@ -10,13 +10,15 @@ import {
   TextInput,
   Button,
 } from "react-native";
-import FriendCard from "../../../components/friends/FriendCard";
-import AddFriendModal from "../../../components/friends/AddFriendModal";
+import FriendCard from "../../components/friends/FriendCard";
+import AddFriendModal from "../../components/friends/AddFriendModal";
+import FriendRequestModal from "../../components/friends/FriendRequestModal";
 import axios from "axios";
 import Modal from "react-native-modal";
 import firebase from "firebase/auth";
 
 export default function Friends() {
+  const currentUserUID = "bbb";
   const [contacts, setContacts] = useState([
     //default friends
     {
@@ -47,46 +49,30 @@ export default function Friends() {
       ProfilePicture: "",
     },
   ]);
-  const [modalVisible, setModalVisible] = useState(false);
+
   // const { user } = useContext(AuthContext);
 
-  /*
   useEffect(() => {
     // friend lists from API
-    const user = firebase.auth().currentUser;
-    if (user) {
-      const uid = user.uid;
-      axios
-        .get(`http://where-next.tech/users/friends`, { uid: uid })
-        .then((response) => {
-          setContacts(response.data.friendList);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    }
+    const user = currentUserUID;
+    axios
+      .post(`http://where-next.tech/users/friends`, {
+        uid: user,
+      })
+      .then((response) => {
+        setContacts(response.data.friendList);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
     setFilteredContacts(
       contacts.filter(
         (contact) =>
-          contact.name.toLowerCase().includes(search.toLowerCase()) ||
-          contact.id.toLowerCase().includes(search.toLowerCase())
+          contact.Name.toLowerCase().includes(search.toLowerCase()) ||
+          contact.Uid.toLowerCase().includes(search.toLowerCase())
       )
     );
   }, [search, contacts]);
-  */
-
-  /*
-  useEffect(() => {
-    axios.get('API_URL/contacts')
-      .then(response => {
-        setContacts(response.data);
-        setFilteredContacts(response.data);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  }, []);
-  */
 
   return (
     <SafeAreaView>
@@ -98,6 +84,7 @@ export default function Friends() {
       />
 
       <AddFriendModal />
+      <FriendRequestModal />
 
       <ScrollView>
         {filteredContacts.map((contact) => (

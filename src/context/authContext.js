@@ -6,12 +6,14 @@ import {
   signOut,
 } from "firebase/auth";
 import { FIREBASE_AUTH } from "../../firebaseConfig";
+import { set } from "firebase/database";
 
 export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(undefined);
+  const [userToken, setUserToken] = useState(null);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(FIREBASE_AUTH, (user) => {
@@ -38,7 +40,7 @@ export const AuthContextProvider = ({ children }) => {
 
       // Get the Firebase ID token
       const token = await userCredential.user.getIdToken();
-      console.log("Firebase ID token:", token);
+      setUserToken(token);
     } catch (error) {
       console.error("Sign-in error:", error);
     }
@@ -68,7 +70,7 @@ export const AuthContextProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, isAuthenticated, login, register, logout }}
+      value={{ userToken, user, isAuthenticated, login, register, logout }}
     >
       {children}
     </AuthContext.Provider>

@@ -4,7 +4,7 @@ import FeatherIcon from "react-native-vector-icons/Feather";
 import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
-import { router, useLocalSearchParams } from "expo-router";
+
 const LocationCard = ({
   name,
   placename,
@@ -15,15 +15,46 @@ const LocationCard = ({
   placelocation,
   status,
   currentuseruid,
+  pendingRendezvous,
+  setPendingRendezvous,
   scheduleid,
 }) => {
-  const onRendezvousPressHandler = () => {
-    if (status === "Draft") {
-      router.push("./createRendezvous/edit");
-      return;
-    } else {
-      router.push("./createRendezvous/rendezvousInfo");
-    }
+  const onAcceptPress = () => {
+    axios
+      .patch("http://where-next.tech/rendezvous/accept-invitation", {
+        scheduleid: scheduleid,
+        receiveruid: currentuseruid,
+      })
+      .then((response) => {
+        console.log(response.data);
+        setPendingRendezvous(
+          pendingRendezvous.filter(
+            (rendezvous) => rendezvous.scheduleid !== scheduleid
+          )
+        );
+      })
+      .catch((error) => {
+        console.error("Error updating data: ", error);
+      });
+  };
+
+  const onDeclinePress = () => {
+    axios
+      .patch("http://where-next.tech/rendezvous/reject-invitation", {
+        scheduleid: scheduleid,
+        receiveruid: currentuseruid,
+      })
+      .then((response) => {
+        console.log(response.data);
+        setPendingRendezvous(
+          pendingRendezvous.filter(
+            (rendezvous) => rendezvous.scheduleid !== scheduleid
+          )
+        );
+      })
+      .catch((error) => {
+        console.error("Error updating data: ", error);
+      });
   };
 
   return (
@@ -61,19 +92,14 @@ const LocationCard = ({
         <Text>{members}</Text>
       </View>
 
-      {status === "Draft" ? (
-        <View style={styles.cardAction}>
-          <TouchableOpacity onPress={onRendezvousPressHandler}>
-            <Feather name="edit" size={24} color="black" />
-          </TouchableOpacity>
-        </View>
-      ) : (
-        <View style={styles.cardAction}>
-          <TouchableOpacity onPress={onRendezvousPressHandler}>
-            <FeatherIcon color="#9ca3af" name="chevron-right" size={22} />
-          </TouchableOpacity>
-        </View>
-      )}
+      <View style={styles.cardAction}>
+        <TouchableOpacity onPress={onAcceptPress}>
+          <AntDesign name="check" size={24} color="black" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onDeclinePress}>
+          <AntDesign name="close" size={24} color="black" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -119,5 +145,6 @@ const styles = StyleSheet.create({
   },
   cardAction: {
     paddingRight: 16,
+    flexDirection: "row",
   },
 });

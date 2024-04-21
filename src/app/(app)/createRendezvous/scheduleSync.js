@@ -1,28 +1,12 @@
 import React, { useState } from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 import ScheduleSyncTimeCard from "../../../components/calendar/ScheduleSyncTimeCard";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 
 export default function scheduleSync() {
-  const [timeList, setTimeList] = useState([
-    {
-      startTime: "16:00",
-      endTime: "20:00",
-    },
-    {
-      startTime: "21:00",
-      endTime: "22:00",
-    },
-    {
-      startTime: "23:00",
-      endTime: "00:00",
-    },
-    {
-      startTime: "01:00",
-      endTime: "02:00",
-    },
-  ]);
+  const [timeList, setTimeList] = useState([]);
   const [selectedTime, setSelectedTime] = useState(null);
+  const currentUserUID = "aaa";
 
   const handleSelectTime = (time) => {
     setSelectedTime(time);

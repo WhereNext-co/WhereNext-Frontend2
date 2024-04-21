@@ -168,7 +168,7 @@ export default function SignIn() {
                 onPress={() => router.replace("./(app)/home")}
               />
               <Button
-                title="Go to Home"
+                title="Go to Schedule Sync"
                 onPress={() =>
                   router.replace("./(app)/createRendezvous/scheduleSync")
                 }
