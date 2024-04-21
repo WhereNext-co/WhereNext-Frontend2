@@ -19,7 +19,7 @@ function AppLayout() {
     const inApp = segments[0] == "(app)";
     if (isAuthenticated && !inApp) {
       //To home
-      router.replace("home");
+      // router.replace("home");
     } else if (isAuthenticated == false) {
       //To signIn
       router.replace("Introduce");
