@@ -36,6 +36,7 @@ import {
   NativeViewGestureHandler,
 } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
+import Star from "../../../../assets/home/placeDetail/star";
 
 export default function MapView() {
   const { location, setLocation } = useContext(UserLocationContext);
@@ -257,6 +258,7 @@ export default function MapView() {
             {searchDetails.primaryTypeDisplayName && (
               <Text>{searchDetails.primaryTypeDisplayName.text}</Text>
             )}
+
             {searchDetails.regularOpeningHours &&
               searchDetails.regularOpeningHours.periods
                 .filter((p) => {
@@ -270,8 +272,31 @@ export default function MapView() {
                       2,
                       "0"
                     )}:${String(p.close.minute).padStart(2, "0")}`}</Text>
+                    {console.log(searchDetails.regularOpeningHours.periods)}
                   </>
                 ))}
+
+            {searchDetails.currentOpeningHours.openNow
+              ? searchDetails.regularOpeningHours.periods
+                  .filter((p) => {
+                    return p.open.day === today;
+                  })
+                  .map((p) => (
+                    <Text>{`Open · Closed at ${String(p.close.hour).padStart(
+                      2,
+                      "0"
+                    )}:${String(p.close.minute).padStart(2, "0")}`}</Text>
+                  ))
+              : searchDetails.regularOpeningHours.periods
+                  .filter((p) => {
+                    return p.open.day === today + 1;
+                  })
+                  .map((p) => (
+                    <Text>{`Close · Opened at ${String(p.open.hour).padStart(
+                      2,
+                      "0"
+                    )}:${String(p.open.minute).padStart(2, "0")}`}</Text>
+                  ))}
             {searchDetails.regularOpeningHours &&
               searchDetails.regularOpeningHours.weekdayDescriptions.map((p) => (
                 <View>
@@ -290,29 +315,44 @@ export default function MapView() {
                   : "Paid"
               }`}</Text>
             )}
-
-            {searchDetails.reviews &&
-              searchDetails.reviews.map((review) => (
-                <View>
-                  <Image
-                    key={review.name}
-                    source={{
-                      uri: review.authorAttribution.photoUri,
-                    }}
-                    style={{
-                      width: 40,
-                      height: 40,
-                      marginRight: 10,
-                      borderRadius: 16,
-                    }}
-                  />
-                  <Text>{review.authorAttribution.displayName}</Text>
-                  <Text>{review.relativePublishTimeDescription}</Text>
-                  <Text>{`Rating: ${review.rating}`}</Text>
-                  <Text>{`"${review.text.text}"`}</Text>
-                  <Text>{review.authorAttribution.photoUri}</Text>
-                </View>
-              ))}
+            {searchDetails.reviews && (
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {searchDetails.reviews.map((review) => (
+                  <View className="flex w-72 gap-2 mr-4 ml-1 mt-1 p-2 pb-4 border-solid rounded-lg border-2 border-[#2acbf9] ">
+                    <View className="flex flex-row items-center">
+                      <Image
+                        key={review.name}
+                        source={{
+                          uri: review.authorAttribution.photoUri,
+                        }}
+                        style={{
+                          width: 40,
+                          height: 40,
+                          marginRight: 10,
+                          borderRadius: 16,
+                        }}
+                      />
+                      <View>
+                        <Text className="font-semibold">
+                          {review.authorAttribution.displayName}
+                        </Text>
+                        <View className="flex flex-row justify-center items-center">
+                          <View className="flex flex-row justify-center items-center">
+                            {[...Array(review.rating)].map((_, i) => (
+                              <Star key={i} width={20} height={20} />
+                            ))}
+                          </View>
+                          <Text className="ml-2">
+                            {review.relativePublishTimeDescription}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                    <Text>{`"${review.text.text}"`}</Text>
+                  </View>
+                ))}
+              </ScrollView>
+            )}
             {searchDetails.goodForGroups && (
               <Text>{`Group: ${
                 searchDetails.goodForGroups ? "Recommended" : "Not Recommended"
