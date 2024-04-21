@@ -1,5 +1,5 @@
 import { View, Text, TextInput,  StyleSheet,Pressable,Image, TouchableOpacity,Alert} from "react-native";
-import React,{useEffect, useState}  from "react";
+import React,{useEffect, useState,useContext}  from "react";
 import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
 import { router, useLocalSearchParams} from "expo-router";
 import Button from '../../components/componentspung/Button/Button/Button';
@@ -8,6 +8,7 @@ import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import { set } from "date-fns";
 import { se } from "date-fns/locale";
+import { AuthContext } from "../../context/authContext";
 
 export default function Login({}) {
   const [link,setLink]=useState('https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images%2F732A162A-5181-41A1-BDDC-3FACDBC8C706.png?alt=media&token=baa3a32e-2732-4086-ab60-8e3759ef32af');
@@ -22,6 +23,8 @@ export default function Login({}) {
   const [title,setTitle]=useState('');
   const [region,setRegion]=useState('');
   const [telNo,setTelNo]=useState('');
+  const userUID =useContext(AuthContext)
+
   handleChangeBirthdate = (text) => {
     setDInputValue(text.split('-')[2].split('T')[0])
     setMInputValue(text.split('-')[1])
@@ -32,7 +35,7 @@ export default function Login({}) {
 
   useEffect(() => {
     axios.post('http://where-next.tech/users/get-profile', {
-        uid: "aaa",
+        uid: userUID.user.uid,
       })
       .then(response => {
         console.log("all",response.data);
@@ -62,7 +65,7 @@ export default function Login({}) {
         setYInputValue("0"+yInputValue)
       }
       axios.put('http://where-next.tech/users/profile', {
-        uid: "aaa",
+        uid: userUID.user.uid,
         userName:surnameInputValue,
         email:email,
         title:title,

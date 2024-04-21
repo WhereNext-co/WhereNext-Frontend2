@@ -27,11 +27,11 @@ const timeRangesToAngles = (timeRanges) => {
   return angles;}
 };
 
-const MultipleSectors = ({ timeRanges, color }) => {
+const MultipleSectors = ({ timeRanges, color,link }) => {
+  console.log('circle;', link)
   const angles = timeRangesToAngles(timeRanges);
-  const circleRadius = 120;
+  const circleRadius = 120; 
   const imageRadius = circleRadius - 2; 
-  const link='https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images%2F732A162A-5181-41A1-BDDC-3FACDBC8C706.png?alt=media&token=baa3a32e-2732-4086-ab60-8e3759ef32af'
   const calculateGradientColors = (angle) => {
     const topColorRed = 55;
     const topColorGreen = 195;
@@ -69,7 +69,7 @@ const MultipleSectors = ({ timeRanges, color }) => {
       <Defs>
       <LinearGradient id="blueGradient" x1="0%" y1="0%" x2="0%" y2="100%">
             <Stop offset="0%" stopColor="#293152" />
-            <Stop offset="100%" stopColor="#2d344a" />
+            <Stop offset="100%" stopColor="#1f1f1f" />
           </LinearGradient>
         </Defs>
         <Circle cx="150" cy="150" r="150" fill="url(#blueGradient)" />
@@ -126,7 +126,7 @@ const MultipleSectors = ({ timeRanges, color }) => {
           return <Circle key={index} cx={radius + x1} cy={radius + y1} r={miniradius} fill={`url(#gradientminie${index})`}/>
         })}
         <Circle cx="150" cy="150" r={circleRadius} fill="#14072b" />
-        <Image source={{ uri: link }} 
+        <Image source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images%2F'+link.slice(81) }} 
         style={{
         width: imageRadius * 2,
         height: imageRadius * 2,

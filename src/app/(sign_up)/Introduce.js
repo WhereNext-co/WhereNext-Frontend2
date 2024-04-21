@@ -3,7 +3,7 @@ import { Link } from "expo-router";
 import React  from "react";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
-import { router } from "expo-router";
+import { router,Stack } from "expo-router";
 
 import SlideButton from '../../components/componentspung/Button/SlideButton/Button';
 
@@ -19,7 +19,7 @@ export default function Login() {
   
   return(
     <View style={styles.container}>
-      
+      <Stack.Screen options={{ headerShown: false }} />
       <SlideButton label={"Introduce your self "} onPress={handlePress}></SlideButton>
       
       
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     // Styles that are unchanged from previous step are hidden for brevity. 
     container: {
       flex: 1,
-      backgroundColor: '#000000',
+      backgroundColor: '#14072b',
       justifyContent: 'center',
       alignItems: 'center',
     }

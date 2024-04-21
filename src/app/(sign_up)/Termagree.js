@@ -1,7 +1,7 @@
 import { View, Text, TextInput,  StyleSheet,Pressable,} from "react-native";
 import React  from "react";
 import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
-import { router, useLocalSearchParams} from "expo-router";
+import { router, useLocalSearchParams,Stack} from "expo-router";
 
 import Button from '../../components/componentspung/Button/Button/Button';
 import ScrollDownComponent from "../../components/componentspung/scrolldown/scrolldown";
@@ -38,15 +38,17 @@ export default function Login() {
       });
     };
     return(
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
-        <View style={{ position: 'absolute', top: 20, left: 20 }}>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#14072b' ,paddingVertical:50,padding:10}}>
+      <Stack.Screen options={{ headerShown: false }} />
+        
+        <View style={{ position: 'absolute', top: 60, left: 20 }}>
         <Backbutton style={{}} onPress={handlePress2}/>
         </View>
         <View style={{ alignItems: 'center' , marginBottom: 20}}>
           <Text style={{textAlign :"center",
           textAlignVertical:"bottom",
           fontSize:30,
-          padding:20, 
+          padding:30, 
           color:'white'}}>Terms and conditions {'\n'} Privacy Conditions</Text>
      
         </View>

@@ -3,13 +3,14 @@ import { Text, View, StyleSheet, Alert , Image} from 'react-native';
 import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
 import Button from '../../components/componentspung/Button/Button/Button';
 import { SvgUri } from 'react-native-svg';
-import { router, useLocalSearchParams} from "expo-router";
+import { router, useLocalSearchParams,Stack} from "expo-router";
 
 import * as Location from 'expo-location';
 
 export default function LocationRequest() {
   let {name,surname,username,title,mail,birthdate,profile} = useLocalSearchParams();
-
+  console.log(profile)
+  console.log(profile.slice (81))
   const [errorMsg, setErrorMsg] = useState(null);
   const handlePress = () => {
     router.push({
@@ -52,8 +53,9 @@ export default function LocationRequest() {
 
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#14072b' }}>
+      <Stack.Screen options={{ headerShown: false }} />
     
-      <View style={{ position: 'absolute', top: 20, left: 20 }}>
+      <View style={{ position: 'absolute', top: 60, left: 20 }}>
         <Backbutton style={{}} onPress={handlePress2}/>
       </View>
       <View style={{ alignItems: 'center' , marginBottom: 20}}>

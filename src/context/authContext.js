@@ -14,6 +14,7 @@ export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(undefined);
   const [userToken, setUserToken] = useState(null);
+  const [userUID, setUserUID] = useState(null);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(FIREBASE_AUTH, (user) => {
@@ -41,6 +42,8 @@ export const AuthContextProvider = ({ children }) => {
       // Get the Firebase ID token
       const token = await userCredential.user.getIdToken();
       setUserToken(token);
+      setUserUID(userCredential.user.uid);
+      console.log("User token:", token);
     } catch (error) {
       console.error("Sign-in error:", error);
     }
@@ -70,7 +73,15 @@ export const AuthContextProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ userToken, user, isAuthenticated, login, register, logout }}
+      value={{
+        userUID,
+        userToken,
+        user,
+        isAuthenticated,
+        login,
+        register,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>

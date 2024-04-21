@@ -1,7 +1,7 @@
 import { View, Text,StyleSheet, Platform} from "react-native";
 import React,{useState,useEffect}  from "react";
 import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
-import { router, useLocalSearchParams} from "expo-router";
+import { router, useLocalSearchParams, Stack} from "expo-router";
 import Button from '../../components/componentspung/Button/Button/Button';
 import Birthdate from '../../components/componentspung/Birthdate/Birthdate';
 
@@ -44,8 +44,10 @@ export default function Login() {
   };
 
   return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
-      <View style={{ position: 'absolute', top: 20, left: 20 }}>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#14072b' }}>
+      <Stack.Screen options={{ headerShown: false }} />
+
+      <View style={{ position: 'absolute', top: 60, left: 20 }}>
         <Backbutton style={{}} onPress={handlePress2}/>
       </View>
       <View style={{ alignItems: 'center' , marginBottom: 20}}>
