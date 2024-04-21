@@ -27,7 +27,7 @@ export default function Login() {
       //
     };
     const handlePress2 = () => {
-      router.push({pathname:'/Mail',params:{title:title,name:name,surname:surname,mail:mail}})
+      router.push({pathname:'/Name',params:{title:title,name:name,surname:surname,mail:mail}})
     };
     const [usernameInputValue, setUsernameInputValue] = useState(username);
     const [usernameValid, setUsernameValid] = useState(true);

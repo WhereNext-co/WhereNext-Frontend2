@@ -12,14 +12,14 @@ import {
 import { AuthContext, useAuth } from "../../context/authContext";
 import axios from "axios";
 export default function Login() {
-  let { title,name,surname,mail,username,birthdate,profile,phone,countryCode,password,uid } = useLocalSearchParams();
+  let { title,name,surname,mail,username,birthdate,profile,phone2,countryCode2,password,uid } = useLocalSearchParams();
   const [password2, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [resend, setResend] = useState(false);
+  const [token, setToken] = useState(''); // Token for user login
   const { login, register, isAuthenticated } = useAuth();
-
+  console.log(title,name,surname,mail,username,birthdate,profile,phone2,countryCode2,password,uid);
   const auth = FIREBASE_AUTH;
-  console.log(title,name,surname,mail,username,birthdate,profile,phone,countryCode,password,uid )
   useEffect(() => {
     console.log(password2);
     if (password2.length === 6) {
@@ -27,16 +27,60 @@ export default function Login() {
       signInHandler();
     }
   }, [password2]); // Dependency array to check for password change
-
+useEffect(() => {
+    if (token !== "") {
+      createdatabase();
+    }
+}, [token]);
   const OTPHandler = (OTP) => {
     setPassword(OTP);
   };
+  const createdatabase = async () => {
+    try {
+      console.log("create database");
+      console.log(token);
+      console.log(username, title, name, surname, mail, birthdate, countryCode2, phone2, profile);
+      const response = await axios.post(
+        "http://where-next.tech/users/create-info",
+        {
+          userName: username,
+          title: title,
+          name: name + " " + surname,
+          email: mail,
+          birthdate: birthdate,
+          region: countryCode2,
+          telNo: phone2,
+          profilePicture: profile,
+          bio: "Change this in settings",
+        },
+        {
+          headers: {
+            Authorization: "Bearer "+token,
+          },
+        }
+      ).then((response) => {
+        console.log(response.data);
+        router.replace({ pathname: "../(app)/home"});
+      })
+      .catch((error) => {
+        console.error("There was a problem with your Axios request: here", error);
+      });
+      
+      // Do something with the response data if needed
+    } catch (error) {
+      console.error("Failed to send phone number to API:", error);
+    } finally {
+      console.log("finally");
+      setLoading(false);
+    }
+  }
 
   const sendPhoneNumberToAPI = async (phoneNumber) => {
     try {
+      console.log(`${countryCode2}${phone2}`);
       const response = await axios.post(
         "http://where-next.tech/auth/updateFirebaseUserPassword",
-        { telNo: `${countryCode}${phone}` }
+        { telNo: `${countryCode2}${phone2}` }
       );
       const { message, telNo } = response.data;
       setResend(true);
@@ -49,21 +93,23 @@ export default function Login() {
   const signInHandler = async () => {
     // Sign in handler
     setLoading(true);
-    console.log(password, password2);
-    if (resend==false) {if (password==password2) {
-      alert("Success");
-      router.replace("/(app)/home"); // Navigate to home page
-    } else {
-      alert("Error: OTP is incorrect"); // Debug
-    }} else {try {
-      await login(mail, password2);
-      alert("Success");
-      router.replace("/(app)/home"); // Navigate to home page
+    console.log(password2);
+     try {
+      console.log('check-telno')
+      const userCredential = await signInWithEmailAndPassword(
+        FIREBASE_AUTH,
+        mail,
+        password2
+      );
+      console.log(userCredential._tokenResponse.idToken)
+      setToken(userCredential._tokenResponse.idToken);
+      awaitalert("Success");
+      // router.replace("/(app)/home"); // Navigate to home page
     } catch (error) {
       alert(`Error: ${error} Password: ${password} Email: ${emailphoneFormat}`); // Debug
     } finally {
-      setLoading(false);
-    }}
+      console.log('finally')
+    }
     // try {
     //   const response = await signInWithEmailAndPassword(
     //     auth,
@@ -79,14 +125,22 @@ export default function Login() {
     // }
   };
 
-  const handlePress = () => {
-    router.push({ pathname: "/Name", params: { name: '', surname: '' } });
-  };
-
+ 
   const handlePress2 = () => {
-    router.push('Phone');
-  };
-
+    router.replace({pathname:'/Phone',params: {
+          title: title,
+          name: name,
+          surname: surname,
+          mail: emailPhoneFormat,
+          username: username,
+          birthdate:birthdate,
+          profile:profile,
+          phone2:phone2,
+          countryCode2:countryCode2,
+          uid:uid
+        }
+  }
+    )}
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
       <View style={{ position: 'absolute', top: 20, left: 20 }}>

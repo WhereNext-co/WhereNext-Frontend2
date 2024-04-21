@@ -1,4 +1,4 @@
-import { View, Text, TextInput,  StyleSheet, ActivityIndicator,} from "react-native";
+import { View, Text, TextInput,  StyleSheet, ActivityIndicator, Alert,} from "react-native";
 import React,{ useState, useEffect } from "react";
 import CountryCodePicker from '../../components/componentspung/Countrycodepicker/Countrycodepicker';
 import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
@@ -15,25 +15,53 @@ import { AuthContext, useAuth } from "../../context/authContext";
 
 export default function Login() {
     const { login, register, isAuthenticated } = useAuth();
-    let {name,surname,username,title,mail,birthdate,profile} = useLocalSearchParams();
-    const [phone, setPhone] = useState("");
+    let {name,surname,username,title,mail,birthdate,profile,phone2} = useLocalSearchParams();
+    const [phone, setPhone] = useState(phone2);
     const [countryCode, setCountryCode] = useState("+66"); // Default country code is +66 (Thailand)
     const [emailPhoneFormat, setEmailPhoneFormat] = useState("");
     const [loading, setLoading] = useState(false);
-    const [password, setPassword] = useState("");
     const [uid, setUid] = useState("");
     const [verifyValidPhone, setVerifyValidPhone] = useState(false);
     const auth = FIREBASE_AUTH;
+    const [already,setAlready] = useState(false);
+    const [phoneexist,setPhoneexist] = useState(true);
     const phoneChangeHandler = (phoneNumber) => {
       setPhone(phoneNumber);  
     };
+    useEffect(() => {
+      console.log('already:',already)
+      if (already==true){
+        console.log("tel in firebase already")
+        try {
+          console.log(`1${countryCode}${phone}`)  
+          axios.post('http://where-next.tech/auth/updateFirebaseUserPassword', {
+          telNo: `${countryCode}${phone}`
+        } 
+      )
+        .then(response => {
+          console.log(response.data);
+          changeEmailPhoneFormat(`${countryCode}${phone}@wherenext.com`);
+          
+        })
+        .catch(error => {
+          console.error('There was a problem with your Axios request in updatefirebase:', error);
+          setAlready(true);
+        });
   
+        } catch (error) {
+          setVerifyValidPhone(false);
+          alert("Create Account failed:"+error.message);
+        } finally {
+          setLoading(false);
+          
+        }
+      }
+    }, [already]);
     const countryCodeChangeHandler = (countryCode) => {
       setCountryCode(`+${countryCode}`);
     };
     useEffect(() => {
-      console.log(password,uid,emailPhoneFormat)
-      if (password!="" ) {
+      if (emailPhoneFormat!="") {
       //   axios.post('http://where-next.tech/users/check-username', {
       //     uid:uid,  
       //     userName: username,
@@ -59,7 +87,6 @@ export default function Login() {
       //     profile:profile,
       //     phone:phone,
       //     countryCode:countryCode,
-      //     password:password,
       //     uid:uid
       //   }})
       // })
@@ -74,39 +101,54 @@ export default function Login() {
             username: username,
             birthdate:birthdate,
             profile:profile,
-            phone:phone,
-            countryCode:countryCode,
-            password:password,
+            phone2:phone,
+            countryCode2:countryCode,
             uid:uid
           }})
       }
-      
     } ,[emailPhoneFormat]);
     const verifyPhoneHandler = () => {
-      //No logic to check for phoneNum yet
-      
       alert("OTP Sent!");
     };
     const changeEmailPhoneFormat = (a) => {
-      console.log(a)
       setEmailPhoneFormat(a);
     };
-
-    //const dummyOTP = "123456"; Dummy OTP for testing
-  
     const signUpHandler = async () => {
-      // Sign up handler
-      /*setLoading(true);
+      console.log('check-telno')
+      setLoading(true);
       try {
-        const response = await createUserWithEmailAndPassword(
-          auth,
-          emailphoneFormat,
-          dummyOTP
-        ); //Use dummy OTP to create account
-        alert(`Account created for ${dummyOTP}`); // Debug*/
+        console.log(`+${phone}`)
+        axios.post('http://where-next.tech/users/check-telno', {
+        telNo: `${phone}`
+      } 
+    )
+      .then(response => {
+        console.log(response.data);
+        if (response.data.exists==true)
+        {
+          alert("Phone number already exists, please login instead.")
+        }
+        else
+        {
+          console.log('There is no telno in database go to createFirebaseUser')
+          signUpHandler2();
+        }
+      })
+      .catch(error => {
+        console.error('There was a problem with your Axios request:', error);
+      });
+      } catch (error) {
+        setVerifyValidPhone(false);
+        alert("Create Account failed:"+error.message);
+      } finally {
+        setLoading(false);
+        
+      }
+    }
+    const signUpHandler2 = async () => {
         setLoading(true);
         try {
-        console.log(`1${countryCode}${phone}`)  
+        console.log('createFirebaseUser',`${countryCode}${phone}`)
         axios.post('http://where-next.tech/auth/createFirebaseUser', {
         telNo: `${countryCode}${phone}`
       } 
@@ -114,21 +156,20 @@ export default function Login() {
       .then(response => {
         console.log(response.data);
         setUid(response.data.uid)
-        setPassword(response.data.password)
         changeEmailPhoneFormat(response.data.email);
-
         
       })
       .catch(error => {
-        console.error('There was a problem with your Axios request:', error);
+        console.error('There was a problem with your Axios request in createfirebase:', error);
+        setAlready(true);
       });
-
-      } catch (error) {
+} 
+       catch (error) {
         setVerifyValidPhone(false);
         alert("Create Account failed:"+error.message);
       } finally {
         setLoading(false);
-        
+        console.log('Will it run?')
       }
     };
     const handlePress2 = () => {

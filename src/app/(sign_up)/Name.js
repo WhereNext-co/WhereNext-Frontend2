@@ -16,11 +16,12 @@ export default function Login({}) {
   const [selectedTitle, setSelectedTitle] = useState(null);
   const handlePress = () => {
     router.push({
-      pathname: "/Mail",
+      pathname: "/Username",
       params: {
         title: selectedTitle.name,
         name: nameInputValue,
         surname: surnameInputValue,
+        mail:''
       },
     });
   };
