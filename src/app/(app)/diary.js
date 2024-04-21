@@ -13,11 +13,21 @@ import {
 import LocationCard from "../../components/dairy/LocationCard";
 import { format } from "date-fns";
 import axios from "axios";
+import { router } from "expo-router";
 
 function LocationList({ locations, filterStatus }) {
   const filteredLocations = locations.filter(
     (location) => location.meetingStatus === filterStatus
   );
+
+  const statusHandler = (location) => {
+    console.log("my location", location);
+    if (location.meetingStatus == "draft") {
+      router.push("./createRendezvous/edit");
+    } else {
+      router.push("./createRendezvous/rendezvousInfo");
+    }
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -27,9 +37,7 @@ function LocationList({ locations, filterStatus }) {
           img={location.img}
           locationName={location.locationName}
           locationDetail={location.locationDetail}
-          onPress={() => {
-            // Handle the press event here...
-          }}
+          onPress={() => statusHandler(location)}
           meetingStatus={location.meetingStatus}
         />
       ))}
@@ -38,44 +46,28 @@ function LocationList({ locations, filterStatus }) {
 }
 
 function Active({ locations }) {
+  console.log("Active", locations[0].meetingStatus);
   return <LocationList locations={locations} filterStatus="active" />;
 }
 
 function Past({ locations }) {
+  console.log("Past", locations);
   return <LocationList locations={locations} filterStatus="past" />;
 }
 
 function Drafts({ locations }) {
-  return <LocationList locations={locations} filterStatus="drafts" />;
+  console.log("Draft", locations);
+  return <LocationList locations={locations} filterStatus="draft" />;
 }
 
 function Pending({ locations }) {
+  console.log("Pending", locations);
   return <LocationList locations={locations} filterStatus="pending" />;
 }
 
 export default function Diary() {
   const [selectedTab, setSelectedTab] = useState("Active");
-  const [groupedLocations, setGroupedLocations] = useState({});
-  const [isLocationsByDateEmpty, setIsLocationsByDateEmpty] = useState(false);
   const [locations, setLocations] = useState([
-    {
-      locationName: "The Complete",
-      locationDetail: "Rachaprarop, Ratchathewi, Bangkok 10400",
-      locationID: "123456",
-      img: "",
-      users: ["Guy Chelsea"],
-      meetingStatus: "active", // This can be 'active', 'pending', 'past', or 'draft'
-      date: "2022-01-01",
-    },
-    {
-      locationName: "Fusion",
-      locationDetail: "Phayathai, Ratchathewi, Bangkok 10400",
-      locationID: "123437",
-      img: "",
-      users: ["John Doe", "Jane Doe"],
-      meetingStatus: "active", // This can be 'active', 'pending', 'past', or 'draft'
-      date: "2022-01-01",
-    },
     {
       locationName: "Samitivej Hospital",
       locationDetail:
@@ -83,25 +75,21 @@ export default function Diary() {
       locationID: "123457",
       img: "",
       users: ["Mearz Wong"],
-      meetingStatus: "past", // This can be 'active', 'pending', 'past', or 'draft'
+      meetingStatus: "draft", // This can be 'active', 'pending', 'past', or 'draft'
+      date: "2022-02-01",
+    },
+    {
+      locationName: "Pung Hospital",
+      locationDetail:
+        "133 Sukhumvit 49 Alley, Khlong Tan Nuea, Watthana, Bangkok 10110",
+      locationID: "123457",
+      img: "",
+      users: ["Mearz Wong"],
+      meetingStatus: "active", // This can be 'active', 'pending', 'past', or 'draft'
       date: "2022-02-01",
     },
     // More locations here...
   ]);
-
-  useEffect(() => {
-    const newGroupedLocations = locations.reduce((acc, location) => {
-      const date = format(new Date(location.date), "MMMM yyyy");
-      if (!acc[date]) {
-        acc[date] = [];
-        setIsLocationsByDateEmpty(true);
-      }
-      acc[date].push(location);
-      return acc;
-    }, {});
-
-    setGroupedLocations(newGroupedLocations);
-  }, [locations]);
 
   /*
     useEffect(() => {
@@ -125,17 +113,12 @@ export default function Diary() {
         <Button title="Pending" onPress={() => setSelectedTab("Pending")} />
       </View>
 
-      {Object.entries(groupedLocations).map(([date, locations]) => {
-        return (
-          <View key={date}>
-            {isLocationsByDateEmpty && <Text>{date}</Text>}
-            {selectedTab === "Active" && <Active locations={locations} />}
-            {selectedTab === "Past" && <Past locations={locations} />}
-            {selectedTab === "Drafts" && <Drafts locations={locations} />}
-            {selectedTab === "Pending" && <Pending locations={locations} />}
-          </View>
-        );
-      })}
+      <View>
+        {selectedTab === "Active" && <Active locations={locations} />}
+        {selectedTab === "Past" && <Past locations={locations} />}
+        {selectedTab === "Drafts" && <Drafts locations={locations} />}
+        {selectedTab === "Pending" && <Pending locations={locations} />}
+      </View>
     </SafeAreaView>
   );
 }

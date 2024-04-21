@@ -7,6 +7,7 @@ import Friends from "../../../assets/tabs/friends.svg";
 import Profile from "../../../assets/tabs/profile.svg";
 import Diary from "../../../assets/tabs/dairy.svg";
 import Home from "../../../assets/tabs/home.svg";
+import PlusCircle from "../../../assets/tabs/plusCircle.svg";
 import { View } from "react-native";
 import { userLocationContext } from "../../context/userLocationContext";
 
@@ -18,7 +19,7 @@ export default function TabLayout() {
         options={{
           title: "Rendezvous",
           tabBarIcon: ({ color }) => (
-            <Bell width={30} height={30} name="bell" color={color} />
+            <PlusCircle width={30} height={30} name="bell" color={color} />
           ),
         }}
       />

@@ -64,12 +64,14 @@ export default function Friends({ onFriendChange }) {
   return (
     <SafeAreaView>
       {/* Search input */}
-      <TextInput
-        value={search}
-        onChangeText={setSearch}
-        placeholder="Search"
-        style={styles.searchInput}
-      />
+      <View style={styles.search}>
+        <TextInput
+          value={search}
+          onChangeText={setSearch}
+          placeholder="Search"
+          style={styles.searchInput}
+        />
+      </View>
 
       {/* List of friends */}
       <ScrollView>
@@ -97,6 +99,7 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     borderWidth: 1,
     paddingLeft: 10,
+    borderRadius: 10,
   },
   container: {
     flex: 1,
@@ -108,5 +111,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background for modal
+  },
+  search: {
+    padding: 10,
+    margin: 10,
   },
 });

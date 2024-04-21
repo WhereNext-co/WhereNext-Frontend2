@@ -1,14 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
-const ScheduleSyncTimeCard = ({ startTime, endTime, onPress }) => {
+const ScheduleSyncTimeCard = ({ startTime, endTime, selected, onSelect }) => {
+  const [isSelected, setIsSelected] = useState(false);
+
+  useEffect(() => {
+    setIsSelected(selected);
+  }, [selected]);
+
   return (
-    <TouchableOpacity onPress={onPress}>
-      <View /*The part where name is displayed*/ style={styles.cardBody}>
+    <TouchableOpacity onPress={() => onSelect({ startTime, endTime })}>
+      <View
+        style={
+          selected.startTime === startTime ? styles.selectedCard : styles.card
+        }
+      >
         <Text style={styles.cardTitle}>
           {startTime} - {endTime}
         </Text>
       </View>
+      {selected && console.log(selected.startTime === startTime)}
     </TouchableOpacity>
   );
 };
@@ -16,12 +27,15 @@ const ScheduleSyncTimeCard = ({ startTime, endTime, onPress }) => {
 export default ScheduleSyncTimeCard;
 
 const styles = StyleSheet.create({
-  /** Card */
   card: {
     paddingVertical: 14,
-    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-start",
+    margin: 8,
+  },
+  selectedCard: {
+    borderColor: "blue", // Change this to your desired color
+    borderWidth: 1,
+    borderRadius: 12,
   },
   cardBody: {
     marginRight: "auto",

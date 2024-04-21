@@ -36,11 +36,17 @@ import {
   NativeViewGestureHandler,
 } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
+import Star from "../../../../assets/home/placeDetail/star";
+import Pin from "../../../../assets/home/placeDetail/pin";
+import Clock from "../../../../assets/home/placeDetail/clock";
+import BookmarkSquare from "../../../../assets/home/placeDetail/bookmarkSquare";
+import Car from "../../../../assets/home/placeDetail/car";
+import Thumbup from "../../../../assets/home/placeDetail/thumbup";
 
 export default function MapView() {
   const { location, setLocation } = useContext(UserLocationContext);
   const [searchText, setSearchText] = useState(""); // State to hold the search text
-  const [searchDetails, setSearchDetails] = useState(null); // State to hold the search details
+  const { searchDetails, setSearchDetails } = useContext(UserLocationContext); // State to hold the search details
   const [searchResults, setSearchResults] = useState(null); // State to hold the search results
   const [nearbyPlaces, setNearbyPlaces] = useState([]); // State to hold the nearby places
   const [searching, setSearching] = useState(false);
@@ -48,7 +54,8 @@ export default function MapView() {
   const searchRef = useRef();
   const { dismiss, dismissAll } = useBottomSheetModal();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const today = new Date().getDay();
+  const [showAll, setShowAll] = useState(false);
+  const today = new Date().getDay(); // Get the current day (0 for Sunday, 1 for Monday, etc.)
 
   // variables
   // const snapPoints = useMemo(() => ["40%", "100%"], []);
@@ -57,7 +64,16 @@ export default function MapView() {
     getNearbyPlaces();
   }, [location]); // Add location as a dependency to useEffect
 
-  const placeType = ["restaurant", "convenience_store"];
+  const placeType = [
+    "restaurant",
+    "convenience_store",
+    "art_gallery",
+    "museum",
+    "cafe",
+    "bakery",
+    "book_store",
+    "department_store",
+  ];
 
   const getSearchPlaces = async (requestData) => {
     if (!requestData.textQuery) {
@@ -117,6 +133,14 @@ export default function MapView() {
 
   const handleSearchChange = (newText) => {
     getSearchPlaces({ textQuery: newText });
+  };
+
+  const createRendezvousHandler = () => {
+    router.push("createRendezvous");
+  };
+
+  const handleToggleDropdown = () => {
+    setShowAll(!showAll);
   };
 
   if (searching) {
@@ -216,10 +240,90 @@ export default function MapView() {
                 : styles.drawerContainer
             }
           >
-            <Text className="font-medium text-2xl">
+            <Text className="font-medium text-2xl pl-6">
               {searchDetails?.displayName.text}
             </Text>
-            <Pressable>
+
+            {searchDetails.rating ? (
+              <View className="flex flex-row items-center my-1  pl-6">
+                <Text className="mr-1">{searchDetails.rating}</Text>
+                {[...Array(Math.round(searchDetails.rating))].map((_, i) => (
+                  <Star key={i} width={20} height={20} />
+                ))}
+                <Text className="ml-1">{`(${searchDetails.userRatingCount})`}</Text>
+              </View>
+            ) : (
+              <Text className="pl-6 my-1">No reviews</Text>
+            )}
+
+            {searchDetails.primaryTypeDisplayName && (
+              <Text className="my-1 pl-6">
+                {searchDetails.primaryTypeDisplayName.text}
+              </Text>
+            )}
+
+            {searchDetails.regularOpeningHours &&
+            searchDetails.regularOpeningHours.periods !== undefined &&
+            searchDetails.regularOpeningHours.periods.length > 0 &&
+            searchDetails.regularOpeningHours.periods.some(
+              (p) =>
+                p.open &&
+                p.close &&
+                typeof p.open.hour !== "undefined" &&
+                typeof p.close.hour !== "undefined"
+            ) ? (
+              searchDetails.regularOpeningHours.periods.some(
+                (p) =>
+                  p.open.hour === 0 &&
+                  p.open.minute === 0 &&
+                  p.close.hour === 23 &&
+                  p.close.minute === 59
+              ) ? (
+                <Text className="pl-6 my-1">Open 24 Hours</Text>
+              ) : searchDetails.currentOpeningHours ? (
+                searchDetails.currentOpeningHours.openNow ? (
+                  searchDetails.regularOpeningHours.periods
+                    .filter((p) => p.open.day === today)
+                    .map((p) => (
+                      <Text className="pl-6 my-1">{`Open · Closes ${String(
+                        p.close.hour
+                      ).padStart(2, "0")}:${String(p.close.minute).padStart(
+                        2,
+                        "0"
+                      )}`}</Text>
+                    ))
+                ) : (
+                  searchDetails.regularOpeningHours.periods
+                    .filter((p) => p.open.day === (today === 6 ? 0 : today + 1))
+                    .map((p) => (
+                      <Text className="pl-6 my-1">{`Closed · Opens ${String(
+                        p.open.hour
+                      ).padStart(2, "0")}:${String(p.open.minute).padStart(
+                        2,
+                        "0"
+                      )}`}</Text>
+                    ))
+                )
+              ) : null
+            ) : // Handle 24 hours opening
+            searchDetails.currentOpeningHours ? (
+              searchDetails.currentOpeningHours.openNow ? (
+                <Text className="pl-6 my-1">Open 24 Hours</Text>
+              ) : (
+                searchDetails.currentOpeningHours.periods
+                  .filter((p) => p.open.day === today)
+                  .map((p) => (
+                    <Text className="pl-6 my-1">{`Open · Closes ${String(
+                      p.close.hour
+                    ).padStart(2, "0")}:${String(p.close.minute).padStart(
+                      2,
+                      "0"
+                    )}`}</Text>
+                  ))
+              )
+            ) : null}
+
+            <Pressable onPress={createRendezvousHandler} className="px-6">
               <LinearGradient
                 colors={["#2acbf9", "#9aeeb0"]}
                 start={{ x: 0, y: 0.5 }}
@@ -230,7 +334,11 @@ export default function MapView() {
               </LinearGradient>
             </Pressable>
             {searchDetails && searchDetails.photos && (
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                className="px-6 my-1"
+              >
                 {searchDetails.photos.map((photo) => (
                   <Image
                     key={photo.name}
@@ -248,75 +356,126 @@ export default function MapView() {
               </ScrollView>
             )}
 
-            <Text>{searchDetails.shortFormattedAddress}</Text>
-            {searchDetails.rating ? (
-              <Text>{`Rating: ${searchDetails.rating} (${searchDetails.userRatingCount})`}</Text>
-            ) : (
-              <Text>No reviews</Text>
-            )}
-            {searchDetails.primaryTypeDisplayName && (
-              <Text>{searchDetails.primaryTypeDisplayName.text}</Text>
-            )}
-            {searchDetails.regularOpeningHours &&
-              searchDetails.regularOpeningHours.periods
-                .filter((p) => {
-                  return p.open.day === today;
-                })
-                .map((p) => (
-                  <>
-                    <Text>{`${String(p.open.hour).padStart(2, "0")}:${String(
-                      p.open.minute
-                    ).padStart(2, "0")} - ${String(p.close.hour).padStart(
-                      2,
-                      "0"
-                    )}:${String(p.close.minute).padStart(2, "0")}`}</Text>
-                  </>
-                ))}
-            {searchDetails.regularOpeningHours &&
-              searchDetails.regularOpeningHours.weekdayDescriptions.map((p) => (
-                <View>
-                  <Text>{p}</Text>
+            {searchDetails.regularOpeningHours && (
+              <TouchableOpacity
+                onPress={handleToggleDropdown}
+                className="flex flex-row pl-6 my-2 "
+              >
+                <Clock width={30} height={30} className="mr-2" />
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  {searchDetails.regularOpeningHours && (
+                    <View>
+                      {!showAll ? (
+                        // Show only today's information
+                        <Text style={{ fontWeight: "bold" }}>
+                          {
+                            searchDetails.regularOpeningHours
+                              .weekdayDescriptions[today]
+                          }
+                        </Text>
+                      ) : (
+                        // Show information for all days
+                        searchDetails.regularOpeningHours.weekdayDescriptions.map(
+                          (p, index) => (
+                            <Text
+                              key={index}
+                              style={{
+                                fontWeight: index === today ? "bold" : "normal",
+                                marginBottom: 5, // Add spacing between each day's information
+                              }}
+                            >
+                              {p}
+                            </Text>
+                          )
+                        )
+                      )}
+                    </View>
+                  )}
                 </View>
-              ))}
-            {searchDetails.reservable && (
-              <Text>{`Reservation: ${
-                searchDetails.reservable ? "Available" : "Unavailable"
-              }`}</Text>
-            )}
-            {searchDetails.parkingOptions && (
-              <Text>{`Parking: ${
-                searchDetails.parkingOptions.freeParkingLot
-                  ? "Available for Free"
-                  : "Paid"
-              }`}</Text>
+              </TouchableOpacity>
             )}
 
-            {searchDetails.reviews &&
-              searchDetails.reviews.map((review) => (
-                <View>
-                  <Image
-                    key={review.name}
-                    source={{
-                      uri: review.authorAttribution.photoUri,
-                    }}
-                    style={{
-                      width: 40,
-                      height: 40,
-                      marginRight: 10,
-                      borderRadius: 16,
-                    }}
-                  />
-                  <Text>{review.authorAttribution.displayName}</Text>
-                  <Text>{review.relativePublishTimeDescription}</Text>
-                  <Text>{`Rating: ${review.rating}`}</Text>
-                  <Text>{`"${review.text.text}"`}</Text>
-                  <Text>{review.authorAttribution.photoUri}</Text>
-                </View>
-              ))}
+            <View className="flex flex-row items-center pl-6 my-1">
+              <Pin width={30} height={30} className="mr-2" />
+              <Text>{searchDetails.shortFormattedAddress}</Text>
+            </View>
+
+            {searchDetails.reservable && (
+              <View className="flex flex-row items-center pl-6 my-1">
+                <BookmarkSquare width={30} height={30} className="mr-2" />
+                <Text>{`Reservation: ${
+                  searchDetails.reservable ? "Available" : "Unavailable"
+                }`}</Text>
+              </View>
+            )}
+            {searchDetails.parkingOptions && (
+              <View className="flex flex-row items-center pl-6 my-1">
+                <Car width={30} height={30} className="mr-2" />
+                <Text>{`Parking: ${
+                  searchDetails.parkingOptions.freeParkingLot
+                    ? "Available for Free"
+                    : "Paid"
+                }`}</Text>
+              </View>
+            )}
             {searchDetails.goodForGroups && (
-              <Text>{`Group: ${
-                searchDetails.goodForGroups ? "Recommended" : "Not Recommended"
-              }`}</Text>
+              <View className="flex flex-row items-center pl-6 my-1">
+                <Thumbup width={30} height={30} className="mr-2" />
+                <Text>{`Group: ${
+                  searchDetails.goodForGroups
+                    ? "Recommended"
+                    : "Not Recommended"
+                }`}</Text>
+              </View>
+            )}
+
+            {searchDetails.reviews && (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                className="px-6 my-1"
+              >
+                <View className="flex flex-row flex-wrap">
+                  {searchDetails.reviews.map((review) => (
+                    <View className="flex flex-wrap">
+                      <View className="flex w-72 gap-2 mr-4 ml-1 mt-1 p-2 pb-4 border-solid rounded-lg border-2 border-[#2acbf9] ">
+                        <View className="flex flex-row items-center">
+                          <Image
+                            key={review.name}
+                            source={{
+                              uri: review.authorAttribution.photoUri,
+                            }}
+                            style={{
+                              width: 40,
+                              height: 40,
+                              marginRight: 10,
+                              borderRadius: 16,
+                            }}
+                          />
+                          <View>
+                            <Text className="font-semibold">
+                              {review.authorAttribution.displayName}
+                            </Text>
+                            <View className="flex flex-row justify-center items-center">
+                              <View className="flex flex-row justify-center items-center">
+                                {[...Array(Math.round(review.rating))].map(
+                                  (_, i) => (
+                                    <Star key={i} width={20} height={20} />
+                                  )
+                                )}
+                              </View>
+                              <Text className="ml-2">
+                                {review.relativePublishTimeDescription}
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                        {review.text && <Text>{`"${review.text.text}"`}</Text>}
+                      </View>
+                    </View>
+                  ))}
+                </View>
+              </ScrollView>
             )}
           </BottomSheetScrollView>
         </BottomSheetModal>
@@ -339,12 +498,12 @@ const styles = StyleSheet.create({
   },
   drawerContainer: {
     flex: 1,
-    paddingLeft: 24,
+
     paddingTop: 12,
   },
   drawerContainerWhenSheetOpen: {
     flex: 1,
-    paddingLeft: 24,
+
     paddingTop: 60,
   },
   container: {
@@ -404,7 +563,7 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 25,
     paddingVertical: 10,
-    marginVertical: 20,
+    marginVertical: 10,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {

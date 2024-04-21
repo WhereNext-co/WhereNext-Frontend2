@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Button } from "react-native";
+import { View, Text, Button, StyleSheet } from "react-native";
 import ScheduleSyncTimeCard from "../../../components/calendar/ScheduleSyncTimeCard";
 import { router } from "expo-router";
 
@@ -10,21 +10,23 @@ export default function scheduleSync() {
       endTime: "20:00",
     },
     {
-      startTime: "16:00",
-      endTime: "21:00",
+      startTime: "21:00",
+      endTime: "22:00",
     },
     {
-      startTime: "16:00",
-      endTime: "21:00",
+      startTime: "23:00",
+      endTime: "00:00",
     },
     {
-      startTime: "16:00",
-      endTime: "21:00",
+      startTime: "01:00",
+      endTime: "02:00",
     },
   ]);
+  const [selectedTime, setSelectedTime] = useState(null);
 
-  const handleSelectTime = () => {
-    console.log("Time selected");
+  const handleSelectTime = (time) => {
+    setSelectedTime(time);
+    console.log(time);
   };
 
   const onConfirm = () => {
@@ -32,25 +34,27 @@ export default function scheduleSync() {
   };
 
   const onEdit = () => {
-    router.replace("./edit");
+    router.replace("./desired");
   };
 
   return (
-    <View style={{ backgroundColor: "white", padding: 22 }}>
+    <View>
       <Text>Schedule Sync</Text>
       <View>
         {timeList !== null ? (
-          <>
+          <View>
             {timeList.map((time) => (
               <ScheduleSyncTimeCard
+                key={time.startTime}
                 startTime={time.startTime}
                 endTime={time.endTime}
-                onPress={handleSelectTime}
+                selected={selectedTime}
+                onSelect={handleSelectTime}
               />
             ))}
             <Button title="Send Invites" onPress={onConfirm} />
             <Button title="Choose Desired Time" onPress={onEdit} />
-          </>
+          </View>
         ) : (
           <View>
             <Text>Uh oh... Seems like there are no matching time</Text>
@@ -61,3 +65,20 @@ export default function scheduleSync() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  cardContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  card: {
+    paddingVertical: 14,
+    alignItems: "center",
+    margin: 8,
+  },
+  selectedCard: {
+    borderColor: "blue", // Change this to your desired color
+    borderWidth: 1,
+    borderRadius: 12,
+  },
+});
