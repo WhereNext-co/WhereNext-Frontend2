@@ -52,7 +52,7 @@ export default function Login() {
     console.log(password, password2);
     if (resend==false) {if (password==password2) {
       alert("Success");
-      router.replace({ pathname: "/Location", params: { name: '', surname: '' } }); // Navigate to home page
+      router.replace("/(app)/home"); // Navigate to home page
     } else {
       alert("Error: OTP is incorrect"); // Debug
     }} else {try {
