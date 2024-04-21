@@ -82,7 +82,7 @@ export default function MapView() {
     }
     try {
       await globalApi.searchPlace(requestData).then((response) => {
-        console.log("res", response);
+        // console.log("res", response);
         setSearchResults(response);
       });
     } catch (error) {
@@ -119,7 +119,7 @@ export default function MapView() {
 
   const handleSearchFocus = () => {
     dismissAll();
-    console.log("Search box focused");
+    // console.log("Search box focused");
     setSearching(true);
     setTimeout(() => {
       searchRef.current.focus();
@@ -127,7 +127,7 @@ export default function MapView() {
   };
 
   const reversehandleSearchFocus = () => {
-    console.log("Search box focused");
+    // console.log("Search box focused");
     setSearching(false);
   };
 
