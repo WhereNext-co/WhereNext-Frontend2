@@ -25,7 +25,7 @@ export default function Login() {
         surname: surname,
         mail: mail,
         username: username,
-        birthdate: date.toJSON().slice(0, 10)
+        birthdate: date.toISOString()
       }
     });
   };

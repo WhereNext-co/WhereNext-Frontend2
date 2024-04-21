@@ -12,6 +12,7 @@ import CustomCountryCodePicker from "../components/CustomCountryCodePicker";
 import OTP from "../components/OTP";
 import { AuthContext, useAuth } from "../context/authContext";
 import axios from "axios";
+import { u } from "react-native-big-calendar";
 
 export default function SignIn() {
   const { login, register, isAuthenticated } = useAuth();
@@ -21,7 +22,7 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [verifyValidPhone, setVerifyValidPhone] = useState(false);
-
+  const [realVerify, setRealVerify] = useState(false); // Real verify phone number
   //Debug
   console.log("<--Phone w/o CC-->");
   console.log(phone);
@@ -31,6 +32,8 @@ export default function SignIn() {
   console.log(password);
   console.log("<------>");
 
+  
+
   const phoneChangeHandler = (phoneNumber) => {
     setPhone(phoneNumber);
     setEmailPhoneFormat(`${countryCode}${phoneNumber}@wherenext.com`);
@@ -39,8 +42,35 @@ export default function SignIn() {
   const countryCodeChangeHandler = (countryCode) => {
     setCountryCode(`+${countryCode}`);
   };
-
   const verifyPhoneHandler = async () => {
+    setLoading(true);
+    try {
+      // Send telephone number to API
+      axios.post("http://where-next.tech/auth/checkTelNo", {
+        telNo: `${phone}`,
+      }).then((response) => {
+        console.log(response.data);
+        if (response.data.exists == true) {
+          setRealVerify(true);
+        } else {
+          setRealVerify(false);
+        }
+      }
+      ).catch((error) => {
+        console.error("Error sending phone number to API:", error);
+        // Handle error condition, e.g., show error message to user
+      }
+      );
+    } catch (error) {
+      console.error("Error sending phone number to API:", error);
+      // Handle error condition, e.g., show error message to user
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  const verifyPhoneHandler2 = async () => {
     setLoading(true);
     try {
       // Send telephone number to API
@@ -52,8 +82,15 @@ export default function SignIn() {
     } finally {
       setLoading(false);
     }
-  };
+  }; 
 
+  useEffect(() => {
+    if (realVerify==true) {
+      verifyPhoneHandler2();
+    } else {
+      alert("account not found");
+    }
+  }, [realVerify]);
   const sendPhoneNumberToAPI = async (phoneNumber) => {
     try {
       const response = await axios.post(
