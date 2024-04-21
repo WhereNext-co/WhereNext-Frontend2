@@ -7,6 +7,7 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         paddingHorizontal: 6,
         marginBottom: 4,
+        
     },
     dropDownStyle: {
         backgroundColor: 'white',
@@ -18,14 +19,16 @@ const styles = StyleSheet.create({
         marginBottom: 2,
         alignItems: 'center',
         width:90,
-        marginLeft: 8 
+        marginLeft: 8,
     },
     transform:{transform: [{ rotate: '180deg' }]
     },
     scrollview:{
-        backgroundColor:'white',
+        backgroundColor:'blue',
         padding:8,
-        borderRadius:18}
+        borderRadius:18,
+        position:'relative'
+    }
 });
 
 
