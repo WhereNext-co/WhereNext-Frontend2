@@ -133,7 +133,7 @@ export default function GalleryPicker() {
   <View style={styles.imageContainer}>
         <Image source={{ uri: link }} style={styles.image} />
         <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={handleButtonPress} />
+        <TouchableOpacity style={styles.button} onPress={handleButtonPress}></TouchableOpacity>
         </View>
       </View>
        {/* <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: 'black', marginBottom: 20 }}>
