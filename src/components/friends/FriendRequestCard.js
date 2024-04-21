@@ -46,14 +46,17 @@ const FriendRequestCard = ({
       });
   };
 
-  const icon_size = 31;
   return (
     <View style={styles.card}>
       {img ? ( //Checking if the img is available
         <Image
           alt=""
           resizeMode="cover"
-          source={{ uri: img }}
+          source={{
+            uri: `https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images%2F${img.slice(
+              81
+            )}`,
+          }}
           style={styles.cardImg}
         />
       ) : (
@@ -65,14 +68,14 @@ const FriendRequestCard = ({
 
       <View /*The part where name is displayed*/ style={styles.cardBody}>
         <Text style={styles.cardTitle}>{name}</Text>
-        <Text>{username}</Text>
+        <Text className="text-sm text-slate-700">{`@${username}`}</Text>
       </View>
 
       <TouchableOpacity onPress={handleAccept}>
         <View style={styles.cardAction}>
           <AntDesign //Pending Receive
             name="check"
-            size={icon_size}
+            size={30}
             color="black"
           />
         </View>
@@ -82,7 +85,7 @@ const FriendRequestCard = ({
         <View style={styles.cardAction}>
           <AntDesign //Pending Receive
             name="close"
-            size={icon_size}
+            size={30}
             color="black"
           />
         </View>
@@ -108,7 +111,7 @@ const styles = StyleSheet.create({
   cardImg: {
     width: 42,
     height: 42,
-    borderRadius: 12,
+    borderRadius: 9999,
   },
   cardAvatar: {
     display: "flex",
@@ -119,7 +122,7 @@ const styles = StyleSheet.create({
   cardAvatarText: {
     fontSize: 19,
     fontWeight: "bold",
-    color: "#fff",
+    color: "#000",
   },
   cardBody: {
     marginRight: "auto",
