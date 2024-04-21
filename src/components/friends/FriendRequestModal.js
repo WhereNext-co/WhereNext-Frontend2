@@ -11,7 +11,7 @@ import {
   TextInput,
   AccessibilityInfo,
 } from "react-native";
-import AddFriendCard from "./AddFriendCard";
+import FriendRequestCard from "./FriendRequestCard";
 import Modal from "react-native-modal";
 import axios from "axios";
 import { set } from "date-fns";
@@ -24,21 +24,18 @@ import { set } from "date-fns";
 
 export default function AddFriendModal() {
   const [isModalVisible, setModalVisible] = useState(false);
-  const CurrentUserUID = "1234";
-  const [requestsReceived, setRequestsReceived] = useState([
-    {
-      Uid: "1234",
-      friendName: "Dummy User",
-      ProfilePicture: "",
-      UserName: "dummyusername",
-    },
-  ]);
+  const CurrentUserUID = "bbb";
+  const [requestsReceived, setRequestsReceived] = useState([]);
+  const [render, setRender] = useState(false);
 
   useEffect(() => {
     axios
-      .post("http://where-next.tech/users/get-friendrequest")
+      .post("http://where-next.tech/users/get-friendrequest", {
+        uid: CurrentUserUID,
+      })
       .then((response) => {
-        setRequestsReceived(response.data);
+        setRequestsReceived(response.data.requestsReceived);
+        setRender(true);
       })
       .catch((error) => {
         console.error("Error fetching data: ", error);
@@ -55,16 +52,22 @@ export default function AddFriendModal() {
         <View>
           <Text>Friend Requests</Text>
           <ScrollView>
-            {requestsReceived.map((user) => (
-              <FriendRequestCard
-                currentuserUID={CurrentUserUID}
-                key={user.Uid}
-                img={user.ProfilePicture}
-                name={user.friendName}
-                username={user.UserName}
-                onPress={() => console.log(`Friend at index pressed`)}
-              />
-            ))}
+            {render ? (
+              <View>
+                {requestsReceived.map((user) => (
+                  <FriendRequestCard
+                    currentuserUID={CurrentUserUID}
+                    key={user.Sender.Uid}
+                    img={user.Sender.ProfilePicture}
+                    name={user.Sender.Name}
+                    username={user.UserName}
+                    onPress={() => console.log(`Friend at index pressed`)}
+                  />
+                ))}
+              </View>
+            ) : (
+              <Text>loading...</Text>
+            )}
           </ScrollView>
         </View>
         <View>

@@ -15,44 +15,54 @@ import AddFriendCard from "./AddFriendCard";
 import Modal from "react-native-modal";
 import { remove, set } from "firebase/database";
 import firebase from "firebase/auth";
+import axios from "axios";
 
 export default function AddFriendModal() {
-  const [contacts, setContacts] = useState(
+  const currentUserUID = "bbb";
+  const [userToAdd, setUserToAdd] = useState(
     //default friends
     {
-      ProfilePicture: "",
       Uid: "123456",
+      ProfilePicture: "",
       Name: "Guy Chelsea",
     }
   );
-  const [friendstatus, setFriendStatus] = useState("");
 
-  /*
-    useEffect(() => {
-    axios.get('API_URL/contacts')
-      .then(response => {
-        setContacts(response.data);
+  useEffect(() => {
+    const user = currentUserUID;
+    axios
+      .post(`http://where-next.tech/users/friends/friendinfo`, {
+        uid: user,
+        friendName: userToAdd.UserName,
       })
-      .catch(error => {
-        console.error('Error:', error);
+      .then((response) => {
+        setUserToAdd(response.data.friend);
+        setFriendStatus(response.data.friendStatus);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
       });
-  }, []);
-  */
+  }, [
+    addFriendHandler,
+    cancelFriendRequestHandler,
+    removeFriendHandler,
+    AcceptFriendHandler,
+  ]);
 
+  const [friendstatus, setFriendStatus] = useState(null);
   const [search, setSearch] = useState("");
-  const [filteredContacts, setFilteredContacts] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
 
-  /*
   const onSearchHandler = () => {
-    const user = firebase.auth().currentUser;
+    const user = currentUserUID;
+    console.log(search);
     axios
-      .get(`http://where-next.tech/users/friends/friendinfo`, {
-        uid: user.uid,
+      .post(`http://where-next.tech/users/friends/friendinfo`, {
+        uid: user,
         friendName: search,
       })
       .then((response) => {
-        setContacts(response.data.friend);
+        setUserToAdd(response.data.friend);
         setFriendStatus(response.data.friendStatus);
       })
       .catch((error) => {
@@ -60,28 +70,30 @@ export default function AddFriendModal() {
       });
   };
 
-  const addFriendHandler = (contact) => {
-    const user = firebase.auth().currentUser;
+  const addFriendHandler = () => {
+    const user = currentUserUID;
     axios
       .post("http://where-next.tech/users/friendrequest", {
-        uid: user.uid,
-        friendName: contact.name,
+        uid: user,
+        friendName: userToAdd.UserName,
       })
       .then((response) => {
         console.log(response.data);
-        setContacts([...contacts, friend]);
+        setUserToAdd([...userToAdd, friend]);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
 
-  const cancelFriendRequestHandler = (contact) => {
-    const user = firebase.auth().currentUser;
+  const cancelFriendRequestHandler = () => {
+    console.log(currentUserUID);
+    console.log(userToAdd.UserName);
+    const user = currentUserUID;
     axios
       .delete("http://where-next.tech/users/friendrequest/cancel", {
-        uid: user.uid,
-        friendName: contact.name,
+        uid: user,
+        friendName: userToAdd.UserName,
       })
       .then((response) => {
         console.log(response.data);
@@ -91,12 +103,12 @@ export default function AddFriendModal() {
       });
   };
 
-  const removeFriendHandler = (contact) => {
-    const user = firebase.auth().currentUser;
+  const removeFriendHandler = () => {
+    const user = currentUserUID;
     axios
       .delete("http://where-next.tech/users/friends", {
-        uid: user.uid,
-        friendName: contact.name,
+        uid: user,
+        friendName: userToAdd.UserName,
       })
       .then((response) => {
         console.log(response.data);
@@ -106,12 +118,12 @@ export default function AddFriendModal() {
       });
   };
 
-  const AcceptFriendHandler = (contact) => {
-    const user = firebase.auth().currentUser;
+  const AcceptFriendHandler = () => {
+    const user = currentUserUID;
     axios
       .put("http://where-next.tech/users/friendrequest", {
-        uid: user.uid,
-        friendName: contact.name,
+        uid: user,
+        friendName: userToAdd.UserName,
       })
       .then((response) => {
         console.log(response.data);
@@ -120,49 +132,21 @@ export default function AddFriendModal() {
         console.error("Error:", error);
       });
   };
-*/
-
-  const onSearchHandler = () => {
-    console.log("Search for: ", search);
-  };
-
-  const addFriendHandler = (contacts) => {
-    console.log("Add friend: ", contacts);
-  };
-
-  const cancelFriendRequestHandler = (contacts) => {
-    console.log("Cancel friend request: ", contacts);
-  };
-
-  const removeFriendHandler = (contacts) => {
-    console.log("Remove friend: ", contacts);
-  };
-
-  const AcceptFriendHandler = (contacts) => {
-    console.log("Accept friend: ", contacts);
-  };
-
-  const showAddFriendModal = () => {
-    setModalVisible(true);
-  };
-
-  const hideAddFriendModal = () => {
-    setModalVisible(false);
-  };
-
-  // useEffect(() => {
-  // Assuming contacts is the array of contacts you want to search through
-  //   setFilteredContacts(
-  //     contacts.filter((contact) =>
-  //       contact.name.toLowerCase().includes(search.toLowerCase())
-  //     )
-  //   );
-  // }, [search, contacts]);
 
   return (
     <View>
-      <Button title="Open Add Friend Modal" onPress={showAddFriendModal} />
-      <Modal isVisible={modalVisible} onBackdropPress={hideAddFriendModal}>
+      <Button
+        title="Open Add Friend Modal"
+        onPress={() => {
+          setModalVisible(true);
+        }}
+      />
+      <Modal
+        isVisible={modalVisible}
+        onBackdropPress={() => {
+          setModalVisible(false);
+        }}
+      >
         <View style={styles.modalContent}>
           <TextInput
             value={search}
@@ -170,12 +154,12 @@ export default function AddFriendModal() {
             placeholder="Search"
             style={styles.searchInput}
           />
-
+          <Button title="Search" onPress={onSearchHandler} />
           <ScrollView>
             <AddFriendCard
-              key={contacts.Uid}
-              img={contacts.ProfilePicture}
-              name={contacts.Name}
+              key={userToAdd.Uid}
+              img={userToAdd.ProfilePicture}
+              name={userToAdd.Name}
               onAddPress={addFriendHandler}
               onPendingPress={cancelFriendRequestHandler}
               onRemovePress={removeFriendHandler}
@@ -183,8 +167,13 @@ export default function AddFriendModal() {
               status={friendstatus}
             />
           </ScrollView>
-          <Button title="Search" onSearchPress={onSearchHandler} />
-          <Button title="Close" onPress={hideAddFriendModal} />
+
+          <Button
+            title="Close"
+            onPress={() => {
+              setModalVisible(false);
+            }}
+          />
         </View>
       </Modal>
     </View>
