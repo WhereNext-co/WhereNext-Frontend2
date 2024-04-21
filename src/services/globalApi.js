@@ -20,13 +20,13 @@ const headers = {
 };
 
 const nearByPlace = async (requestData) => {
-  console.log("API_KEY", API_KEY);
+  // console.log("API_KEY", API_KEY);
   return (res = await axios
     .post(NEARBY_URL, requestData, {
       headers,
     })
     .then((response) => {
-      console.log("Nearby places:", response.data.places);
+      // console.log("Nearby places:", response.data.places);
       return response.data.places;
     })
     .catch((error) => {
@@ -40,7 +40,7 @@ const searchPlace = async (requestData) => {
       headers,
     })
     .then((response) => {
-      console.log("Search results:", response.data.places);
+      // console.log("Search results:", response.data.places);
       return response.data.places;
     })
     .catch((error) => {
