@@ -16,6 +16,7 @@ import FriendRequestModal from "../../components/friends/FriendRequestModal";
 import axios from "axios";
 import Modal from "react-native-modal";
 import firebase from "firebase/auth";
+import colors from "../../shared/colors";
 
 export default function Friends() {
   const currentUserUID = "bbb";
@@ -56,7 +57,7 @@ export default function Friends() {
     // friend lists from API
     const user = currentUserUID;
     axios
-      .post(`http://where-next.tech/users/friends`, {
+      .post(`http://where-next.tech/users/get-friends`, {
         uid: user,
       })
       .then((response) => {
@@ -76,36 +77,48 @@ export default function Friends() {
 
   return (
     <SafeAreaView>
-      <TextInput
-        value={search}
-        onChangeText={setSearch}
-        placeholder="Search"
-        style={styles.searchInput}
-      />
+      <View className="px-4">
+        <Text>Friends List</Text>
+        <AddFriendModal />
+        <FriendRequestModal />
+        <TextInput
+          value={search}
+          onChangeText={setSearch}
+          placeholder="Search Friends"
+          style={styles.searchBar}
+        />
 
-      <AddFriendModal />
-      <FriendRequestModal />
-
-      <ScrollView>
-        {filteredContacts.map((contact) => (
-          <FriendCard
-            key={contact.Uid}
-            img={contact.ProfilePicture}
-            name={contact.Name}
-            onPress={() => console.log(`Friend at index pressed`)}
-          />
-        ))}
-      </ScrollView>
+        <ScrollView>
+          {filteredContacts.map((contact) => (
+            <FriendCard
+              key={contact.Uid}
+              img={contact.ProfilePicture}
+              name={contact.Name}
+              onPress={() => console.log(`Friend at index pressed`)}
+            />
+          ))}
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  searchInput: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    paddingLeft: 10,
+  searchBar: {
+    borderRadius: 24,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    backgroundColor: colors.white,
+    shadowColor: colors.black, // This is required for iOS shadow
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5, // This property adds shadow on Android
+    flexGrow: 1,
   },
   container: {
     flex: 1,

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Button,
+  Pressable,
   StyleSheet,
   View,
   Text,
@@ -16,6 +17,8 @@ import Modal from "react-native-modal";
 import { remove, set } from "firebase/database";
 import firebase from "firebase/auth";
 import axios from "axios";
+import { LinearGradient } from "expo-linear-gradient";
+import UserPlus from "../../../assets/friends/user-plus.svg";
 
 export default function AddFriendModal() {
   const currentUserUID = "bbb";
@@ -137,12 +140,21 @@ export default function AddFriendModal() {
 
   return (
     <View>
-      <Button
-        title="Open Add Friend Modal"
+      <Pressable
         onPress={() => {
           setModalVisible(true);
         }}
-      />
+        className="w-12 h-12 items-center justify-center"
+      >
+        <LinearGradient
+          colors={["#2acbf9", "#9aeeb0"]}
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 1, y: 0.5 }}
+          style={styles.button}
+        >
+          <UserPlus width={20} height={20} />
+        </LinearGradient>
+      </Pressable>
       <Modal
         isVisible={modalVisible}
         onBackdropPress={() => {
@@ -197,5 +209,27 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "white",
     borderRadius: 10, // rounded corners
+  },
+  button: {
+    borderRadius: 25,
+    paddingVertical: 10,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    paddingHorizontal: 10,
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#fff",
+    // textTransform: "uppercase",
+    textShadowColor: "rgba(0, 0, 0, 0.4)",
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 3,
   },
 });
