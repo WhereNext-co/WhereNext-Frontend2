@@ -49,9 +49,11 @@ const MyDatePicker = ({date,onChange,showPicker}) => {
           testID="dateTimePicker"
           value={date}
           mode="date"
-          display="default"
+          display="spinner"
+          maximumDate={new Date('2024-12-31')}
           onChange={onChange}
-          style={{backgroundColor:'white'}}
+          textColor='white'
+          style={{backgroundColor:'#14072b'}}
         />
       )}
     </View>

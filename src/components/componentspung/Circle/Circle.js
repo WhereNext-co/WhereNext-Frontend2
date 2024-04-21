@@ -69,7 +69,7 @@ const MultipleSectors = ({ timeRanges, color }) => {
       <Defs>
       <LinearGradient id="blueGradient" x1="0%" y1="0%" x2="0%" y2="100%">
             <Stop offset="0%" stopColor="#293152" />
-            <Stop offset="100%" stopColor="#2d344a" />
+            <Stop offset="100%" stopColor="#1f1f1f" />
           </LinearGradient>
         </Defs>
         <Circle cx="150" cy="150" r="150" fill="url(#blueGradient)" />

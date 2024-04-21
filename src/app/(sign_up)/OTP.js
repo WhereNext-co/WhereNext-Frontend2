@@ -142,7 +142,7 @@ useEffect(() => {
   }
     )}
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#14072b' }}>
       <View style={{ position: 'absolute', top: 20, left: 20 }}>
         <Backbutton style={{}} onPress={handlePress2} />
       </View>
