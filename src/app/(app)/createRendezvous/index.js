@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -14,6 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, router } from "expo-router";
 import { set } from "date-fns";
 import { fr } from "date-fns/locale";
+import { UserLocationContext } from "../../../context/userLocationContext";
 
 export default function CreateMeeting() {
   // State variables
@@ -25,6 +26,7 @@ export default function CreateMeeting() {
   const [hour, setHour] = useState(0);
   const [minute, setMinute] = useState(0);
   const [friendUIDs, setFriendUIDs] = useState([]);
+  const { searchDetails } = useContext(UserLocationContext);
 
   // Event handlers
   const handleStartDateChange = (date) => {
@@ -107,6 +109,9 @@ export default function CreateMeeting() {
       <ScrollView>
         {/* Stack Screen */}
         <Stack.Screen options={{ headerShown: false }} />
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>Create Rendezvous</Text>
+        </View>
         <View style={styles.textInput}>
           {/* Rendezvous Name Input */}
           <TextInput
@@ -116,8 +121,15 @@ export default function CreateMeeting() {
           />
         </View>
 
+        <View>
+          <Text style={styles.searchDetails}>
+            {searchDetails.displayName.text}
+          </Text>
+        </View>
+
         <View style={styles.calendar}>
           {/* Custom Calendar */}
+
           <CustomCalendar
             onEndDateChange={handleEndDateChange}
             onStartDateChange={handleStartDateChange}
@@ -133,13 +145,6 @@ export default function CreateMeeting() {
             onMinuteChange={handleMinuteChange}
           />
         </View>
-
-        {/* Duration */}
-        <Text>Duration: {duration}</Text>
-        <Text>
-          {startDate ? startDate.toString() : "NULL"}
-          {endDate ? endDate.toString() : "NULL"}
-        </Text>
 
         <View style={styles.inviteFriend}>
           {/* Invite Friend */}
@@ -162,14 +167,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   calendar: {
+    flexDirection: "column",
     margin: 10,
     padding: 20,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#000",
+    justifyContent: "center",
+    alignItems: "center",
   },
   textInput: {
-    height: 40,
+    flex: 1,
     borderColor: "#000",
     borderWidth: 1,
     borderRadius: 10,
@@ -189,5 +197,19 @@ const styles = StyleSheet.create({
     bottom: 0,
     padding: 10,
     backgroundColor: "blue", // Change this color to match your design
+  },
+  searchDetails: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginLeft: 10,
+    marginTop: 5,
+    marginBottom: 5,
+  },
+  title: {
+    fontSize: 25,
+    fontWeight: "bold",
+  },
+  titleContainer: {
+    margin: 15,
   },
 });

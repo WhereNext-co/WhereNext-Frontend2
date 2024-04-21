@@ -130,6 +130,12 @@ export default function SignIn() {
                 title="Go to Home"
                 onPress={() => router.replace("./(app)/home")}
               />
+              <Button
+                title="Go to Home"
+                onPress={() =>
+                  router.replace("./(app)/createRendezvous/scheduleSync")
+                }
+              />
             </>
           )}
         </>

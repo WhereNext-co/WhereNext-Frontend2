@@ -41,7 +41,7 @@ import Star from "../../../../assets/home/placeDetail/star";
 export default function MapView() {
   const { location, setLocation } = useContext(UserLocationContext);
   const [searchText, setSearchText] = useState(""); // State to hold the search text
-  const [searchDetails, setSearchDetails] = useState(null); // State to hold the search details
+  const { searchDetails, setSearchDetails } = useContext(UserLocationContext); // State to hold the search details
   const [searchResults, setSearchResults] = useState(null); // State to hold the search results
   const [nearbyPlaces, setNearbyPlaces] = useState([]); // State to hold the nearby places
   const [searching, setSearching] = useState(false);
@@ -58,7 +58,16 @@ export default function MapView() {
     getNearbyPlaces();
   }, [location]); // Add location as a dependency to useEffect
 
-  const placeType = ["restaurant", "convenience_store"];
+  const placeType = [
+    "restaurant",
+    "convenience_store",
+    "art_gallery",
+    "museum",
+    "cafe",
+    "bakery",
+    "book_store",
+    "department_store",
+  ];
 
   const getSearchPlaces = async (requestData) => {
     if (!requestData.textQuery) {
@@ -118,6 +127,10 @@ export default function MapView() {
 
   const handleSearchChange = (newText) => {
     getSearchPlaces({ textQuery: newText });
+  };
+
+  const createRendezvousHandler = () => {
+    router.push("createRendezvous");
   };
 
   if (searching) {
@@ -199,17 +212,7 @@ export default function MapView() {
         handlePlaceSelection={handlePlaceSelection}
       />
       {searchDetails && (
-        <BottomSheetModal
-          name="mymodal"
-          ref={bottomSheetModalRef}
-          enablePanDownToClose={true}
-          enableDismissOnClose={true}
-          snapPoints={["40%", "100%"]}
-          onChange={(index) => setIsSheetOpen(index === 1)}
-          handleIndicatorStyle={
-            isSheetOpen ? styles.handleHidden : styles.handle
-          }
-        >
+
           <BottomSheetScrollView
             style={
               isSheetOpen
@@ -302,6 +305,7 @@ export default function MapView() {
                 <View>
                   <Text>{p}</Text>
                 </View>
+
               ))}
             {searchDetails.reservable && (
               <Text>{`Reservation: ${

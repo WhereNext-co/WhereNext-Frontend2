@@ -9,6 +9,7 @@ import { AuthContextProvider, useAuth } from "../context/authContext";
 function AppLayout() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [searchDetails, setSearchDetails] = useState(null);
 
   const { isAuthenticated } = useAuth();
   const segments = useSegments();
@@ -48,7 +49,9 @@ function AppLayout() {
   }
 
   return (
-    <UserLocationContext.Provider value={{ location, setLocation }}>
+    <UserLocationContext.Provider
+      value={{ location, setLocation, searchDetails, setSearchDetails }}
+    >
       <Stack>
         <Stack.Screen name="(app)" options={{ headerShown: false }} />
         <Stack.Screen name="(sign_up)" options={{ headerShown: false }} />

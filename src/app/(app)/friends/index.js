@@ -10,8 +10,8 @@ import {
   TextInput,
   Button,
 } from "react-native";
-import FriendCard from "../../components/friends/FriendCard";
-import AddFriendModal from "../../components/friends/AddFriendModal";
+import FriendCard from "../../../components/friends/FriendCard";
+import AddFriendModal from "../../../components/friends/AddFriendModal";
 import axios from "axios";
 import Modal from "react-native-modal";
 import firebase from "firebase/auth";
