@@ -11,7 +11,8 @@ import {
   Button,
 } from "react-native";
 import FriendCard from "../../../components/friends/FriendCard";
-import AddFriendModal from "../../../components/friends/AddFriendModal";
+import AddFriendModal from "/../../components/friends/AddFriendModal";
+import FriendRequestModal from "/../../components/friends/FriendRequestModal";
 import axios from "axios";
 import Modal from "react-native-modal";
 import firebase from "firebase/auth";
@@ -75,19 +76,6 @@ export default function Friends() {
   }, [search, contacts]);
   */
 
-  /*
-  useEffect(() => {
-    axios.get('API_URL/contacts')
-      .then(response => {
-        setContacts(response.data);
-        setFilteredContacts(response.data);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  }, []);
-  */
-
   return (
     <SafeAreaView>
       <TextInput
@@ -98,6 +86,7 @@ export default function Friends() {
       />
 
       <AddFriendModal />
+      <FriendRequestModal />
 
       <ScrollView>
         {filteredContacts.map((contact) => (
