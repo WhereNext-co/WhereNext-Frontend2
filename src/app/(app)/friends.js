@@ -20,36 +20,10 @@ import colors from "../../shared/colors";
 
 export default function Friends() {
   const currentUserUID = "bbb";
-  const [contacts, setContacts] = useState([
-    //default friends
-    {
-      Name: "Guy Chelsea",
-      Uid: "0xfjri3995",
-      ProfilePicture: "",
-    },
-
-    {
-      Name: "Mearz Wong",
-      Uid: "03djccnjfj",
-      ProfilePicture: "",
-    },
-  ]);
+  const [contacts, setContacts] = useState([]);
 
   const [search, setSearch] = useState("");
-  const [filteredContacts, setFilteredContacts] = useState([
-    //default friends
-    {
-      Name: "Guy Chelsea",
-      Uid: "0xfjri3995",
-      ProfilePicture: "",
-    },
-
-    {
-      Name: "Mearz Wong",
-      Uid: "03djccnjfj",
-      ProfilePicture: "",
-    },
-  ]);
+  const [filteredContacts, setFilteredContacts] = useState([]);
 
   // const { user } = useContext(AuthContext);
 
@@ -77,10 +51,14 @@ export default function Friends() {
 
   return (
     <SafeAreaView>
-      <View className="px-4">
-        <Text>Friends List</Text>
-        <AddFriendModal />
-        <FriendRequestModal />
+      <View className="p-4">
+        <View className="flex flex-row justify-between items-center">
+          <Text className="text-2xl font-semibold">Friends List</Text>
+          <View className="flex flex-row items-center">
+            <FriendRequestModal />
+            <AddFriendModal />
+          </View>
+        </View>
         <TextInput
           value={search}
           onChangeText={setSearch}
@@ -119,6 +97,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5, // This property adds shadow on Android
     flexGrow: 1,
+    marginVertical: 8,
   },
   container: {
     flex: 1,

@@ -19,7 +19,11 @@ const AddFriendCard = ({
         <Image
           alt=""
           resizeMode="cover"
-          source={{ uri: img }}
+          source={{
+            uri: `https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images%2F${img.slice(
+              81
+            )}`,
+          }}
           style={styles.cardImg}
         />
       ) : (
@@ -96,7 +100,7 @@ const styles = StyleSheet.create({
   cardImg: {
     width: 42,
     height: 42,
-    borderRadius: 12,
+    borderRadius: 9999,
   },
   cardAvatar: {
     display: "flex",
