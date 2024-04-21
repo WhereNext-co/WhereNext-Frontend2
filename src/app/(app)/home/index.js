@@ -212,7 +212,17 @@ export default function MapView() {
         handlePlaceSelection={handlePlaceSelection}
       />
       {searchDetails && (
-
+        <BottomSheetModal
+          name="mymodal"
+          ref={bottomSheetModalRef}
+          enablePanDownToClose={true}
+          enableDismissOnClose={true}
+          snapPoints={["40%", "100%"]}
+          onChange={(index) => setIsSheetOpen(index === 1)}
+          handleIndicatorStyle={
+            isSheetOpen ? styles.handleHidden : styles.handle
+          }
+        >
           <BottomSheetScrollView
             style={
               isSheetOpen
@@ -223,7 +233,7 @@ export default function MapView() {
             <Text className="font-medium text-2xl">
               {searchDetails?.displayName.text}
             </Text>
-            <Pressable>
+            <Pressable onPress={createRendezvousHandler}>
               <LinearGradient
                 colors={["#2acbf9", "#9aeeb0"]}
                 start={{ x: 0, y: 0.5 }}
@@ -305,7 +315,6 @@ export default function MapView() {
                 <View>
                   <Text>{p}</Text>
                 </View>
-
               ))}
             {searchDetails.reservable && (
               <Text>{`Reservation: ${
