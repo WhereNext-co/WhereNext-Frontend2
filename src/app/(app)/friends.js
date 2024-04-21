@@ -56,7 +56,7 @@ export default function Friends() {
     // friend lists from API
     const user = currentUserUID;
     axios
-      .get(`http://where-next.tech/users/friends`, {
+      .post(`http://where-next.tech/users/friends`, {
         uid: user,
       })
       .then((response) => {

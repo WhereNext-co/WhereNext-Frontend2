@@ -56,11 +56,13 @@ export default function AddFriendModal() {
               <View>
                 {requestsReceived.map((user) => (
                   <FriendRequestCard
+                    requestsReceived={requestsReceived}
+                    setRequestsReceived={setRequestsReceived}
                     currentuserUID={CurrentUserUID}
                     key={user.Sender.Uid}
                     img={user.Sender.ProfilePicture}
                     name={user.Sender.Name}
-                    username={user.UserName}
+                    username={user.Sender.UserName}
                     onPress={() => console.log(`Friend at index pressed`)}
                   />
                 ))}

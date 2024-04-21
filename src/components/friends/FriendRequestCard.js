@@ -3,15 +3,27 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-const FriendRequestCard = ({ img, name, username, currentuserUID }) => {
+import axios from "axios";
+const FriendRequestCard = ({
+  key,
+  img,
+  name,
+  username,
+  currentuserUID,
+  setRequestsReceived,
+  requestsReceived,
+}) => {
   const handleAccept = () => {
     axios
       .put("http://where-next.tech/users/friendrequest", {
         uid: currentuserUID,
-        friendName: name,
+        friendName: username,
       })
       .then((response) => {
         console.log(response.data);
+        setRequestsReceived(
+          requestsReceived.filter((user) => user.Sender.Uid !== key)
+        );
       })
       .catch((error) => {
         console.error("Error updating data: ", error);
@@ -20,12 +32,14 @@ const FriendRequestCard = ({ img, name, username, currentuserUID }) => {
 
   const handleDecline = () => {
     axios
-      .del("http://where-next.tech/users/friendrequest/decline", {
-        uid: currentuserUID,
-        friendName: name,
+      .delete("http://where-next.tech/users/friendrequest/decline", {
+        data: { uid: currentuserUID, friendName: username },
       })
       .then((response) => {
         console.log(response.data);
+        setRequestsReceived(
+          requestsReceived.filter((user) => user.Sender.Uid !== key)
+        );
       })
       .catch((error) => {
         console.error("Error updating data: ", error);

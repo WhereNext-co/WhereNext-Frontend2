@@ -19,6 +19,7 @@ import axios from "axios";
 
 export default function AddFriendModal() {
   const currentUserUID = "bbb";
+  const [key, setKey] = useState(0);
   const [userToAdd, setUserToAdd] = useState(
     //default friends
     {
@@ -79,7 +80,8 @@ export default function AddFriendModal() {
       })
       .then((response) => {
         console.log(response.data);
-        setUserToAdd([...userToAdd, friend]);
+        setKey((prevKey) => prevKey + 1);
+        setFriendStatus("friend request already sent");
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -92,11 +94,12 @@ export default function AddFriendModal() {
     const user = currentUserUID;
     axios
       .delete("http://where-next.tech/users/friendrequest/cancel", {
-        uid: user,
-        friendName: userToAdd.UserName,
+        data: { uid: user, friendName: userToAdd.UserName },
       })
       .then((response) => {
         console.log(response.data);
+        setKey((prevKey) => prevKey + 1);
+        setFriendStatus("not friends");
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -107,8 +110,7 @@ export default function AddFriendModal() {
     const user = currentUserUID;
     axios
       .delete("http://where-next.tech/users/friends", {
-        uid: user,
-        friendName: userToAdd.UserName,
+        data: { uid: user, friendName: userToAdd.UserName },
       })
       .then((response) => {
         console.log(response.data);
@@ -157,7 +159,7 @@ export default function AddFriendModal() {
           <Button title="Search" onPress={onSearchHandler} />
           <ScrollView>
             <AddFriendCard
-              key={userToAdd.Uid}
+              key={key}
               img={userToAdd.ProfilePicture}
               name={userToAdd.Name}
               onAddPress={addFriendHandler}

@@ -2,47 +2,79 @@ import React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { Feather } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
+import axios from "axios";
+import { router, useLocalSearchParams } from "expo-router";
 const LocationCard = ({
-  img,
-  locationName,
-  locationDetail,
-  onPress,
-  meetingStatus,
+  name,
+  placename,
+  starttime,
+  endtime,
+  members,
+  placephotolink,
+  placelocation,
+  status,
+  currentuseruid,
+  scheduleid,
 }) => {
+  const onRendezvousPressHandler = () => {
+    if (status === "Draft") {
+      router.push("./createRendezvous/edit");
+      return;
+    } else {
+      router.push("./createRendezvous/rendezvousInfo");
+    }
+  };
+
   return (
-    <TouchableOpacity onPress={onPress}>
-      <View style={styles.card}>
-        {img ? ( //Checking if the img is available
-          <Image
-            alt=""
-            resizeMode="cover"
-            source={{ uri: img }}
-            style={styles.cardImg}
-          />
-        ) : (
-          // If the img is not available, display the first letter of the name.
-          <View style={[styles.cardImg, styles.cardAvatar]}>
-            <Text style={styles.cardAvatarText}>{locationName[0]}</Text>
-          </View>
-        )}
-        <View /*The part where name is displayed*/ style={styles.cardBody}>
-          <Text style={styles.cardTitle}>{locationName}</Text>
-          <Text style={styles.cardTitle}>{locationDetail}</Text>
+    <View style={styles.card}>
+      {placephotolink ? ( //Checking if the img is available
+        <Image
+          alt=""
+          resizeMode="cover"
+          source={{ uri: placephotolink }}
+          style={styles.cardImg}
+        />
+      ) : (
+        // If the img is not available, display the first letter of the name.
+        <View style={[styles.cardImg, styles.cardAvatar]}>
+          <Text style={styles.cardAvatarText}>{placename[0]}</Text>
         </View>
+      )}
 
-        <View style={styles.cardAction}>
-          <Feather name="edit" size={24} color="black" />
-        </View>
-
-        <View style={styles.cardAction}>
-          <FeatherIcon // Right arrow icon displayed at the end of the card.
-            color="#9ca3af"
-            name="chevron-right"
-            size={22}
-          />
-        </View>
+      <View>
+        <Text>{name}</Text>
       </View>
-    </TouchableOpacity>
+
+      <View /*The part where name is displayed*/ style={styles.cardBody}>
+        <Text style={styles.cardTitle}>{placename}</Text>
+        <Text style={styles.cardTitle}>{placelocation}</Text>
+        <Text>{members}</Text>
+      </View>
+
+      <View>
+        <Text>{starttime}</Text>
+        <Text>{endtime}</Text>
+      </View>
+
+      <View>
+        <Text>{members}</Text>
+      </View>
+
+      {status === "Draft" ? (
+        <View style={styles.cardAction}>
+          <TouchableOpacity onPress={onRendezvousPressHandler}>
+            <Feather name="edit" size={24} color="black" />
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <View style={styles.cardAction}>
+          <TouchableOpacity onPress={onRendezvousPressHandler}>
+            <FeatherIcon color="#9ca3af" name="chevron-right" size={22} />
+          </TouchableOpacity>
+        </View>
+      )}
+    </View>
   );
 };
 
