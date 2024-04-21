@@ -47,6 +47,7 @@ export default function MapView() {
   const { location, setLocation } = useContext(UserLocationContext);
   const [searchText, setSearchText] = useState(""); // State to hold the search text
   const { searchDetails, setSearchDetails } = useContext(UserLocationContext); // State to hold the search details
+
   const [searchResults, setSearchResults] = useState(null); // State to hold the search results
   const [nearbyPlaces, setNearbyPlaces] = useState([]); // State to hold the nearby places
   const [searching, setSearching] = useState(false);

@@ -19,44 +19,17 @@ import firebase from "firebase/auth";
 
 export default function Friends() {
   const currentUserUID = "bbb";
-  const [contacts, setContacts] = useState([
-    //default friends
-    {
-      Name: "Guy Chelsea",
-      Uid: "0xfjri3995",
-      ProfilePicture: "",
-    },
-
-    {
-      Name: "Mearz Wong",
-      Uid: "03djccnjfj",
-      ProfilePicture: "",
-    },
-  ]);
+  const [contacts, setContacts] = useState([]);
 
   const [search, setSearch] = useState("");
-  const [filteredContacts, setFilteredContacts] = useState([
-    //default friends
-    {
-      Name: "Guy Chelsea",
-      Uid: "0xfjri3995",
-      ProfilePicture: "",
-    },
-
-    {
-      Name: "Mearz Wong",
-      Uid: "03djccnjfj",
-      ProfilePicture: "",
-    },
-  ]);
+  const [filteredContacts, setFilteredContacts] = useState([]);
 
   // const { user } = useContext(AuthContext);
-
   useEffect(() => {
     // friend lists from API
     const user = currentUserUID;
     axios
-      .post(`http://where-next.tech/users/friends`, {
+      .post(`http://where-next.tech/users/get-friends`, {
         uid: user,
       })
       .then((response) => {

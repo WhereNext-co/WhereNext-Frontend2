@@ -1,19 +1,14 @@
 import React, { useState } from "react";
 import { View, Text, Button } from "react-native";
-import ConfirmationUsersCard from "../../../components/calendar/ConfirmationUsersCard";
 
-export default function confirmation() {
+export default function rendezvousView() {
   const [rendezvous, setRendezvous] = useState({
-    hostuid: "",
     name: "",
     type: "",
     starttime: "",
     endtime: "",
     status: "Draft",
-    InvitedUsers: [
-      { img: "", name: "" },
-      { img: "", name: "" },
-    ],
+    members: 2,
     placename: "",
     placegoogleplaceid: "",
     placelocation: "",

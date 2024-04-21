@@ -17,6 +17,7 @@ import { fr } from "date-fns/locale";
 import { UserLocationContext } from "../../../context/userLocationContext";
 
 export default function CreateMeeting() {
+  const currentUserUID = "ccc";
   // State variables
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -69,6 +70,7 @@ export default function CreateMeeting() {
     endTime: "",
     friendUIDs: [],
     duration: 0,
+    rendezvousName: "",
   });
 
   // Schedule sync handler
@@ -77,30 +79,53 @@ export default function CreateMeeting() {
       alert("Rendezvous Name cannot be empty");
       return;
     } else {
-      console.log(rendezvous);
+      const startDateObj = new Date(startDate);
+      const endDateObj = new Date(endDate);
+
+      const startDateISO = `${startDateObj.getUTCFullYear()}-${String(
+        startDateObj.getUTCMonth() + 1
+      ).padStart(2, "0")}-${String(startDateObj.getUTCDate()).padStart(
+        2,
+        "0"
+      )}T${String(startDateObj.getUTCHours()).padStart(2, "0")}:${String(
+        startDateObj.getUTCMinutes()
+      ).padStart(2, "0")}:${String(startDateObj.getUTCSeconds()).padStart(
+        2,
+        "0"
+      )}Z`;
+
+      const endDateISO = `${endDateObj.getUTCFullYear()}-${String(
+        endDateObj.getUTCMonth() + 1
+      ).padStart(2, "0")}-${String(endDateObj.getUTCDate()).padStart(
+        2,
+        "0"
+      )}T${String(endDateObj.getUTCHours()).padStart(2, "0")}:${String(
+        endDateObj.getUTCMinutes()
+      ).padStart(2, "0")}:${String(endDateObj.getUTCSeconds()).padStart(
+        2,
+        "0"
+      )}Z`;
       setRendezvous({
-        uid: "",
-        startTime: startDate,
-        endTime: endDate,
+        uid: currentUserUID,
+        startTime: startDateISO,
+        endTime: endDateISO,
         friendUIDs: friendUIDs,
         duration: duration,
+        rendezvousName: rendezvousName,
       });
-
-      try {
-        /* const response = await axios.post(
-        'http://where-next.tech/schedulesync/get-free-timeslot',
-        rendezvous
-      );
-
-      if (response.status !== 200) {
-        throw new Error('HTTP error ' + response.status);
-      } */
-        console.log("Rendezvous created:", rendezvous);
-        router.replace("./createRendezvous/scheduleSync");
-        alert("Rendezvous created successfully!");
-      } catch (error) {
-        console.error("Failed to create rendezvous:", error);
-      }
+      console.log(rendezvous);
+      console.log("Rendezvous created:", rendezvous);
+      router.push({
+        pathname: "./createRendezvous/scheduleSync",
+        params: {
+          uid: currentUserUID,
+          startTime: startDateISO,
+          endTime: endDateISO,
+          friendUIDs: friendUIDs,
+          duration: duration,
+        },
+      });
+      alert("Rendezvous created successfully!");
     }
   };
 

@@ -10,11 +10,7 @@ const ScheduleSyncTimeCard = ({ startTime, endTime, selected, onSelect }) => {
 
   return (
     <TouchableOpacity onPress={() => onSelect({ startTime, endTime })}>
-      <View
-        style={
-          selected.startTime === startTime ? styles.selectedCard : styles.card
-        }
-      >
+      <View style={[styles.card, isSelected && styles.selectedCard]}>
         <Text style={styles.cardTitle}>
           {startTime} - {endTime}
         </Text>
