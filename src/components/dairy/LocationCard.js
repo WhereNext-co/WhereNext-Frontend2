@@ -1,6 +1,10 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { Feather } from "@expo/vector-icons";
+import Pin from "../../../assets/home/placeDetail/pin";
+import Members from "../../../assets/tabs/friends";
+import Clock from "../../../assets/home/placeDetail/clock";
+import { router } from "expo-router";
 
 const LocationCard = ({
   name,
@@ -34,39 +38,48 @@ const LocationCard = ({
   };
 
   return (
-    <View style={styles.card}>
-      {placephotolink ? (
-        <Image
-          alt=""
-          resizeMode="cover"
-          source={{ uri: placephotolink }}
-          style={styles.cardImg}
-        />
-      ) : (
-        <View style={[styles.cardImg, styles.cardAvatar]}>
-          <Text style={styles.cardAvatarText}>{placename[0]}</Text>
-        </View>
-      )}
-
-      <View style={styles.cardBody}>
-        <Text style={styles.cardTitle}>{name}</Text>
-        <Text>{placename}</Text>
-        <Text>{placelocation}</Text>
-        <Text>{members}</Text>
-        <Text>Start Time: {formatTime(starttime)}</Text>
-        <Text>End Time: {formatTime(endtime)}</Text>
-      </View>
-
-      <View style={styles.cardAction}>
-        <TouchableOpacity onPress={onRendezvousPressHandler}>
-          {status === "Draft" ? (
-            <Feather name="edit" size={24} color="black" />
+    <TouchableOpacity onPress={onRendezvousPressHandler} style={styles.card}>
+      <View>
+        <View className="flex flex-row">
+          {placephotolink ? (
+            <Image
+              alt=""
+              resizeMode="cover"
+              source={{ uri: placephotolink }}
+              style={styles.cardImg}
+            />
           ) : (
-            <Feather name="chevron-right" size={22} color="#9ca3af" />
+            <View style={[styles.cardImg, styles.cardAvatar]}>
+              <Text style={styles.cardAvatarText}>{name[0]}</Text>
+            </View>
           )}
-        </TouchableOpacity>
+
+          <View className="flex flex-col ml-3">
+            <Text className="font-bold text-xl text-[#a0de32]">{name}</Text>
+
+            <View className="flex flex-row items-center my-1">
+              <Pin width={25} height={25} className="mr-2" />
+              <View>
+                <Text className="text-white">{placename}</Text>
+                <Text className="text-white">{placelocation}</Text>
+              </View>
+            </View>
+
+            <View className="flex flex-row items-center my-1">
+              <Members width={25} height={25} className="mr-2" />
+              <Text className="text-white">{`${members} members`}</Text>
+            </View>
+          </View>
+        </View>
+        <View className="flex flex-row items-center mt-2">
+          <Clock width={25} height={25} className="mr-2" />
+          <View>
+            <Text className="text-white">Start: {formatTime(starttime)}</Text>
+            <Text className="text-white">End: {formatTime(endtime)}</Text>
+          </View>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -74,17 +87,18 @@ export default LocationCard;
 
 const styles = StyleSheet.create({
   card: {
-    paddingVertical: 14,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    backgroundColor: "#C8C8C8",
+    paddingVertical: 20,
+    // flexDirection: "row",
+    // alignItems: "center",
+    // justifyContent: "flex-start",
+    backgroundColor: "#14072b",
     borderRadius: 24,
     marginVertical: 8,
+    paddingHorizontal: 16,
   },
   cardImg: {
-    width: 42,
-    height: 42,
+    width: 100,
+    height: 100,
     borderRadius: 12,
   },
   cardAvatar: {
@@ -96,16 +110,6 @@ const styles = StyleSheet.create({
     fontSize: 19,
     fontWeight: "bold",
     color: "#fff",
-  },
-  cardBody: {
-    marginLeft: 12,
-    flex: 1,
-  },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#000",
-    marginBottom: 4,
   },
   cardAction: {
     paddingRight: 16,
