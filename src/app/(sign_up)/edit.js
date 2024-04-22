@@ -175,42 +175,42 @@ export default function Login({}) {
           paddingLeft:20,justifyContent: 'center', alignItems: 'center'}}>Edit Profile</Text>
         </View>
         <View style={{marginBottom:200, width:"100%"}}>
-        <View style={{justifyContent: 'center', alignItems: 'center',borderBottomWidth:1,borderColor:'white',padding:20}}>
+        <View style={{justifyContent: 'center', alignItems: 'center',borderBottomWidth:1,borderColor:'#303034',padding:20}}>
         <Image source={{ uri: link }} style={styles.image} />
-        <TouchableOpacity onPress={handleButtonPress}><Text style={{color:'blue',fontSize:20}}>Edit profile</Text></TouchableOpacity>
+        <TouchableOpacity onPress={handleButtonPress} style={{paddingTop:10}}><Text style={{color:'#3cb9ff',fontSize:20}}>Edit profile</Text></TouchableOpacity>
         </View>
-        <View style={{flexDirection: 'row',justifyContent: 'flex-start', alignItems: 'center',padding: 20,borderBottomWidth:1,borderColor:'white'}}>
+        <View style={{flexDirection: 'row',justifyContent: 'flex-start', alignItems: 'center',padding: 20,borderBottomWidth:1,borderColor:'#303034'}}>
         <Text style={{
           fontSize:20,
           color:'white',
         justifyContent: 'center', alignItems: 'center'}}>Name</Text>
-        <TextInput placeholder='Name' value={nameInputValue} onChangeText={setNameInputValue} placeholderTextColor="#D8D8D8" style={{color:"red",marginLeft:20,fontSize:20}}/>
+        <TextInput placeholder='Name' value={nameInputValue} onChangeText={setNameInputValue} placeholderTextColor="#D8D8D8" style={{color:"white",marginLeft:20,fontSize:20}}/>
         </View>
-        <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center',padding: 20,borderBottomWidth:1,borderColor:'white'}}>
+        <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center',padding: 20,borderBottomWidth:1,borderColor:'#303034'}}>
         <Text style={{
           fontSize:20,
           color:'white',
           justifyContent: 'center', alignItems: 'center'}}>Username</Text>
-        <TextInput placeholder='Username' value={surnameInputValue} onChangeText={setSurnameInputValue} placeholderTextColor="#D8D8D8" style={{color:"red",marginLeft:20,fontSize:20}}/>
-        </View><View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center',padding: 20,borderBottomWidth:1,borderColor:'white'}}>
+        <TextInput placeholder='Username' value={surnameInputValue} onChangeText={setSurnameInputValue} placeholderTextColor="#D8D8D8" style={{color:"white",marginLeft:20,fontSize:20}}/>
+        </View><View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center',padding: 20,borderBottomWidth:1,borderColor:'#303034'}}>
         <Text style={{
           fontSize:20,
           color:'white',
           justifyContent: 'center', alignItems: 'center'}}>Birth date</Text>
-        <TextInput placeholder='DD'  maxLength={2} value={dInputValue} keyboardType="numeric" onChangeText={setDInputValue} placeholderTextColor="#D8D8D8" style={{color:"red",marginLeft:20,fontSize:20}}/><Text style={{
+        <TextInput placeholder='DD'  maxLength={2} value={dInputValue} keyboardType="numeric" onChangeText={setDInputValue} placeholderTextColor="#D8D8D8" style={{color:"white",marginLeft:20,fontSize:20}}/><Text style={{
           fontSize:20,
-          color:'white'}}>/</Text><TextInput maxLength={2} placeholder='MM' keyboardType="numeric" value={mInputValue} onChangeText={setMInputValue} placeholderTextColor="#D8D8D8" style={{color:"red",fontSize:20}}/><Text style={{
+          color:'white'}}>/</Text><TextInput maxLength={2} placeholder='MM' keyboardType="numeric" value={mInputValue} onChangeText={setMInputValue} placeholderTextColor="#D8D8D8" style={{color:"white",fontSize:20}}/><Text style={{
             fontSize:20,
             color:'white'}}>/</Text>
-          <TextInput placeholder='YYYY' maxLength={4} keyboardType="numeric" value={yInputValue} onChangeText={setYInputValue} placeholderTextColor="#D8D8D8" style={{color:"red",fontSize:20}}/>
-        </View><View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center',padding: 20,borderBottomWidth:1,borderColor:'white'}}>
+          <TextInput placeholder='YYYY' maxLength={4} keyboardType="numeric" value={yInputValue} onChangeText={setYInputValue} placeholderTextColor="#D8D8D8" style={{color:"white",fontSize:20}}/>
+        </View><View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center',padding: 20,borderBottomWidth:1,borderColor:'#303034'}}>
         <Text style={{
           fontSize:20,
           color:'white',
           justifyContent: 'center', alignItems: 'center'}}>Bio</Text>
         <TextInput multiline numberOfLines={4}
-        maxLength={40} placeholder='Bio' value={bioInputValue} onChangeText={setBioInputValue} placeholderTextColor="#D8D8D8" style={{color:"red",marginLeft:20,fontSize:20}}/>
-        </View><View style={{justifyContent:'center',alignItems:'center'}}><Button label={"Next"} onPress={handlePress} style={{}}></Button></View>
+        maxLength={40} placeholder='Bio' value={bioInputValue} onChangeText={setBioInputValue} placeholderTextColor="#D8D8D8" style={{color:"white",marginLeft:20,fontSize:20}}/>
+        </View><View style={{justifyContent:'center',alignItems:'center'}}><Button label={"Save"} onPress={handlePress} style={{}}></Button></View>
         
     </View></View>
     
@@ -233,8 +233,8 @@ const styles = StyleSheet.create({
 
       },
       image: {
-        width: 100,
-        height: 100,
+        width: 125,
+        height: 125,
         borderRadius: 100, // Half of the width and height to make it a circle
       }
   });
