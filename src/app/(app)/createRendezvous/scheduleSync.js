@@ -48,7 +48,7 @@ export default function scheduleSync() {
     router.push({
       pathname: "./confirmation",
       params: {
-        uid: currentUserUID,
+        uid: uid,
         startTime: startTime,
         endTime: endTime,
         friendUIDs: friendUIDs,
@@ -69,12 +69,12 @@ export default function scheduleSync() {
 
   return (
     <View>
-      <Text>Schedule Sync</Text>
+      {/* <Text>Schedule Sync</Text>
       <Text>
         {uid} {friendUIDs.split(",")} {startTime} {endTime}
-      </Text>
+      </Text> */}
       <View>
-        {timeList.length !== 0 ? (
+        {timeList ? (
           <View>
             <View style={styles.timeListContainer}>
               <ScrollView>

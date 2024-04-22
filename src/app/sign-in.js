@@ -1,4 +1,4 @@
-import { router, Stack} from "expo-router";
+import { router, Stack } from "expo-router";
 import {
   Text,
   View,
@@ -28,10 +28,10 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const [verifyValidPhone, setVerifyValidPhone] = useState(false);
 
-  const [pass,setPass] = useState("");
-  
+  const [pass, setPass] = useState("");
+
   useEffect(() => {
-    console.log("pass:",pass)
+    console.log("pass:", pass);
     if (pass !== "") {
       router.replace("./(app)/home"); // Navigate to home page
     }
@@ -51,23 +51,23 @@ export default function SignIn() {
     try {
       // Send telephone number to API
 
-      response = await axios.post("http://where-next.tech/users/check-telno", {
-        telNo: `${phone}`,
-      }).then((response) => {
-        console.log(response.data);
-        if (response.data.exists == true) {
-        verifyPhoneHandler2();
-        console.log("tel in firebase already");
-        } else {
-          alert("Account not found");
-        }
-      }
-      ).catch((error) => {
-        console.error("Error sending phone number to API: checkTelNo", error);
-        // Handle error condition, e.g., show error message to user
-      }
-      );
-
+      response = await axios
+        .post("http://where-next.tech/users/check-telno", {
+          telNo: `${phone}`,
+        })
+        .then((response) => {
+          console.log(response.data);
+          if (response.data.exists == true) {
+            verifyPhoneHandler2();
+            console.log("tel in firebase already");
+          } else {
+            alert("Account not found");
+          }
+        })
+        .catch((error) => {
+          console.error("Error sending phone number to API: checkTelNo", error);
+          // Handle error condition, e.g., show error message to user
+        });
     } catch (error) {
       console.error("Error sending phone number to API: checkTelNo", error);
       // Handle error condition, e.g., show error message to user
@@ -127,14 +127,12 @@ export default function SignIn() {
         password
       );
       setPass(userCredential._tokenResponse.idToken);
-
     } catch (error) {
       alert(`Error: OTP wrong`); // Debug
     } finally {
       setLoading(false);
     }
   };
- 
 
   const signUpHandler = async () => {
     // Sign up handler
@@ -142,19 +140,36 @@ export default function SignIn() {
   };
 
   return (
-    <View style={{flex:1,backgroundColor:'#14072b',justifyContent:'center', alignItems:'center',height:'100%'}}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "#14072b",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+      }}
+    >
       <Stack.Screen options={{ headerShown: false }} />
 
       {}
-      {verifyValidPhone ? (<View style={{justifyContent:'center',alignItems:'center'}}>
-        <OTP onOTPChange={OTPHandler} />
-        <Button label={"Send OTP"} onPress={verifyPhoneHandler} />
+      {verifyValidPhone ? (
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <OTP onOTPChange={OTPHandler} />
+          <Button label={"Send OTP"} onPress={verifyPhoneHandler} />
         </View>
       ) : (
-        <View style={{justifyContent:'center',alignItems:'center'}}>
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
           <View>
-            <Text style={{ textAlign: "center", color: "white", fontSize: 30,padding:20,marginBottom:70}}>
-              Log in with{'\n'}your phone number
+            <Text
+              style={{
+                textAlign: "center",
+                color: "white",
+                fontSize: 30,
+                padding: 20,
+                marginBottom: 70,
+              }}
+            >
+              Log in with{"\n"}your phone number
             </Text>
           </View>
           <CustomCountryCodePicker
@@ -164,27 +179,20 @@ export default function SignIn() {
           {loading ? (
             <ActivityIndicator size="large" color="gray" />
           ) : (
-            <View style={{paddingVertical:10}}>
+            <View style={{ paddingVertical: 10 }}>
               <Button label={"Send OTP"} onPress={verifyPhoneHandler} />
               <Pressable style={{}} onPress={signUpHandler}>
-        <Text style={{textAlign :"center",
-        textAlignVertical:"center",
-        fontSize:15, 
-        color:'white'}}>
-        Create Account</Text>
-        </Pressable>
-              <Button
-                label="Go to Home"
-                onPress={() => router.replace("./(app)/home")}
-              />
-              <Button
-
-                label="Go to Schedule Sync"
-
-                onPress={() =>
-                  router.replace("./(app)/createRendezvous/scheduleSync")
-                }
-              />
+                <Text
+                  style={{
+                    textAlign: "center",
+                    textAlignVertical: "center",
+                    fontSize: 15,
+                    color: "white",
+                  }}
+                >
+                  Don't have an account? Sign up
+                </Text>
+              </Pressable>
             </View>
           )}
         </View>
