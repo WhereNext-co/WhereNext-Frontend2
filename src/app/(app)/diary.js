@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   StyleSheet,
   View,
@@ -16,6 +16,7 @@ import { format } from "date-fns";
 import axios from "axios";
 import { router } from "expo-router";
 import { set } from "firebase/database";
+import { AuthContext } from "../../context/authContext";
 
 export default function Diary() {
   const [selectedTab, setSelectedTab] = useState("Active");
@@ -24,7 +25,7 @@ export default function Diary() {
   const [draftRendezvous, setDraftRendezvous] = useState([]);
   const [pendingRendezvous, setPendingRendezvous] = useState([]);
 
-  const currentUserUID = "aaa";
+  const currentUserUID = useContext(AuthContext).user.uid;
 
   useEffect(() => {
     getActiveRendezvous(); // Fetch the active rendezvous when the component mounts

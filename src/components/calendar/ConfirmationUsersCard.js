@@ -1,7 +1,25 @@
-import React from "react";
+import { se } from "date-fns/locale";
+import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
+import axios from "axios";
 
-const FriendCard = ({ img, name }) => {
+const ConfirmationUsersCard = ({ uid }) => {
+  axios
+    .post("http://where-next.tech/users/get-profile", {
+      uid: uid,
+    })
+    .then((response) => {
+      console.log(response.data.user);
+      setName(response.data.user.Name);
+      setImg(response.data.user.ProfilePicture);
+    })
+    .catch((error) => {
+      console.error("Error updating data: ", error);
+    });
+
+  const [name, setName] = useState("");
+  const [img, setImg] = useState("");
+
   return (
     <View style={styles.card}>
       <View style={styles.card}>
@@ -27,7 +45,7 @@ const FriendCard = ({ img, name }) => {
   );
 };
 
-export default FriendCard;
+export default ConfirmationUsersCard;
 
 const styles = StyleSheet.create({
   /** Card */

@@ -1,43 +1,51 @@
 import React, { useState } from "react";
-import { View, Text, Button } from "react-native";
+import { View, Text, Button, StyleSheet } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
 
 export default function rendezvousView() {
-  const [rendezvous, setRendezvous] = useState({
-    name: "",
-    type: "",
-    starttime: "",
-    endtime: "",
-    status: "Draft",
-    members: 2,
-    placename: "",
-    placegoogleplaceid: "",
-    placelocation: "",
-    placemaplink: "",
-    placephotolink: "",
-  });
+  let {
+    uid,
+    startTime,
+    endTime,
+    friendUIDs,
+    duration,
+    placegoogleplaceid,
+    placename,
+    placelocation,
+    placemaplink,
+    placephotolink,
+    rendezvousName,
+  } = useLocalSearchParams();
 
   const onConfirm = () => {
-    console.log("Confirming");
-  };
-
-  const onEdit = () => {
-    router.replace("./createRendezvous/edit");
-  };
-
-  const onDraft = () => {
-    setRendezvous((prevState) => ({
-      ...prevState,
-      status: "Draft",
-    }));
+    router.push("../home");
   };
 
   return (
-    <View style={{ backgroundColor: "white", padding: 22 }}>
-      <Text>Rendezvous Name: {rendezvous.name}</Text>
-      <Text>Location: {rendezvous.placename}</Text>
-      <Text>Start Time: {rendezvous.starttime}</Text>
-      <Text>End Time: {rendezvous.endtime}</Text>
-      <Text>Friends:</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Rendezvous Name: {rendezvousName}</Text>
+      <Text style={styles.text}>Location: {placename}</Text>
+      <Text style={styles.text}>Start Time: {startTime}</Text>
+      <Text style={styles.text}>End Time: {endTime}</Text>
+      <Text style={styles.text}>Friends:</Text>
+      <Button title="Back To Home" onPress={onConfirm} />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+    padding: 22,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  text: {
+    fontSize: 18,
+    marginBottom: 10,
+  },
+});

@@ -15,9 +15,10 @@ import { Stack, router, useLocalSearchParams } from "expo-router";
 import { set } from "date-fns";
 import { fr, se } from "date-fns/locale";
 import { UserLocationContext } from "../../../context/userLocationContext";
+import { AuthContext } from "../../../context/authContext";
 
 export default function CreateMeeting() {
-  const currentUserUID = "ccc";
+  const currentUserUID = useContext(AuthContext).user.uid;
   let {
     placegoogleplaceid,
     placename,
@@ -129,7 +130,13 @@ export default function CreateMeeting() {
           startTime: startDateISO,
           endTime: endDateISO,
           friendUIDs: friendUIDs,
+          rendezvousName: rendezvousName,
           duration: duration,
+          placegoogleplaceid: placegoogleplaceid,
+          placename: placename,
+          placelocation: placelocation,
+          placemaplink: placemaplink,
+          placephotolink: placephotolink,
         },
       });
       alert("Rendezvous created successfully!");
@@ -186,7 +193,10 @@ export default function CreateMeeting() {
 
         <View style={styles.inviteFriend}>
           {/* Invite Friend */}
-          <InviteFriend onFriendChange={handleFriendChange} />
+          <InviteFriend
+            onFriendChange={handleFriendChange}
+            currentUserUID={currentUserUID}
+          />
         </View>
       </ScrollView>
       {/* Schedule Sync Button */}

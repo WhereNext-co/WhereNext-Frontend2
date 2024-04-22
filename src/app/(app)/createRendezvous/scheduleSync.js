@@ -1,12 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, Text, Button, StyleSheet, ScrollView } from "react-native";
 import ScheduleSyncTimeCard from "../../../components/calendar/ScheduleSyncTimeCard";
 import { router, useLocalSearchParams } from "expo-router";
 import axios from "axios";
 
 export default function scheduleSync() {
-  let { uid, startTime, endTime, friendUIDs, duration } =
-    useLocalSearchParams();
+  let {
+    uid,
+    startTime,
+    endTime,
+    friendUIDs,
+    duration,
+    placegoogleplaceid,
+    placename,
+    placelocation,
+    placemaplink,
+    placephotolink,
+    rendezvousName,
+    currentUserUID,
+  } = useLocalSearchParams();
   const [timeList, setTimeList] = useState([]);
   const [selectedTime, setSelectedTime] = useState(null);
 
@@ -33,7 +45,22 @@ export default function scheduleSync() {
   };
 
   const onConfirm = () => {
-    router.replace("./confirmation");
+    router.push({
+      pathname: "./confirmation",
+      params: {
+        uid: currentUserUID,
+        startTime: startTime,
+        endTime: endTime,
+        friendUIDs: friendUIDs,
+        duration: duration,
+        placegoogleplaceid: placegoogleplaceid,
+        placename: placename,
+        placelocation: placelocation,
+        placemaplink: placemaplink,
+        placephotolink: placephotolink,
+        rendezvousName: rendezvousName,
+      },
+    });
   };
 
   const onEdit = () => {
@@ -49,15 +76,20 @@ export default function scheduleSync() {
       <View>
         {timeList.length !== 0 ? (
           <View>
-            {timeList.map((time) => (
-              <ScheduleSyncTimeCard
-                key={time[0]}
-                startTime={time[0]}
-                endTime={time[1]}
-                selected={selectedTime}
-                onSelect={handleSelectTime}
-              />
-            ))}
+            <View style={styles.timeListContainer}>
+              <ScrollView>
+                {timeList.map((time) => (
+                  <ScheduleSyncTimeCard
+                    key={time[0]}
+                    startTime={time[0]}
+                    endTime={time[1]}
+                    selected={selectedTime}
+                    onSelect={handleSelectTime}
+                  />
+                ))}
+              </ScrollView>
+            </View>
+
             <Button title="Send Invites" onPress={onConfirm} />
             <Button title="Choose Desired Time" onPress={onEdit} />
           </View>
@@ -86,5 +118,13 @@ const styles = StyleSheet.create({
     borderColor: "blue", // Change this to your desired color
     borderWidth: 1,
     borderRadius: 12,
+  },
+  timeListContainer: {
+    margin: 10,
+    padding: 20,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#000",
+    height: 300,
   },
 });

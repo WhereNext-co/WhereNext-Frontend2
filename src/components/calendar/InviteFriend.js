@@ -14,14 +14,12 @@ import FriendCard from "./InviteFriendCard";
 import axios from "axios";
 import Modal from "react-native-modal";
 
-export default function Friends({ onFriendChange }) {
-  const currentUserUID = "bbb";
+export default function Friends({ onFriendChange, currentUserUID }) {
   useEffect(() => {
     // friend lists from API
-    const user = currentUserUID;
     axios
       .post(`http://where-next.tech/users/get-friends`, {
-        uid: user,
+        uid: currentUserUID,
       })
       .then((response) => {
         setContacts(response.data.friendList);
@@ -46,16 +44,12 @@ export default function Friends({ onFriendChange }) {
 
   // Event handler for selecting/deselecting friends
   const handlePress = (friend) => {
-    if (selectedFriends.includes(friend.id)) {
+    if (selectedFriends.includes(friend.Uid)) {
       setSelectedFriends(selectedFriends.filter((id) => id !== friend.Uid));
     } else {
       setSelectedFriends([...selectedFriends, friend.Uid]);
     }
     console.log(`From child component: ${selectedFriends}`);
-  };
-
-  //On invite button press
-  const onInvite = () => {
     onFriendChange(selectedFriends);
   };
 
@@ -95,9 +89,6 @@ export default function Friends({ onFriendChange }) {
           />
         ))}
       </ScrollView>
-
-      {/* Invite button */}
-      <Button title="Invite" onPress={onInvite} />
     </SafeAreaView>
   );
 }
