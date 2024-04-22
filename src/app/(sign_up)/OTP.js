@@ -103,7 +103,7 @@ useEffect(() => {
       );
       console.log(userCredential._tokenResponse.idToken)
       setToken(userCredential._tokenResponse.idToken);
-      awaitalert("Success");
+      alert("Success");
       // router.replace("/(app)/home"); // Navigate to home page
     } catch (error) {
       alert(`Error: ${error} Password: ${password} Email: ${emailphoneFormat}`); // Debug
