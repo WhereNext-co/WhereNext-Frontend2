@@ -27,7 +27,7 @@ export default function confirmation() {
         starttime: startTime,
         endtime: endTime,
         status: "Active",
-        InvitedUsers: ["bbb", "ccc", "eee"],
+        InvitedUsers: friendUIDs.split(","),
         placename: placename,
         placegoogleplaceid: placegoogleplaceid,
         placelocation: placelocation,
