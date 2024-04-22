@@ -8,7 +8,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-import { router, useLocalSearchParams} from "expo-router";
+import { router, useLocalSearchParams,Stack} from "expo-router";
 import axios from 'axios';
 import { AuthContext, useAuth } from "../../context/authContext";
 
@@ -187,8 +187,9 @@ export default function Login() {
       });
     };
     return(
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
-        <View style={{ position: 'absolute', top: 20, left: 20 }}>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#14072b' }}>
+      <Stack.Screen options={{ headerShown: false }} />
+        <View style={{ position: 'absolute', top: 60, left: 20 }}>
         <Backbutton style={{}} onPress={handlePress2}/>
         </View>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

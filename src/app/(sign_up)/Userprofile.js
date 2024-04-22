@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { View, Button, StyleSheet, Text, Alert, Image, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { listFiles, uploadToFirebase, fbStorage } from '../../../firebaseConfig';
-import Buttonpung from '../../components/componentspung/Button/Button/Button';
+import Buttonpung from '../../components/componentspung/Button/Button/LongButton';
 import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
-import { router, useLocalSearchParams} from "expo-router";
-
+import { router, useLocalSearchParams,Stack} from "expo-router";
+import { LinearGradient } from 'expo-linear-gradient';
 export default function GalleryPicker() {
   let {name,surname,username,title,mail,birthdate,profile} = useLocalSearchParams();
   const [permission, requestPermission] = ImagePicker.useCameraPermissions();
   const [files, setFiles] = useState([]);
-  const [link,setLink]=useState(profile ? profile : 'https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images%2F732A162A-5181-41A1-BDDC-3FACDBC8C706.png?alt=media&token=baa3a32e-2732-4086-ab60-8e3759ef32af');
-
+  const [link,setLink]=useState(profile ? 'https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images%2F'+profile.slice(81) : 'https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images%2F732A162A-5181-41A1-BDDC-3FACDBC8C706.png?alt=media&token=baa3a32e-2732-4086-ab60-8e3759ef32af');
+  console.log(profile)
   const handleButtonPress = () => {
     Alert.alert(
       'Choose an option',
@@ -39,14 +39,13 @@ export default function GalleryPicker() {
         mail: mail,
         username: username,
         birthdate:birthdate,
-        profile:link
+        profile: link
       }
     });
   };
   const handlePress2 = () => {
     router.push({pathname:'/UsernameBD',params:{title:title,name:name,surname:surname,mail:mail,username:username,birthdate:birthdate}})
   };
-  console.log(birthdate)
   useEffect(() => {
     listFiles().then((listResp) => {
       const files = listResp.map((value) => {
@@ -55,10 +54,6 @@ export default function GalleryPicker() {
       setFiles(files);
     });
   }, []);
-  useEffect(() => {
-    console.log('Link updated:', link);
-
-  }, [link]);
   const takePhoto = async () => {
     try{
     const cameraResp = await ImagePicker.launchCameraAsync({
@@ -70,7 +65,6 @@ export default function GalleryPicker() {
       const { uri} = cameraResp.assets[0]
       const fileName = uri.split('/').pop()
       const uploadResp = await uploadToFirebase(uri, fileName)
-      console.log(uploadResp)
       const downloadUrl = uploadResp.downloadUrl;
       setLink(downloadUrl)
       listFiles().then((listResp)=>{
@@ -96,7 +90,6 @@ export default function GalleryPicker() {
         const { uri } = imageResp.assets[0];
         const fileName = uri.split('/').pop();
         const uploadResp = await uploadToFirebase(uri, fileName);
-        console.log(uploadResp);
         const downloadUrl = uploadResp.downloadUrl;
         setLink(downloadUrl)
         listFiles().then((listResp) => {
@@ -124,7 +117,8 @@ export default function GalleryPicker() {
 
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#14072b' }}>
-        <View style={{ position: 'absolute', top: 20, left: 20 }}>
+      <Stack.Screen options={{ headerShown: false }} />
+        <View style={{ position: 'absolute', top: 60, left: 20 }}>
         <Backbutton style={{}} onPress={handlePress2}/>
         </View>
         <View style={{ alignItems: 'center',marginBottom: 20 }}>
@@ -139,7 +133,24 @@ export default function GalleryPicker() {
   <View style={styles.imageContainer}>
         <Image source={{ uri: link }} style={styles.image} />
         <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={handleButtonPress} />
+        <TouchableOpacity style={{}} onPress={handleButtonPress}>
+        <LinearGradient colors={['#2acbf9', '#9aeeb0']}
+        style={{
+          width: 40,
+          height: 40,
+          backgroundColor: 'rgba(255, 255, 255, 0.7)',
+          marginBottom: 10,
+          borderRadius: 20, // Half of the width to make it a circle
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        start={{ x: 0, y: 0.5 }}
+        end={{ x: 1, y: 0.5 }}>
+        <Text style={{fontSize:30}}>
+        +</Text>
+      </LinearGradient>
+
+        </TouchableOpacity>
         </View>
       </View>
        {/* <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: 'black', marginBottom: 20 }}>
@@ -191,5 +202,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.7)',
     marginBottom: 10,
     borderRadius: 20, // Half of the width to make it a circle
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

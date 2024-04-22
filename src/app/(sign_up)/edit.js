@@ -1,13 +1,14 @@
 import { View, Text, TextInput,  StyleSheet,Pressable,Image, TouchableOpacity,Alert} from "react-native";
-import React,{useEffect, useState}  from "react";
+import React,{useEffect, useState,useContext}  from "react";
 import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
-import { router, useLocalSearchParams} from "expo-router";
+import { router, useLocalSearchParams,Stack} from "expo-router";
 import Button from '../../components/componentspung/Button/Button/Button';
 import { listFiles, uploadToFirebase, fbStorage } from '../../../firebaseConfig';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import { set } from "date-fns";
 import { se } from "date-fns/locale";
+import { AuthContext } from "../../context/authContext";
 
 export default function Login({}) {
   const [link,setLink]=useState('https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images%2F732A162A-5181-41A1-BDDC-3FACDBC8C706.png?alt=media&token=baa3a32e-2732-4086-ab60-8e3759ef32af');
@@ -22,6 +23,8 @@ export default function Login({}) {
   const [title,setTitle]=useState('');
   const [region,setRegion]=useState('');
   const [telNo,setTelNo]=useState('');
+  const userUID =useContext(AuthContext)
+
   handleChangeBirthdate = (text) => {
     setDInputValue(text.split('-')[2].split('T')[0])
     setMInputValue(text.split('-')[1])
@@ -32,7 +35,7 @@ export default function Login({}) {
 
   useEffect(() => {
     axios.post('http://where-next.tech/users/get-profile', {
-        uid: "aaa",
+        uid: userUID.user.uid,
       })
       .then(response => {
         console.log("all",response.data);
@@ -41,7 +44,7 @@ export default function Login({}) {
         setSurnameInputValue(response.data.user.UserName)
         handleChangeBirthdate(response.data.user.Birthdate)
         setBioInputValue(response.data.user.Bio)
-        setLink(response.data.user.ProfilePicture)
+        setLink('https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images%2F'+response.data.user.ProfilePicture.slice(81))
         setEmail(response.data.user.Email)
         setTitle(response.data.user.Title)
         setRegion(response.data.user.Region)
@@ -61,8 +64,10 @@ export default function Login({}) {
       if (yInputValue.length==1){
         setYInputValue("0"+yInputValue)
       }
+      console.log(link)
+      console.log('link:',link.slice(83))
       axios.put('http://where-next.tech/users/profile', {
-        uid: "aaa",
+        uid: userUID.user.uid,
         userName:surnameInputValue,
         email:email,
         title:title,
@@ -70,7 +75,7 @@ export default function Login({}) {
         Birthdate:yInputValue+"-"+mInputValue+"-"+dInputValue+birthdate,
         region:region,
         telNo:telNo,
-        profilePicture:link,
+        profilePicture:'https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images/'+link.slice(83),
         bio:bioInputValue
 
       })
@@ -161,7 +166,8 @@ export default function Login({}) {
     
     return(
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#14072b' }}>
-        <View style={{ position: 'absolute', top: 20, left: 20, flexDirection:'row', }}>
+      <Stack.Screen options={{ headerShown: false }} />
+        <View style={{ position: 'absolute', top: 60, left: 20, flexDirection:'row', }}>
         <Backbutton style={{}} onPress={handlePress2}/> 
         <Text style={{
           fontSize:30,
@@ -169,42 +175,42 @@ export default function Login({}) {
           paddingLeft:20,justifyContent: 'center', alignItems: 'center'}}>Edit Profile</Text>
         </View>
         <View style={{marginBottom:200, width:"100%"}}>
-        <View style={{justifyContent: 'center', alignItems: 'center',borderBottomWidth:1,borderColor:'white',padding:20}}>
+        <View style={{justifyContent: 'center', alignItems: 'center',borderBottomWidth:1,borderColor:'#303034',padding:20}}>
         <Image source={{ uri: link }} style={styles.image} />
-        <TouchableOpacity onPress={handleButtonPress}><Text style={{color:'blue',fontSize:20}}>Edit profile</Text></TouchableOpacity>
+        <TouchableOpacity onPress={handleButtonPress} style={{paddingTop:10}}><Text style={{color:'#3cb9ff',fontSize:20}}>Edit profile</Text></TouchableOpacity>
         </View>
-        <View style={{flexDirection: 'row',justifyContent: 'flex-start', alignItems: 'center',padding: 20,borderBottomWidth:1,borderColor:'white'}}>
+        <View style={{flexDirection: 'row',justifyContent: 'flex-start', alignItems: 'center',padding: 20,borderBottomWidth:1,borderColor:'#303034'}}>
         <Text style={{
           fontSize:20,
           color:'white',
         justifyContent: 'center', alignItems: 'center'}}>Name</Text>
-        <TextInput placeholder='Name' value={nameInputValue} onChangeText={setNameInputValue} placeholderTextColor="#D8D8D8" style={{color:"red",marginLeft:20,fontSize:20}}/>
+        <TextInput placeholder='Name' value={nameInputValue} onChangeText={setNameInputValue} placeholderTextColor="#D8D8D8" style={{color:"white",marginLeft:20,fontSize:20}}/>
         </View>
-        <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center',padding: 20,borderBottomWidth:1,borderColor:'white'}}>
+        <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center',padding: 20,borderBottomWidth:1,borderColor:'#303034'}}>
         <Text style={{
           fontSize:20,
           color:'white',
           justifyContent: 'center', alignItems: 'center'}}>Username</Text>
-        <TextInput placeholder='Username' value={surnameInputValue} onChangeText={setSurnameInputValue} placeholderTextColor="#D8D8D8" style={{color:"red",marginLeft:20,fontSize:20}}/>
-        </View><View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center',padding: 20,borderBottomWidth:1,borderColor:'white'}}>
+        <TextInput placeholder='Username' value={surnameInputValue} onChangeText={setSurnameInputValue} placeholderTextColor="#D8D8D8" style={{color:"white",marginLeft:20,fontSize:20}}/>
+        </View><View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center',padding: 20,borderBottomWidth:1,borderColor:'#303034'}}>
         <Text style={{
           fontSize:20,
           color:'white',
           justifyContent: 'center', alignItems: 'center'}}>Birth date</Text>
-        <TextInput placeholder='DD'  maxLength={2} value={dInputValue} keyboardType="numeric" onChangeText={setDInputValue} placeholderTextColor="#D8D8D8" style={{color:"red",marginLeft:20,fontSize:20}}/><Text style={{
+        <TextInput placeholder='DD'  maxLength={2} value={dInputValue} keyboardType="numeric" onChangeText={setDInputValue} placeholderTextColor="#D8D8D8" style={{color:"white",marginLeft:20,fontSize:20}}/><Text style={{
           fontSize:20,
-          color:'white'}}>/</Text><TextInput maxLength={2} placeholder='MM' keyboardType="numeric" value={mInputValue} onChangeText={setMInputValue} placeholderTextColor="#D8D8D8" style={{color:"red",fontSize:20}}/><Text style={{
+          color:'white'}}>/</Text><TextInput maxLength={2} placeholder='MM' keyboardType="numeric" value={mInputValue} onChangeText={setMInputValue} placeholderTextColor="#D8D8D8" style={{color:"white",fontSize:20}}/><Text style={{
             fontSize:20,
             color:'white'}}>/</Text>
-          <TextInput placeholder='YYYY' maxLength={4} keyboardType="numeric" value={yInputValue} onChangeText={setYInputValue} placeholderTextColor="#D8D8D8" style={{color:"red",fontSize:20}}/>
-        </View><View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center',padding: 20,borderBottomWidth:1,borderColor:'white'}}>
+          <TextInput placeholder='YYYY' maxLength={4} keyboardType="numeric" value={yInputValue} onChangeText={setYInputValue} placeholderTextColor="#D8D8D8" style={{color:"white",fontSize:20}}/>
+        </View><View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center',padding: 20,borderBottomWidth:1,borderColor:'#303034'}}>
         <Text style={{
           fontSize:20,
           color:'white',
           justifyContent: 'center', alignItems: 'center'}}>Bio</Text>
         <TextInput multiline numberOfLines={4}
-        maxLength={40} placeholder='Bio' value={bioInputValue} onChangeText={setBioInputValue} placeholderTextColor="#D8D8D8" style={{color:"red",marginLeft:20,fontSize:20}}/>
-        </View><View style={{justifyContent:'center',alignItems:'center'}}><Button label={"Next"} onPress={handlePress} style={{}}></Button></View>
+        maxLength={40} placeholder='Bio' value={bioInputValue} onChangeText={setBioInputValue} placeholderTextColor="#D8D8D8" style={{color:"white",marginLeft:20,fontSize:20}}/>
+        </View><View style={{justifyContent:'center',alignItems:'center'}}><Button label={"Save"} onPress={handlePress} style={{}}></Button></View>
         
     </View></View>
     
@@ -227,8 +233,8 @@ const styles = StyleSheet.create({
 
       },
       image: {
-        width: 100,
-        height: 100,
+        width: 125,
+        height: 125,
         borderRadius: 100, // Half of the width and height to make it a circle
       }
   });

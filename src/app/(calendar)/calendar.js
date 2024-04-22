@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState ,useContext} from 'react';
 import { Calendar } from 'react-native-big-calendar';
 import { View, Text } from 'react-native';
 import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
-import { router } from 'expo-router';
+import { router,Stack } from 'expo-router';
 import axios from "axios";
+import { AuthContext } from "../../context/authContext";
 
 
 const MyCalendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [eventList, setEventList] = useState([]);
   const [loading, setLoading] = useState(false);
+  const userUID =useContext(AuthContext)
+
   console.log('Current month:',currentMonth.getMonth());
   addEvent = (data) => {
     let events = eventList;
@@ -25,7 +28,7 @@ const MyCalendar = () => {
   }
   useEffect(() => {
     axios.post('http://where-next.tech/schedules/get-allschedule', {
-        useruid:"bbb"
+        useruid:userUID.user.uid,
       })
       .then(response => {
         console.log("output",response.data);
@@ -53,7 +56,9 @@ const MyCalendar = () => {
   };
   return (
     <View>
-      <View style={{padding:20,flexDirection:'row',justifyContent:'flex-start'}}>
+      <Stack.Screen options={{ headerShown: false }} />
+
+      <View style={{padding:20,flexDirection:'row',justifyContent:'flex-start',marginTop:40}}>
         <Backbutton style={{}} onPress={handlePress2}/>
         <Text style={{ textAlign: 'center', fontSize: 20, marginLeft:110}}>
           {currentMonth.toLocaleString('default', { month: 'long' })}{' '}

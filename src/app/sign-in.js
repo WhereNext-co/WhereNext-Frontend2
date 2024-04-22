@@ -1,19 +1,23 @@
-import { router } from "expo-router";
+import { router, Stack} from "expo-router";
 import {
   Text,
   View,
   TouchableOpacity,
   TextInput,
   ActivityIndicator,
-  Button,
+  Pressable,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import CustomCountryCodePicker from "../components/CustomCountryCodePicker";
 import OTP from "../components/OTP";
 import { AuthContext, useAuth } from "../context/authContext";
 import axios from "axios";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { u } from "react-native-big-calendar";
 import { set } from "date-fns";
+
+import Button from "../components/componentspung/Button/Button/LongButton";
+import { FIREBASE_AUTH } from "../../firebaseConfig";
 
 export default function SignIn() {
   const { login, register, isAuthenticated } = useAuth();
@@ -23,6 +27,15 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [verifyValidPhone, setVerifyValidPhone] = useState(false);
+
+  const [pass,setPass] = useState("");
+  
+  useEffect(() => {
+    console.log("pass:",pass)
+    if (pass !== "") {
+      router.replace("./(app)/home"); // Navigate to home page
+    }
+  }, [pass]);
 
   const phoneChangeHandler = (phoneNumber) => {
     setPhone(phoneNumber);
@@ -37,23 +50,24 @@ export default function SignIn() {
     console.log("phone:", phone);
     try {
       // Send telephone number to API
-      response = await axios
-        .post("http://where-next.tech/users/check-telno", {
-          telNo: `${phone}`,
-        })
-        .then((response) => {
-          console.log(response.data);
-          if (response.data.exists == true) {
-            verifyPhoneHandler2();
-            console.log("tel in firebase already");
-          } else {
-            alert("Account not found");
-          }
-        })
-        .catch((error) => {
-          console.error("Error sending phone number to API: checkTelNo", error);
-          // Handle error condition, e.g., show error message to user
-        });
+
+      response = await axios.post("http://where-next.tech/users/check-telno", {
+        telNo: `${phone}`,
+      }).then((response) => {
+        console.log(response.data);
+        if (response.data.exists == true) {
+        verifyPhoneHandler2();
+        console.log("tel in firebase already");
+        } else {
+          alert("Account not found");
+        }
+      }
+      ).catch((error) => {
+        console.error("Error sending phone number to API: checkTelNo", error);
+        // Handle error condition, e.g., show error message to user
+      }
+      );
+
     } catch (error) {
       console.error("Error sending phone number to API: checkTelNo", error);
       // Handle error condition, e.g., show error message to user
@@ -107,37 +121,42 @@ export default function SignIn() {
     // Sign in handler
     setLoading(true);
     try {
-      await login(emailphoneFormat, password);
-      alert("Success");
-      router.replace("/(app)/home"); // Navigate to home page
+      const userCredential = await signInWithEmailAndPassword(
+        FIREBASE_AUTH,
+        emailphoneFormat,
+        password
+      );
+      setPass(userCredential._tokenResponse.idToken);
+
     } catch (error) {
-      alert(`Error: ${error} Password: ${password} Email: ${emailphoneFormat}`); // Debug
+      alert(`Error: OTP wrong`); // Debug
     } finally {
       setLoading(false);
     }
   };
-
-  const dummyOTP = "123456"; // Dummy OTP for default sign up
+ 
 
   const signUpHandler = async () => {
     // Sign up handler
-    setLoading(true);
-    try {
-      await register(emailphoneFormat, dummyOTP);
-    } catch (error) {
-      alert("Create Account failed");
-    } finally {
-      setLoading(false);
-    }
+    router.push({ pathname: "/(sign_up)/Introduce" }); // Navigate to username page
   };
 
   return (
-    <View>
+    <View style={{flex:1,backgroundColor:'#14072b',justifyContent:'center', alignItems:'center',height:'100%'}}>
+      <Stack.Screen options={{ headerShown: false }} />
+
       {}
-      {verifyValidPhone ? (
+      {verifyValidPhone ? (<View style={{justifyContent:'center',alignItems:'center'}}>
         <OTP onOTPChange={OTPHandler} />
+        <Button label={"Send OTP"} onPress={verifyPhoneHandler} />
+        </View>
       ) : (
-        <>
+        <View style={{justifyContent:'center',alignItems:'center'}}>
+          <View>
+            <Text style={{ textAlign: "center", color: "white", fontSize: 30,padding:20,marginBottom:70}}>
+              Log in with{'\n'}your phone number
+            </Text>
+          </View>
           <CustomCountryCodePicker
             onPhoneChange={phoneChangeHandler}
             onCountryCodeChange={countryCodeChangeHandler}
@@ -145,22 +164,30 @@ export default function SignIn() {
           {loading ? (
             <ActivityIndicator size="large" color="gray" />
           ) : (
-            <>
-              <Button title="Send OTP" onPress={verifyPhoneHandler} />
-              <Button title="Create Account" onPress={signUpHandler} />
+            <View style={{paddingVertical:10}}>
+              <Button label={"Send OTP"} onPress={verifyPhoneHandler} />
+              <Pressable style={{}} onPress={signUpHandler}>
+        <Text style={{textAlign :"center",
+        textAlignVertical:"center",
+        fontSize:15, 
+        color:'white'}}>
+        Create Account</Text>
+        </Pressable>
               <Button
-                title="Go to Home"
+                label="Go to Home"
                 onPress={() => router.replace("./(app)/home")}
               />
               <Button
-                title="Go to Home"
+
+                label="Go to Schedule Sync"
+
                 onPress={() =>
                   router.replace("./(app)/createRendezvous/scheduleSync")
                 }
               />
-            </>
+            </View>
           )}
-        </>
+        </View>
       )}
     </View>
   );

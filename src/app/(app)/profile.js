@@ -1,18 +1,15 @@
 import { View, Text, TouchableOpacity,TextInput,Switch,Platform ,FlatList,} from "react-native";
 import MultipleSectors from "../../components/componentspung/Circle/Circle";
 import Button from '../../components/componentspung/Button/Button/Button';
-import { useState, useRef, useEffect} from "react";
+import { useState, useRef, useEffect, useContext} from "react";
 import { router } from "expo-router";
 import SlidingUpPanel from 'rn-sliding-up-panel';
 import DateTimePicker from '@react-native-community/datetimepicker'; 
-import { add, format } from 'date-fns';   
 import Dropdown from "../../components/componentspung/Dropdown/Dropdown"
-import { getCalendars } from "expo-localization";
 import axios from 'axios';
 import globalApi from "../../services/globalApi";
-import { Use } from "react-native-svg";
-import { se } from "date-fns/locale";
-
+import { AuthContext } from "../../context/authContext";
+import { LinearGradient } from 'expo-linear-gradient';
 export default function Tab() {
   const [events, setEvents] = useState([]);
   const [title, setTitle] = useState('');
@@ -24,18 +21,21 @@ export default function Tab() {
   const [showPicker, setShowPicker] = useState(Platform.OS === 'ios'); // Show picker initially for iOS
   const [selectedTitle, setSelectedTitle] = useState(null)
   const [loading, setLoading] = useState(true);
+  const [loading2, setLoading2] = useState(true);
   const [eventnum, setEventnum] = useState(0);
   const [searchResults, setSearchResults] = useState(null); // State to hold the search results
   const [searchText, setSearchText] = useState(""); // State to hold the search text
   const [searchDetails, setSearchDetails] = useState(null); // State to hold the search details
   const [searching, setSearching] = useState(true);
   const [pic,setPic]=useState(null)
-
+  const [profile,setProfile]=useState('https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images%2F732A162A-5181-41A1-BDDC-3FACDBC8C706.png?alt=media&token=baa3a32e-2732-4086-ab60-8e3759ef32af')
+  const userUID =useContext(AuthContext)
+  console.log("userUID",userUID.user.uid)
   const dateday = new Date();
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const dayName = days[dateday.getDay()];
   const hour = dateday.getHours();
-  const name = 'John Doe';
+  const [name, setName] = useState('wait Sec');
   const day = dateday.getDate();
   const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December'];
@@ -115,7 +115,7 @@ const handlePlaceSelection = (place) => {
   console.log(typeof (a));
   useEffect(() => {
     axios.post('http://where-next.tech/schedules/get-schedulebytime', {
-        useruid:"bbb",
+        useruid:userUID.user.uid,
         starttime: a,
         endtime: b
       })
@@ -134,6 +134,21 @@ const handlePlaceSelection = (place) => {
       }).finally(() => {
         setLoading(false);
       });
+}, [])
+useEffect(() => {
+  axios.post('http://where-next.tech/users/get-profile', {
+    uid:userUID.user.uid,
+    })
+    .then(response => {
+      console.log("outputUser",response.data);
+      setName(response.data.user.Name)
+      setProfile(response.data.user.ProfilePicture)
+    })
+    .catch(error => {
+      console.error('There was a problem with your Axios request:', error);
+    }).finally(() => {
+      setLoading2(false);
+    });
 }, [])
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -174,7 +189,7 @@ const handlePlaceSelection = (place) => {
     console.log("placephotolink",pic)
 
     axios.post('http://where-next.tech/schedules/create-personalschedule', {
-      hostuid:"bbb",
+      hostuid:userUID.user.uid,
       name:title,
       type:selectedTitle.name,
       starttime: a,
@@ -201,21 +216,36 @@ const handlePlaceSelection = (place) => {
 
   return (
     <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center', backgroundColor: '#14072b' }}>
-      <View style={{ alignItems: 'center', backgroundColor: 'black', top: 50 }}>
+      <View style={{ alignItems: 'center', backgroundColor: '#14072b', top: 50 }}>
         <Text style={{ textAlign: "center", textAlignVertical: "bottom", fontSize: 20, padding: 5, color: 'white' }}>Good {timeOfDay}, {name}</Text>
         <Text style={{ textAlign: "center", textAlignVertical: "bottom", fontSize: 15, padding: 10, color: 'white' }}>Today is {dayName},{day+month+year}</Text>
       </View>
-      <View style={{ alignItems: 'center', marginTop: 70 }}>
+      <View style={{ alignItems: 'center', marginTop: 70,backgroundColor:'#4b4b4b', borderRadius:8 }}>
         <Text style={{ textAlign: "center", textAlignVertical: "bottom", fontSize: 15, padding: 20, color: 'white' }}>You have {eventnum} events today</Text>
       </View>
       <View style={{ marginTop: 80 }}>
-        {!loading && (<MultipleSectors color="red" timeRanges={events} />)}
+        {!loading && !loading2 && (<MultipleSectors color="red" timeRanges={events} link= {profile}/>)}
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: '#14072b', marginTop: 100 }}>
         <Button label={"Add Schedule"} onPress={() => this._panel.show()} style={{ marginRight: 10 }}></Button>
         <Button label={"Edit profile"} onPress={handlePress} style={{ marginHorizontal: 10 }}></Button>
-        <Button label={"icon"} onPress={handlePress2} style={{ marginLeft: 10 }}></Button>
-        
+        <TouchableOpacity style={{}} onPress={handlePress2}>
+        <LinearGradient colors={['#2acbf9', '#9aeeb0']}
+        style={{
+          width: 40,
+          height: 40,
+          backgroundColor: 'rgba(255, 255, 255, 0.7)',
+          borderRadius: 20, // Half of the width to make it a circle
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        start={{ x: 0, y: 0.5 }}
+        end={{ x: 1, y: 0.5 }}>
+        <Text style={{fontSize:20}}>
+        +</Text>
+      </LinearGradient>
+
+        </TouchableOpacity>
       </View>
     
 
@@ -285,6 +315,7 @@ const handlePlaceSelection = (place) => {
               getSearchPlaces({ textQuery: newText });
             }} color={'white'} placeholderTextColor={'#B8B8B8'} fontSize={30} style={{ padding: 10 }} />
             {searching&&(<FlatList
+            style={{ paddingTop: 60}}
             data={searchResults}
             renderItem={({ item }) => (
               <TouchableOpacity

@@ -25,15 +25,16 @@ export default function Diary() {
   const [draftRendezvous, setDraftRendezvous] = useState([]);
   const [pendingRendezvous, setPendingRendezvous] = useState([]);
 
-  const currentUserUID = useContext(AuthContext).user.uid;
-
+const currentUserUID = useContext(AuthContext);
   useEffect(() => {
     getActiveRendezvous(); // Fetch the active rendezvous when the component mounts
-  }, []);
+
+  
+
 
   const getActiveRendezvous = () => {
     setSelectedTab("Active");
-    const user = currentUserUID;
+    const user = currentUserUID.user.uid;
     axios
       .post(`http://where-next.tech/rendezvous/get-active-rendezvous`, {
         useruid: user,
@@ -49,7 +50,7 @@ export default function Diary() {
 
   const getPastRendezvous = () => {
     setSelectedTab("Past");
-    const user = currentUserUID;
+    const user = currentUserUID.user.uid;
     axios
       .post(`http://where-next.tech/rendezvous/get-past-rendezvous`, {
         useruid: user,
@@ -64,7 +65,7 @@ export default function Diary() {
 
   const getDraftRendezvous = () => {
     setSelectedTab("Draft");
-    const user = currentUserUID;
+    const user = currentUserUID.user.uid;
     axios
       .post(`http://where-next.tech/rendezvous/get-draft-rendezvous`, {
         useruid: user,
@@ -79,7 +80,7 @@ export default function Diary() {
 
   const getPendingRendezvous = () => {
     setSelectedTab("Pending");
-    const user = currentUserUID;
+    const user = currentUserUID.user.uid;
     axios
       .post(`http://where-next.tech/rendezvous/get-pending-rendezvous`, {
         useruid: user,
@@ -94,15 +95,48 @@ export default function Diary() {
 
   // name placename time #members
   return (
-    <SafeAreaView>
-      <View>
-        <Button title="Active" onPress={getActiveRendezvous} />
-        <Button title="Past" onPress={getPastRendezvous} />
-        <Button title="Draft" onPress={getDraftRendezvous} />
-        <Button title="Pending" onPress={getPendingRendezvous} />
-      </View>
+    <ScrollView className="bg-[#fff]">
+      <View className="p-4 pt-20 bg-[#fff]">
+        <Text className="text-2xl font-semibold">Meeting Dairy</Text>
+        <View style={styles.tabButtonsContainer}>
+          <TouchableOpacity
+            style={[
+              styles.tabButton,
+              selectedTab === "Active" && styles.activeTabButton,
+            ]}
+            onPress={getActiveRendezvous}
+          >
+            <Text style={styles.tabButtonText}>Active</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.tabButton,
+              selectedTab === "Past" && styles.activeTabButton,
+            ]}
+            onPress={getPastRendezvous}
+          >
+            <Text style={styles.tabButtonText}>Past</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.tabButton,
+              selectedTab === "Draft" && styles.activeTabButton,
+            ]}
+            onPress={getDraftRendezvous}
+          >
+            <Text style={styles.tabButtonText}>Draft</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.tabButton,
+              selectedTab === "Pending" && styles.activeTabButton,
+            ]}
+            onPress={getPendingRendezvous}
+          >
+            <Text style={styles.tabButtonText}>Pending</Text>
+          </TouchableOpacity>
+        </View>
 
-      <ScrollView>
         {selectedTab === "Active" ? (
           <View>
             {activeRendezvous &&
@@ -180,8 +214,8 @@ export default function Diary() {
         ) : (
           <></>
         )}
-      </ScrollView>
-    </SafeAreaView>
+      </View>
+    </ScrollView>
   );
 }
 
@@ -197,6 +231,27 @@ const styles = StyleSheet.create({
     justifyContent: "space-between", // Optional: adjust based on your layout needs
     alignItems: "center", // Optional: adjust based on your layout needs
     padding: 10,
+  },
+  tabButtonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 20,
+    paddingHorizontal: 20,
+    backgroundColor: "#181D45",
+    paddingVertical: 5,
+    borderRadius: 20,
+  },
+  tabButton: {
+    backgroundColor: "#181D45",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+  },
+  activeTabButton: {
+    backgroundColor: "#4C51BF",
+  },
+  tabButtonText: {
+    color: "#FFFFFF",
   },
 });
 

@@ -1,8 +1,8 @@
 import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
 import React, { useState, useEffect } from "react";
 import Backbutton from "../../components/componentspung/Button/turnbackbutton/Backbutton";
-import { router, useLocalSearchParams } from "expo-router";
-import Button from "../../components/componentspung/Button/Button/Button";
+import { router, useLocalSearchParams,Stack } from "expo-router";
+import Button from "../../components/componentspung/Button/Button/LongButton";
 import Inputtext from "../../components/componentspung/InputText/InputText";
 import Dropdown from "../../components/componentspung/Dropdown/Dropdown";
 
@@ -15,7 +15,10 @@ export default function Login({}) {
   const { name, surname, title } = useLocalSearchParams();
   const [selectedTitle, setSelectedTitle] = useState(null);
   const handlePress = () => {
-    router.push({
+    if (selectedTitle==null || nameInputValue==null || surnameInputValue==null) {
+      setShowError(true);
+    }
+    else {router.push({
       pathname: "/Username",
       params: {
         title: selectedTitle.name,
@@ -23,7 +26,7 @@ export default function Login({}) {
         surname: surnameInputValue,
         mail:''
       },
-    });
+    });}
   };
   const handlePress2 = () => {
     router.push("/Introduce");
@@ -48,17 +51,19 @@ export default function Login({}) {
   const onSelectTitle = (item) => {
     setSelectedTitle(item);
   };
-
+  const [showError, setShowError] = useState(false);
   return (
     <View
       style={{
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "black",
+        backgroundColor: "#14072b",
       }}
     >
-      <View style={{ position: "absolute", top: 20, left: 20 }}>
+      <Stack.Screen options={{ headerShown: false }} />
+
+      <View style={{ position: "absolute", top: 60, left: 20 }}>
         <Backbutton style={{}} onPress={handlePress2} />
       </View>
       <View style={{ alignItems: "center", marginBottom: 20 }}>
@@ -80,29 +85,34 @@ export default function Login({}) {
           flexDirection: "row",
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: "black",
+          backgroundColor: "#14072b",
           marginBottom: 20,
         }}
-      >
+      ><View style={{flex:0.2}}>
         <Dropdown
           onSelect={onSelectTitle}
           value={selectedTitle}
           data={titledata}
           label=" title "
-        />
+        /></View><View style={{flex:0.3,marginLeft:6}}>
         <Inputtext
           placeholder="Name"
           value={nameInputValue}
           onPress={nameInputChange}
-        />
+        /></View><View style={{flex:0.5}}>
         <Inputtext
           placeholder="Surname"
           value={surnameInputValue}
           onPress={surnameInputChange}
         />
-      </View>
+      </View></View>
 
       <Button label={"Next"} onPress={handlePress} style={{}}></Button>
+      {showError && (
+  <View style={{ alignItems: "center", position: "absolute", bottom: 300 }}>
+    <Text style={{ color: "red", fontSize: 30 }}>Please fill in all fields.</Text>
+  </View>
+)}
     </View>
   );
 }
