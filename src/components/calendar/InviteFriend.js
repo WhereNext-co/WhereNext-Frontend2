@@ -44,13 +44,17 @@ export default function Friends({ onFriendChange, currentUserUID }) {
 
   // Event handler for selecting/deselecting friends
   const handlePress = (friend) => {
+    let updatedSelectedFriends;
     if (selectedFriends.includes(friend.Uid)) {
-      setSelectedFriends(selectedFriends.filter((id) => id !== friend.Uid));
+      updatedSelectedFriends = selectedFriends.filter(
+        (id) => id !== friend.Uid
+      );
     } else {
-      setSelectedFriends([...selectedFriends, friend.Uid]);
+      updatedSelectedFriends = [...selectedFriends, friend.Uid];
     }
-    console.log(`From child component: ${selectedFriends}`);
-    onFriendChange(selectedFriends);
+    setSelectedFriends(updatedSelectedFriends);
+    console.log(`From child component: ${updatedSelectedFriends}`);
+    onFriendChange(updatedSelectedFriends);
   };
 
   // Filter contacts based on search input

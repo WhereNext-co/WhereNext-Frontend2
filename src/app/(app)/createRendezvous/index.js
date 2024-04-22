@@ -85,6 +85,18 @@ export default function CreateMeeting() {
     if (rendezvousName === "") {
       alert("Rendezvous Name cannot be empty");
       return;
+    } else if (friendUIDs.length === 0) {
+      alert("Invite Someone!");
+      return;
+    } else if (startDate === null || endDate === null) {
+      alert("Select at least a date!");
+      return;
+    } else if (duration === 0) {
+      alert("Duration can't be empty!");
+      return;
+    } else if (placename === undefined) {
+      alert("Choose a place first!");
+      return;
     } else {
       const startDateObj = new Date(startDate);
       const endDateObj = new Date(endDate);
@@ -122,6 +134,7 @@ export default function CreateMeeting() {
       });
       console.log("startD", startDateISO, "endD", endDateISO);
       console.log("a", rendezvous);
+      console.log("b", friendUIDs);
       console.log("Rendezvous created:", rendezvous);
       router.push({
         pathname: "./createRendezvous/scheduleSync",

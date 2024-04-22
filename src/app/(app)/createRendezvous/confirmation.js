@@ -19,6 +19,18 @@ export default function confirmation() {
     rendezvousName,
   } = useLocalSearchParams();
   const onConfirm = () => {
+    console.log(
+      uid,
+      rendezvousName,
+      startTime,
+      endTime,
+      friendUIDs,
+      placename,
+      placegoogleplaceid,
+      placelocation,
+      placemaplink,
+      placephotolink
+    );
     axios
       .post("http://where-next.tech/rendezvous/create-rendezvous", {
         hostuid: uid,
