@@ -219,11 +219,11 @@ useEffect(() => {
 
   return (
     <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center', backgroundColor: '#14072b' }}>
-      <View style={{ alignItems: 'center', backgroundColor: 'black', top: 50 }}>
+      <View style={{ alignItems: 'center', backgroundColor: '#14072b', top: 50 }}>
         <Text style={{ textAlign: "center", textAlignVertical: "bottom", fontSize: 20, padding: 5, color: 'white' }}>Good {timeOfDay}, {name}</Text>
         <Text style={{ textAlign: "center", textAlignVertical: "bottom", fontSize: 15, padding: 10, color: 'white' }}>Today is {dayName},{day+month+year}</Text>
       </View>
-      <View style={{ alignItems: 'center', marginTop: 70 }}>
+      <View style={{ alignItems: 'center', marginTop: 70,backgroundColor:'#4b4b4b', borderRadius:8 }}>
         <Text style={{ textAlign: "center", textAlignVertical: "bottom", fontSize: 15, padding: 20, color: 'white' }}>You have {eventnum} events today</Text>
       </View>
       <View style={{ marginTop: 80 }}>
@@ -303,6 +303,7 @@ useEffect(() => {
               getSearchPlaces({ textQuery: newText });
             }} color={'white'} placeholderTextColor={'#B8B8B8'} fontSize={30} style={{ padding: 10 }} />
             {searching&&(<FlatList
+            style={{ paddingTop: 60}}
             data={searchResults}
             renderItem={({ item }) => (
               <TouchableOpacity

@@ -3,7 +3,7 @@ import React  from "react";
 import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
 import { router, useLocalSearchParams,Stack} from "expo-router";
 
-import Button from '../../components/componentspung/Button/Button/Button';
+import Button from '../../components/componentspung/Button/Button/LongButton';
 import ScrollDownComponent from "../../components/componentspung/scrolldown/scrolldown";
 
 export default function Login() {
@@ -38,7 +38,7 @@ export default function Login() {
       });
     };
     return(
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#14072b' ,paddingVertical:50,padding:10}}>
+    <View style={{flex: 1, justifyContent: 'flex-start', alignItems: 'center', backgroundColor: '#14072b' ,paddingVertical:50,padding:10}}>
       <Stack.Screen options={{ headerShown: false }} />
         
         <View style={{ position: 'absolute', top: 60, left: 20 }}>
@@ -52,8 +52,10 @@ export default function Login() {
           color:'white'}}>Terms and conditions {'\n'} Privacy Conditions</Text>
      
         </View>
-        
+        <View style ={{flex:0.7}}>
         <ScrollDownComponent />
+
+        </View>
         
         <Button label={"Next"} onPress={handlePress} style={{}}></Button>
         

@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { View, Button, StyleSheet, Text, Alert, Image, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { listFiles, uploadToFirebase, fbStorage } from '../../../firebaseConfig';
-import Buttonpung from '../../components/componentspung/Button/Button/Button';
+import Buttonpung from '../../components/componentspung/Button/Button/LongButton';
 import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
 import { router, useLocalSearchParams,Stack} from "expo-router";
-
+import { LinearGradient } from 'expo-linear-gradient';
 export default function GalleryPicker() {
   let {name,surname,username,title,mail,birthdate,profile} = useLocalSearchParams();
   const [permission, requestPermission] = ImagePicker.useCameraPermissions();
@@ -133,7 +133,16 @@ export default function GalleryPicker() {
   <View style={styles.imageContainer}>
         <Image source={{ uri: link }} style={styles.image} />
         <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={handleButtonPress}></TouchableOpacity>
+        <TouchableOpacity style={{}} onPress={handleButtonPress}>
+        <LinearGradient colors={['#2acbf9', '#9aeeb0']}
+        style={styles.button}
+        start={{ x: 0, y: 0.5 }}
+        end={{ x: 1, y: 0.5 }}>
+        <Text style={{fontSize:30}}>
+        +</Text>
+      </LinearGradient>
+
+        </TouchableOpacity>
         </View>
       </View>
        {/* <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: 'black', marginBottom: 20 }}>
@@ -185,5 +194,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.7)',
     marginBottom: 10,
     borderRadius: 20, // Half of the width to make it a circle
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

@@ -1,7 +1,7 @@
 import { View, Text, TextInput,  StyleSheet,Pressable,} from "react-native";
 import React,{ useState, useEffect } from "react";
 import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
-import { router, useLocalSearchParams} from "expo-router";
+import { router, useLocalSearchParams,Stack} from "expo-router";
 import Button from '../../components/componentspung/Button/Button/Button';
 import { FIREBASE_AUTH } from "../../../firebaseConfig";
 import OTP from '../../components/componentspung/OTP/OTP';
@@ -131,7 +131,7 @@ useEffect(() => {
           title: title,
           name: name,
           surname: surname,
-          mail: emailPhoneFormat,
+          mail: mail,
           username: username,
           birthdate:birthdate,
           profile:profile,
@@ -143,10 +143,11 @@ useEffect(() => {
     )}
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#14072b' }}>
-      <View style={{ position: 'absolute', top: 20, left: 20 }}>
+      <Stack.Screen options={{ headerShown: false }} />
+      <View style={{ position: 'absolute', top: 60, left: 20 }}>
         <Backbutton style={{}} onPress={handlePress2} />
       </View>
-      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: 'black', marginBottom: 20 }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: '#14072b', marginBottom: 20 }}>
         <OTP onOTPChange={OTPHandler} />
       </View>
       <Button label={"Send OTP"} onPress={sendPhoneNumberToAPI} style={{}}></Button>

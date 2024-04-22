@@ -1,7 +1,7 @@
 import { View, Text, TextInput,  StyleSheet,Pressable,Image, TouchableOpacity,Alert} from "react-native";
 import React,{useEffect, useState,useContext}  from "react";
 import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
-import { router, useLocalSearchParams} from "expo-router";
+import { router, useLocalSearchParams,Stack} from "expo-router";
 import Button from '../../components/componentspung/Button/Button/Button';
 import { listFiles, uploadToFirebase, fbStorage } from '../../../firebaseConfig';
 import * as ImagePicker from 'expo-image-picker';
@@ -44,7 +44,7 @@ export default function Login({}) {
         setSurnameInputValue(response.data.user.UserName)
         handleChangeBirthdate(response.data.user.Birthdate)
         setBioInputValue(response.data.user.Bio)
-        setLink(response.data.user.ProfilePicture)
+        setLink('https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images%2F'+response.data.user.ProfilePicture.slice(81))
         setEmail(response.data.user.Email)
         setTitle(response.data.user.Title)
         setRegion(response.data.user.Region)
@@ -64,6 +64,8 @@ export default function Login({}) {
       if (yInputValue.length==1){
         setYInputValue("0"+yInputValue)
       }
+      console.log(link)
+      console.log('link:',link.slice(83))
       axios.put('http://where-next.tech/users/profile', {
         uid: userUID.user.uid,
         userName:surnameInputValue,
@@ -73,7 +75,7 @@ export default function Login({}) {
         Birthdate:yInputValue+"-"+mInputValue+"-"+dInputValue+birthdate,
         region:region,
         telNo:telNo,
-        profilePicture:link,
+        profilePicture:'https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images/'+link.slice(83),
         bio:bioInputValue
 
       })
@@ -164,7 +166,8 @@ export default function Login({}) {
     
     return(
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#14072b' }}>
-        <View style={{ position: 'absolute', top: 20, left: 20, flexDirection:'row', }}>
+      <Stack.Screen options={{ headerShown: false }} />
+        <View style={{ position: 'absolute', top: 60, left: 20, flexDirection:'row', }}>
         <Backbutton style={{}} onPress={handlePress2}/> 
         <Text style={{
           fontSize:30,
