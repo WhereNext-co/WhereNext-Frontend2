@@ -89,97 +89,95 @@ export default function Diary() {
 
   // name placename time #members
   return (
-    <SafeAreaView>
-      <View className="p-4">
+    <ScrollView className="bg-[#fff]">
+      <View className="p-4 pt-20 bg-[#fff]">
         <Text className="text-2xl font-semibold">Meeting Dairy</Text>
-        <View className="flex flex-row justify-between">
+        <View className="flex flex-row justify-between my-4 ">
           <Button title="Active" onPress={getActiveRendezvous} />
           <Button title="Past" onPress={getPastRendezvous} />
           <Button title="Draft" onPress={getDraftRendezvous} />
           <Button title="Pending" onPress={getPendingRendezvous} />
         </View>
 
-        <ScrollView>
-          {selectedTab === "Active" ? (
-            <View>
-              {activeRendezvous &&
-                activeRendezvous.map((rendezvous) => (
-                  <LocationCard
-                    name={rendezvous.name}
-                    placename={rendezvous.placename}
-                    starttime={rendezvous.starttime}
-                    endtime={rendezvous.endtime}
-                    members={rendezvous.member.length}
-                    placephotolink={rendezvous.placephotolink}
-                    placelocation={rendezvous.placelocation}
-                    status={rendezvous.status}
-                    scheduleid={rendezvous.scheduleid}
-                    currentuseruid={currentUserUID}
-                  />
-                ))}
-            </View>
-          ) : selectedTab === "Past" ? (
-            <View>
-              {draftRendezvous &&
-                draftRendezvous.map((rendezvous) => (
-                  <LocationCard
-                    name={rendezvous.name}
-                    placename={rendezvous.placename}
-                    starttime={rendezvous.starttime}
-                    endtime={rendezvous.endtime}
-                    members={rendezvous.member.length}
-                    placephotolink={rendezvous.placephotolink}
-                    placelocation={rendezvous.placelocation}
-                    status={rendezvous.status}
-                    scheduleid={rendezvous.scheduleid}
-                    currentuseruid={currentUserUID}
-                  />
-                ))}
-            </View>
-          ) : selectedTab === "Draft" ? (
-            <View>
-              {pastRendezvous &&
-                pastRendezvous.map((rendezvous) => (
-                  <LocationCard
-                    name={rendezvous.name}
-                    placename={rendezvous.placename}
-                    starttime={rendezvous.starttime}
-                    endtime={rendezvous.endtime}
-                    members={rendezvous.member.length}
-                    placephotolink={rendezvous.placephotolink}
-                    placelocation={rendezvous.placelocation}
-                    status={rendezvous.status}
-                    scheduleid={rendezvous.scheduleid}
-                    currentuseruid={currentUserUID}
-                  />
-                ))}
-            </View>
-          ) : selectedTab === "Pending" ? (
-            <View>
-              {pendingRendezvous &&
-                pendingRendezvous.map((rendezvous) => (
-                  <LocationCardPending
-                    name={rendezvous.name}
-                    placename={rendezvous.placename}
-                    starttime={rendezvous.starttime}
-                    endtime={rendezvous.endtime}
-                    members={rendezvous.member.length}
-                    placephotolink={rendezvous.placephotolink}
-                    placelocation={rendezvous.placelocation}
-                    status={rendezvous.status}
-                    scheduleid={rendezvous.scheduleid}
-                    currentuseruid={currentUserUID}
-                    pendingRendezvous={pendingRendezvous}
-                    setPendingRendezvous={setPendingRendezvous}
-                  />
-                ))}
-            </View>
-          ) : (
-            <></>
-          )}
-        </ScrollView>
+        {selectedTab === "Active" ? (
+          <View>
+            {activeRendezvous &&
+              activeRendezvous.map((rendezvous) => (
+                <LocationCard
+                  name={rendezvous.name}
+                  placename={rendezvous.placename}
+                  starttime={rendezvous.starttime}
+                  endtime={rendezvous.endtime}
+                  members={rendezvous.member.length}
+                  placephotolink={rendezvous.placephotolink}
+                  placelocation={rendezvous.placelocation}
+                  status={rendezvous.status}
+                  scheduleid={rendezvous.scheduleid}
+                  currentuseruid={currentUserUID}
+                />
+              ))}
+          </View>
+        ) : selectedTab === "Past" ? (
+          <View>
+            {draftRendezvous &&
+              draftRendezvous.map((rendezvous) => (
+                <LocationCard
+                  name={rendezvous.name}
+                  placename={rendezvous.placename}
+                  starttime={rendezvous.starttime}
+                  endtime={rendezvous.endtime}
+                  members={rendezvous.member.length}
+                  placephotolink={rendezvous.placephotolink}
+                  placelocation={rendezvous.placelocation}
+                  status={rendezvous.status}
+                  scheduleid={rendezvous.scheduleid}
+                  currentuseruid={currentUserUID}
+                />
+              ))}
+          </View>
+        ) : selectedTab === "Draft" ? (
+          <View>
+            {pastRendezvous &&
+              pastRendezvous.map((rendezvous) => (
+                <LocationCard
+                  name={rendezvous.name}
+                  placename={rendezvous.placename}
+                  starttime={rendezvous.starttime}
+                  endtime={rendezvous.endtime}
+                  members={rendezvous.member.length}
+                  placephotolink={rendezvous.placephotolink}
+                  placelocation={rendezvous.placelocation}
+                  status={rendezvous.status}
+                  scheduleid={rendezvous.scheduleid}
+                  currentuseruid={currentUserUID}
+                />
+              ))}
+          </View>
+        ) : selectedTab === "Pending" ? (
+          <View>
+            {pendingRendezvous &&
+              pendingRendezvous.map((rendezvous) => (
+                <LocationCardPending
+                  name={rendezvous.name}
+                  placename={rendezvous.placename}
+                  starttime={rendezvous.starttime}
+                  endtime={rendezvous.endtime}
+                  members={rendezvous.member.length}
+                  placephotolink={rendezvous.placephotolink}
+                  placelocation={rendezvous.placelocation}
+                  status={rendezvous.status}
+                  scheduleid={rendezvous.scheduleid}
+                  currentuseruid={currentUserUID}
+                  pendingRendezvous={pendingRendezvous}
+                  setPendingRendezvous={setPendingRendezvous}
+                />
+              ))}
+          </View>
+        ) : (
+          <></>
+        )}
       </View>
-    </SafeAreaView>
+    </ScrollView>
   );
 }
 
