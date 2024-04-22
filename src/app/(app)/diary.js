@@ -26,6 +26,10 @@ export default function Diary() {
 
   const currentUserUID = "aaa";
 
+  useEffect(() => {
+    getActiveRendezvous(); // Fetch the active rendezvous when the component mounts
+  }, []);
+
   const getActiveRendezvous = () => {
     setSelectedTab("Active");
     const user = currentUserUID;

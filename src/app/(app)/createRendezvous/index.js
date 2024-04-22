@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,13 +11,20 @@ import CustomCalendar from "../../../components/calendar/CustomCalendar";
 import TimePicker from "../../../components/calendar/TimePicker";
 import InviteFriend from "../../../components/calendar/InviteFriend";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { set } from "date-fns";
-import { fr } from "date-fns/locale";
+import { fr, se } from "date-fns/locale";
 import { UserLocationContext } from "../../../context/userLocationContext";
 
 export default function CreateMeeting() {
   const currentUserUID = "ccc";
+  let {
+    placegoogleplaceid,
+    placename,
+    placelocation,
+    placemaplink,
+    placephotolink,
+  } = useLocalSearchParams();
   // State variables
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -27,7 +34,6 @@ export default function CreateMeeting() {
   const [hour, setHour] = useState(0);
   const [minute, setMinute] = useState(0);
   const [friendUIDs, setFriendUIDs] = useState([]);
-  const { searchDetails } = useContext(UserLocationContext);
 
   // Event handlers
   const handleStartDateChange = (date) => {
@@ -113,7 +119,8 @@ export default function CreateMeeting() {
         duration: duration,
         rendezvousName: rendezvousName,
       });
-      console.log(rendezvous);
+      console.log("startD", startDateISO, "endD", endDateISO);
+      console.log("a", rendezvous);
       console.log("Rendezvous created:", rendezvous);
       router.push({
         pathname: "./createRendezvous/scheduleSync",
@@ -147,8 +154,14 @@ export default function CreateMeeting() {
         </View>
 
         <View>
+          {console.log(
+            placegoogleplaceid,
+            placelocation,
+            placemaplink,
+            placephotolink
+          )}
           <Text style={styles.searchDetails}>
-            {searchDetails.displayName.text}
+            {placename ? placename : "No search details"}
           </Text>
         </View>
 

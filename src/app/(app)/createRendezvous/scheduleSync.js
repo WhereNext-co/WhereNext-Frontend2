@@ -7,18 +7,17 @@ import axios from "axios";
 export default function scheduleSync() {
   let { uid, startTime, endTime, friendUIDs, duration } =
     useLocalSearchParams();
-  useLocalSearchParams();
   const [timeList, setTimeList] = useState([]);
   const [selectedTime, setSelectedTime] = useState(null);
 
   useEffect(() => {
     axios
       .post(`http://where-next.tech/schedulesync/get-free-timeslot`, {
-        uid: "aaa",
-        startTime: "2024-12-01T00:00:00Z",
-        endTime: "2024-12-15T00:00:00Z",
-        friendUIDs: ["bbb", "ccc"],
-        duration: 172800,
+        uid: uid,
+        startTime: startTime,
+        endTime: endTime,
+        friendUIDs: friendUIDs.split(","),
+        duration: parseInt(duration),
       })
       .then((response) => {
         setTimeList(response.data.nonOverlappingSchedules);
@@ -45,7 +44,7 @@ export default function scheduleSync() {
     <View>
       <Text>Schedule Sync</Text>
       <Text>
-        {uid} {friendUIDs} {startTime} {endTime}
+        {uid} {friendUIDs.split(",")} {startTime} {endTime}
       </Text>
       <View>
         {timeList.length !== 0 ? (
