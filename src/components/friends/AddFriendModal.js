@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Button,
   Pressable,
@@ -20,9 +20,10 @@ import axios from "axios";
 import { LinearGradient } from "expo-linear-gradient";
 import UserPlus from "../../../assets/friends/user-plus.svg";
 import Xmark from "../../../assets/friends/x-mark.svg";
+import { AuthContext } from "../../context/authContext";
 
 export default function AddFriendModal() {
-  const currentUserUID = "bbb";
+  const currentUserUID = useContext(AuthContext);
   const [key, setKey] = useState(0);
   const [userToAdd, setUserToAdd] = useState(null);
 
@@ -31,7 +32,7 @@ export default function AddFriendModal() {
   const [modalVisible, setModalVisible] = useState(false);
 
   const onSearchHandler = () => {
-    const user = currentUserUID;
+    const user = currentUserUID.user.uid;
     console.log(search);
     axios
       .post(`http://where-next.tech/users/friends/friendinfo`, {
@@ -48,7 +49,7 @@ export default function AddFriendModal() {
   };
 
   const addFriendHandler = () => {
-    const user = currentUserUID;
+    const user = currentUserUID.user.uid;
     axios
       .post("http://where-next.tech/users/friendrequest", {
         uid: user,
@@ -68,7 +69,7 @@ export default function AddFriendModal() {
   const cancelFriendRequestHandler = () => {
     console.log(currentUserUID);
     console.log(userToAdd.UserName);
-    const user = currentUserUID;
+    const user = currentUserUID.user.uid;
     axios
       .delete("http://where-next.tech/users/friendrequest/cancel", {
         data: { uid: user, friendName: userToAdd.UserName },
@@ -85,7 +86,7 @@ export default function AddFriendModal() {
   };
 
   const removeFriendHandler = () => {
-    const user = currentUserUID;
+    const user = currentUserUID.user.uid;
     axios
       .delete("http://where-next.tech/users/friends", {
         data: { uid: user, friendName: userToAdd.UserName },
@@ -100,7 +101,7 @@ export default function AddFriendModal() {
   };
 
   const AcceptFriendHandler = () => {
-    const user = currentUserUID;
+    const user = currentUserUID.user.uid;
     axios
       .put("http://where-next.tech/users/friendrequest", {
         uid: user,

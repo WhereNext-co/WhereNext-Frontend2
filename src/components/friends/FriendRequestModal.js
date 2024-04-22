@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Button,
   StyleSheet,
@@ -17,6 +17,7 @@ import Modal from "react-native-modal";
 import axios from "axios";
 import { set } from "date-fns";
 import { LinearGradient } from "expo-linear-gradient";
+import { AuthContext } from "../../context/authContext";
 
 //Get friend requests from API
 
@@ -26,14 +27,14 @@ import { LinearGradient } from "expo-linear-gradient";
 
 export default function FriendRequestModal() {
   const [isModalVisible, setModalVisible] = useState(false);
-  const CurrentUserUID = "ccc";
+  const CurrentUserUID = useContext(AuthContext);
   const [requestsReceived, setRequestsReceived] = useState([]);
   const [render, setRender] = useState(false);
 
   useEffect(() => {
     axios
       .post("http://where-next.tech/users/get-friendrequest", {
-        uid: CurrentUserUID,
+        uid: CurrentUserUID.user.uid,
       })
       .then((response) => {
         setRequestsReceived(response.data.requestsReceived);
@@ -67,18 +68,22 @@ export default function FriendRequestModal() {
           <Text style={styles.modalTitle}>Friend Requests</Text>
           <ScrollView style={styles.requestsContainer}>
             {render ? (
-              requestsReceived.map((user) => (
-                <FriendRequestCard
-                  requestsReceived={requestsReceived}
-                  setRequestsReceived={setRequestsReceived}
-                  currentuserUID={CurrentUserUID}
-                  key={user.Sender.Uid}
-                  img={user.Sender.ProfilePicture}
-                  name={user.Sender.Name}
-                  username={user.Sender.UserName}
-                  onPress={() => console.log(`Friend at index pressed`)}
-                />
-              ))
+              requestsReceived.length > 0 ? (
+                requestsReceived.map((user) => (
+                  <FriendRequestCard
+                    requestsReceived={requestsReceived}
+                    setRequestsReceived={setRequestsReceived}
+                    currentuserUID={CurrentUserUID}
+                    key={user.Sender.Uid}
+                    img={user.Sender.ProfilePicture}
+                    name={user.Sender.Name}
+                    username={user.Sender.UserName}
+                    onPress={() => console.log(`Friend at index pressed`)}
+                  />
+                ))
+              ) : (
+                <Text style={styles.loadingText}>No friend requests</Text>
+              )
             ) : (
               <Text style={styles.loadingText}>Loading...</Text>
             )}
