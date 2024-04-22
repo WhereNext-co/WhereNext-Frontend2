@@ -30,12 +30,48 @@ const LocationCard = ({
 
   const onRendezvousPressHandler = () => {
     if (status === "Draft") {
-      router.push("./createRendezvous/edit");
+      router.push({
+        pathname: "./createRendezvous/edit",
+        params: {
+          scheduleid: scheduleid,
+          name: name,
+          placename: placename,
+          starttime: starttime,
+          endtime: endtime,
+          members: members,
+          placephotolink: placephotolink,
+          placelocation: placelocation,
+          status: status,
+        },
+      });
       return;
     } else {
-      router.push("./createRendezvous/rendezvousInfo");
+      router.push({
+        pathname: "./createRendezvous/rendezvousView",
+        params: {
+          scheduleid: scheduleid,
+          name: name,
+          placename: placename,
+          starttime: starttime,
+          endtime: endtime,
+          members: members,
+          placephotolink: placephotolink,
+          placelocation: placelocation,
+          status: status,
+        },
+      });
     }
   };
+  //"./createRendezvous/rendezvousInfo"
+  // router.push({
+  //   pathname: "/Username",
+  //   params: {
+  //     title: selectedTitle.name,
+  //     name: nameInputValue,
+  //     surname: surnameInputValue,
+  //     mail: "",
+  //   },
+  // });
 
   return (
     <TouchableOpacity onPress={onRendezvousPressHandler} style={styles.card}>

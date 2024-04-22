@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,12 +11,21 @@ import CustomCalendar from "../../../components/calendar/CustomCalendar";
 import TimePicker from "../../../components/calendar/TimePicker";
 import InviteFriend from "../../../components/calendar/InviteFriend";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { set } from "date-fns";
-import { fr } from "date-fns/locale";
+import { fr, se } from "date-fns/locale";
 import { UserLocationContext } from "../../../context/userLocationContext";
+import { AuthContext } from "../../../context/authContext";
 
 export default function CreateMeeting() {
+  const currentUserUID = useContext(AuthContext).user.uid;
+  let {
+    placegoogleplaceid,
+    placename,
+    placelocation,
+    placemaplink,
+    placephotolink,
+  } = useLocalSearchParams();
   // State variables
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -26,7 +35,6 @@ export default function CreateMeeting() {
   const [hour, setHour] = useState(0);
   const [minute, setMinute] = useState(0);
   const [friendUIDs, setFriendUIDs] = useState([]);
-  const { searchDetails } = useContext(UserLocationContext);
 
   // Event handlers
   const handleStartDateChange = (date) => {
@@ -69,6 +77,7 @@ export default function CreateMeeting() {
     endTime: "",
     friendUIDs: [],
     duration: 0,
+    rendezvousName: "",
   });
 
   // Schedule sync handler
@@ -76,31 +85,74 @@ export default function CreateMeeting() {
     if (rendezvousName === "") {
       alert("Rendezvous Name cannot be empty");
       return;
+    } else if (friendUIDs.length === 0) {
+      alert("Invite Someone!");
+      return;
+    } else if (startDate === null || endDate === null) {
+      alert("Select at least a date!");
+      return;
+    } else if (duration === 0) {
+      alert("Duration can't be empty!");
+      return;
+    } else if (placename === undefined) {
+      alert("Choose a place first!");
+      return;
     } else {
-      console.log(rendezvous);
+      const startDateObj = new Date(startDate);
+      const endDateObj = new Date(endDate);
+
+      const startDateISO = `${startDateObj.getUTCFullYear()}-${String(
+        startDateObj.getUTCMonth() + 1
+      ).padStart(2, "0")}-${String(startDateObj.getUTCDate()).padStart(
+        2,
+        "0"
+      )}T${String(startDateObj.getUTCHours()).padStart(2, "0")}:${String(
+        startDateObj.getUTCMinutes()
+      ).padStart(2, "0")}:${String(startDateObj.getUTCSeconds()).padStart(
+        2,
+        "0"
+      )}Z`;
+
+      const endDateISO = `${endDateObj.getUTCFullYear()}-${String(
+        endDateObj.getUTCMonth() + 1
+      ).padStart(2, "0")}-${String(endDateObj.getUTCDate()).padStart(
+        2,
+        "0"
+      )}T${String(endDateObj.getUTCHours()).padStart(2, "0")}:${String(
+        endDateObj.getUTCMinutes()
+      ).padStart(2, "0")}:${String(endDateObj.getUTCSeconds()).padStart(
+        2,
+        "0"
+      )}Z`;
       setRendezvous({
-        uid: "",
-        startTime: startDate,
-        endTime: endDate,
+        uid: currentUserUID,
+        startTime: startDateISO,
+        endTime: endDateISO,
         friendUIDs: friendUIDs,
         duration: duration,
+        rendezvousName: rendezvousName,
       });
-
-      try {
-        /* const response = await axios.post(
-        'http://where-next.tech/schedulesync/get-free-timeslot',
-        rendezvous
-      );
-
-      if (response.status !== 200) {
-        throw new Error('HTTP error ' + response.status);
-      } */
-        console.log("Rendezvous created:", rendezvous);
-        router.replace("./createRendezvous/scheduleSync");
-        alert("Rendezvous created successfully!");
-      } catch (error) {
-        console.error("Failed to create rendezvous:", error);
-      }
+      console.log("startD", startDateISO, "endD", endDateISO);
+      console.log("a", rendezvous);
+      console.log("b", friendUIDs);
+      console.log("Rendezvous created:", rendezvous);
+      router.push({
+        pathname: "./createRendezvous/scheduleSync",
+        params: {
+          uid: currentUserUID,
+          startTime: startDateISO,
+          endTime: endDateISO,
+          friendUIDs: friendUIDs,
+          rendezvousName: rendezvousName,
+          duration: duration,
+          placegoogleplaceid: placegoogleplaceid,
+          placename: placename,
+          placelocation: placelocation,
+          placemaplink: placemaplink,
+          placephotolink: placephotolink,
+        },
+      });
+      alert("Rendezvous created successfully!");
     }
   };
 
@@ -122,8 +174,14 @@ export default function CreateMeeting() {
         </View>
 
         <View>
+          {console.log(
+            placegoogleplaceid,
+            placelocation,
+            placemaplink,
+            placephotolink
+          )}
           <Text style={styles.searchDetails}>
-            {searchDetails.displayName.text}
+            {placename ? placename : "No search details"}
           </Text>
         </View>
 
@@ -148,7 +206,10 @@ export default function CreateMeeting() {
 
         <View style={styles.inviteFriend}>
           {/* Invite Friend */}
-          <InviteFriend onFriendChange={handleFriendChange} />
+          <InviteFriend
+            onFriendChange={handleFriendChange}
+            currentUserUID={currentUserUID}
+          />
         </View>
       </ScrollView>
       {/* Schedule Sync Button */}

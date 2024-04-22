@@ -20,7 +20,9 @@ import colors from "../../shared/colors";
 import { AuthContext } from "../../context/authContext";
 
 export default function Friends() {
+
   const currentUserUID = useContext(AuthContext);
+
 
   const [contacts, setContacts] = useState([]);
 
@@ -28,7 +30,6 @@ export default function Friends() {
   const [filteredContacts, setFilteredContacts] = useState([]);
 
   // const { user } = useContext(AuthContext);
-
   useEffect(() => {
     // friend lists from API
     const user = currentUserUID.user.uid;

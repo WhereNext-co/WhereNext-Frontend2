@@ -25,7 +25,12 @@ export default function Diary() {
   const [draftRendezvous, setDraftRendezvous] = useState([]);
   const [pendingRendezvous, setPendingRendezvous] = useState([]);
 
-  const currentUserUID = useContext(AuthContext);
+const currentUserUID = useContext(AuthContext);
+  useEffect(() => {
+    getActiveRendezvous(); // Fetch the active rendezvous when the component mounts
+
+  
+
 
   const getActiveRendezvous = () => {
     setSelectedTab("Active");

@@ -1,29 +1,72 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Button } from "react-native";
 import ConfirmationUsersCard from "../../../components/calendar/ConfirmationUsersCard";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
+import axios from "axios";
 
 export default function confirmation() {
-  const [rendezvous, setRendezvous] = useState({
-    hostuid: "",
-    name: "",
-    type: "",
-    starttime: "StartDate",
-    endtime: "EndDate",
-    status: "Draft",
-    InvitedUsers: [
-      { img: "", name: "Hi" },
-      { img: "", name: "Hi" },
-    ],
-    placename: "",
-    placegoogleplaceid: "",
-    placelocation: "",
-    placemaplink: "",
-    placephotolink: "",
-  });
-
+  let {
+    uid,
+    startTime,
+    endTime,
+    friendUIDs,
+    duration,
+    placegoogleplaceid,
+    placename,
+    placelocation,
+    placemaplink,
+    placephotolink,
+    rendezvousName,
+  } = useLocalSearchParams();
   const onConfirm = () => {
-    router.replace("./rendezvousInfo");
+    console.log(
+      uid,
+      rendezvousName,
+      startTime,
+      endTime,
+      friendUIDs,
+      placename,
+      placegoogleplaceid,
+      placelocation,
+      placemaplink,
+      placephotolink
+    );
+    axios
+      .post("http://where-next.tech/rendezvous/create-rendezvous", {
+        hostuid: uid,
+        name: rendezvousName,
+        type: "Work",
+        starttime: startTime,
+        endtime: endTime,
+        status: "Active",
+        InvitedUsers: friendUIDs.split(","),
+        placename: placename,
+        placegoogleplaceid: placegoogleplaceid,
+        placelocation: placelocation,
+        placemaplink: placemaplink,
+        placephotolink: placephotolink,
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error updating data: ", error);
+      });
+    router.push({
+      pathname: "./rendezvousInfo",
+      params: {
+        startTime: startTime,
+        endTime: endTime,
+        friendUIDs: friendUIDs,
+        duration: duration,
+        placegoogleplaceid: placegoogleplaceid,
+        placename: placename,
+        placelocation: placelocation,
+        placemaplink: placemaplink,
+        placephotolink: placephotolink,
+        rendezvousName: rendezvousName,
+      },
+    });
   };
 
   const onEdit = () => {
@@ -39,13 +82,13 @@ export default function confirmation() {
 
   return (
     <View style={{ backgroundColor: "white", padding: 22 }}>
-      <Text>Rendezvous Name: {rendezvous.name}</Text>
-      <Text>Location: {rendezvous.placename}</Text>
-      <Text>Start Time: {rendezvous.starttime}</Text>
-      <Text>End Time: {rendezvous.endtime}</Text>
+      <Text>Rendezvous Name: {rendezvousName}</Text>
+      <Text>Location: {placename}</Text>
+      <Text>Start Time: {startTime}</Text>
+      <Text>End Time: {endTime}</Text>
       <Text>Friends:</Text>
-      {rendezvous.InvitedUsers.map((member) => (
-        <ConfirmationUsersCard img={member.img} name={member.name} />
+      {friendUIDs.split(",").map((UID) => (
+        <ConfirmationUsersCard uid={UID} />
       ))}
       <Button title="Confirm" onPress={onConfirm} />
       <Button title="Edit" onPress={onEdit} />

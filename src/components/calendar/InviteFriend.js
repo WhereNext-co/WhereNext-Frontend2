@@ -14,21 +14,29 @@ import FriendCard from "./InviteFriendCard";
 import axios from "axios";
 import Modal from "react-native-modal";
 
-export default function Friends({ onFriendChange }) {
+export default function Friends({ onFriendChange, currentUserUID }) {
+  useEffect(() => {
+    // friend lists from API
+    axios
+      .post(`http://where-next.tech/users/get-friends`, {
+        uid: currentUserUID,
+      })
+      .then((response) => {
+        setContacts(response.data.friendList);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+    setFilteredContacts(
+      contacts.filter(
+        (contact) =>
+          contact.Name.toLowerCase().includes(search.toLowerCase()) ||
+          contact.Uid.toLowerCase().includes(search.toLowerCase())
+      )
+    );
+  }, [search, contacts]);
   // State variables
-  const [contacts, setContacts] = useState([
-    // Default friends
-    {
-      img: "",
-      name: "Guy Chelsea",
-      id: "0xfjri3995",
-    },
-    {
-      img: "",
-      name: "Mearz Wong",
-      id: "03djccnjfj",
-    },
-  ]);
+  const [contacts, setContacts] = useState([]);
 
   const [search, setSearch] = useState("");
   const [filteredContacts, setFilteredContacts] = useState([]);
@@ -36,17 +44,17 @@ export default function Friends({ onFriendChange }) {
 
   // Event handler for selecting/deselecting friends
   const handlePress = (friend) => {
-    if (selectedFriends.includes(friend.id)) {
-      setSelectedFriends(selectedFriends.filter((id) => id !== friend.id));
+    let updatedSelectedFriends;
+    if (selectedFriends.includes(friend.Uid)) {
+      updatedSelectedFriends = selectedFriends.filter(
+        (id) => id !== friend.Uid
+      );
     } else {
-      setSelectedFriends([...selectedFriends, friend.id]);
+      updatedSelectedFriends = [...selectedFriends, friend.Uid];
     }
-    console.log(`From child component: ${selectedFriends}`);
-  };
-
-  //On invite button press
-  const onInvite = () => {
-    onFriendChange(selectedFriends);
+    setSelectedFriends(updatedSelectedFriends);
+    console.log(`From child component: ${updatedSelectedFriends}`);
+    onFriendChange(updatedSelectedFriends);
   };
 
   // Filter contacts based on search input
@@ -54,8 +62,8 @@ export default function Friends({ onFriendChange }) {
     setFilteredContacts(
       contacts.filter(
         (contact) =>
-          contact.name.toLowerCase().includes(search.toLowerCase()) ||
-          contact.id.toLowerCase().includes(search.toLowerCase())
+          contact.Name.toLowerCase().includes(search.toLowerCase()) ||
+          contact.Uid.toLowerCase().includes(search.toLowerCase())
       )
     );
   }, [search, contacts]);
@@ -77,17 +85,14 @@ export default function Friends({ onFriendChange }) {
       <ScrollView>
         {filteredContacts.map((contact) => (
           <FriendCard
-            key={contact.id}
-            img={contact.img}
-            name={contact.name}
+            key={contact.Uid}
+            img={contact.ProfilePicture}
+            name={contact.Name}
             onPress={() => handlePress(contact)}
-            isSelected={selectedFriends.includes(contact.id)}
+            isSelected={selectedFriends.includes(contact.Uid)}
           />
         ))}
       </ScrollView>
-
-      {/* Invite button */}
-      <Button title="Invite" onPress={onInvite} />
     </SafeAreaView>
   );
 }

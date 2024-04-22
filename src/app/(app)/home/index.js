@@ -11,7 +11,13 @@ import {
   ScrollView,
 } from "react-native";
 import GoogleMapHomeView from "../../../components/home/googleMapHomeView";
-import { Redirect, Tabs, Stack, router } from "expo-router";
+import {
+  Redirect,
+  Tabs,
+  Stack,
+  router,
+  useLocalSearchParams,
+} from "expo-router";
 import {
   useState,
   useEffect,
@@ -45,8 +51,8 @@ import Thumbup from "../../../../assets/home/placeDetail/thumbup";
 
 export default function MapView() {
   const { location, setLocation } = useContext(UserLocationContext);
-  const [searchText, setSearchText] = useState(""); // State to hold the search text
-  const { searchDetails, setSearchDetails } = useContext(UserLocationContext); // State to hold the search details
+  const [searchText, setSearchText] = useState(""); // State to hold the search text // State to hold the search details
+  const [searchDetails, setSearchDetails] = useState(null); // State to hold the search details
   const [searchResults, setSearchResults] = useState(null); // State to hold the search results
   const [nearbyPlaces, setNearbyPlaces] = useState([]); // State to hold the nearby places
   const [searching, setSearching] = useState(false);
@@ -136,7 +142,17 @@ export default function MapView() {
   };
 
   const createRendezvousHandler = () => {
-    router.push("createRendezvous");
+    console.log(searchDetails);
+    router.push({
+      pathname: "createRendezvous",
+      params: {
+        placegoogleplaceid: searchDetails.id,
+        placename: searchDetails.displayName.text,
+        placelocation: searchDetails.formattedAddress,
+        placemaplink: searchDetails.googleMapsUri,
+        placephotolink: `https://places.googleapis.com/v1/${searchDetails.photos[0].name}/media?maxHeightPx=400&maxWidthPx=400&key=AIzaSyAFn7D3VcmDtWXNJXoHyz44MVNMEj1sLZs`,
+      },
+    });
   };
 
   const handleToggleDropdown = () => {

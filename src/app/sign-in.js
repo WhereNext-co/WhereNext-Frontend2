@@ -15,8 +15,10 @@ import axios from "axios";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { u } from "react-native-big-calendar";
 import { set } from "date-fns";
+
 import Button from "../components/componentspung/Button/Button/LongButton";
 import { FIREBASE_AUTH } from "../../firebaseConfig";
+
 export default function SignIn() {
   const { login, register, isAuthenticated } = useAuth();
   const [phone, setPhone] = useState("");
@@ -25,6 +27,7 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [verifyValidPhone, setVerifyValidPhone] = useState(false);
+
   const [pass,setPass] = useState("");
   
   useEffect(() => {
@@ -33,6 +36,7 @@ export default function SignIn() {
       router.replace("./(app)/home"); // Navigate to home page
     }
   }, [pass]);
+
   const phoneChangeHandler = (phoneNumber) => {
     setPhone(phoneNumber);
     setEmailPhoneFormat(`${countryCode}${phoneNumber}@wherenext.com`);
@@ -46,6 +50,7 @@ export default function SignIn() {
     console.log("phone:", phone);
     try {
       // Send telephone number to API
+
       response = await axios.post("http://where-next.tech/users/check-telno", {
         telNo: `${phone}`,
       }).then((response) => {
@@ -62,6 +67,7 @@ export default function SignIn() {
         // Handle error condition, e.g., show error message to user
       }
       );
+
     } catch (error) {
       console.error("Error sending phone number to API: checkTelNo", error);
       // Handle error condition, e.g., show error message to user
@@ -69,7 +75,6 @@ export default function SignIn() {
       setLoading(false);
     }
   };
-
 
   const verifyPhoneHandler2 = async () => {
     setLoading(true);
@@ -83,7 +88,7 @@ export default function SignIn() {
     } finally {
       setLoading(false);
     }
-  }; 
+  };
 
   const sendPhoneNumberToAPI = async (phoneNumber) => {
     try {
@@ -173,7 +178,9 @@ export default function SignIn() {
                 onPress={() => router.replace("./(app)/home")}
               />
               <Button
+
                 label="Go to Schedule Sync"
+
                 onPress={() =>
                   router.replace("./(app)/createRendezvous/scheduleSync")
                 }
