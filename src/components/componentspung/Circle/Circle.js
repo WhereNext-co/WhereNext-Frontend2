@@ -34,11 +34,11 @@ const MultipleSectors = ({ timeRanges, color,link }) => {
   const imageRadius = circleRadius - 2; 
   const calculateGradientColors = (angle) => {
     const topColorRed = 55;
-    const topColorGreen = 195;
+    const topColorGreen = 95;
     const topColorBlue = 240;
-    const bottomColorRed = 128;
+    const bottomColorRed = 218;
     const bottomColorGreen = 230;
-    const bottomColorBlue = 194;
+    const bottomColorBlue = 94;
     let y1 = Math.cos(((angle.startAngle) * Math.PI) / 180)/2+0.5;
     let y2 = Math.cos(((angle.endAngle) * Math.PI) / 180)/2+0.5;
     if (angle.startAngle<180 && angle.endAngle>180) {

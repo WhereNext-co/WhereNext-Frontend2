@@ -135,7 +135,15 @@ export default function GalleryPicker() {
         <View style={styles.buttonContainer}>
         <TouchableOpacity style={{}} onPress={handleButtonPress}>
         <LinearGradient colors={['#2acbf9', '#9aeeb0']}
-        style={styles.button}
+        style={{
+          width: 40,
+          height: 40,
+          backgroundColor: 'rgba(255, 255, 255, 0.7)',
+          marginBottom: 10,
+          borderRadius: 20, // Half of the width to make it a circle
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
         start={{ x: 0, y: 0.5 }}
         end={{ x: 1, y: 0.5 }}>
         <Text style={{fontSize:30}}>

@@ -5,14 +5,11 @@ import { useState, useRef, useEffect, useContext} from "react";
 import { router } from "expo-router";
 import SlidingUpPanel from 'rn-sliding-up-panel';
 import DateTimePicker from '@react-native-community/datetimepicker'; 
-import { add, format } from 'date-fns';   
 import Dropdown from "../../components/componentspung/Dropdown/Dropdown"
-import { getCalendars } from "expo-localization";
 import axios from 'axios';
 import globalApi from "../../services/globalApi";
-import { Use } from "react-native-svg";
-import { se } from "date-fns/locale";
 import { AuthContext } from "../../context/authContext";
+import { LinearGradient } from 'expo-linear-gradient';
 export default function Tab() {
   const [events, setEvents] = useState([]);
   const [title, setTitle] = useState('');
@@ -232,8 +229,23 @@ useEffect(() => {
       <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: '#14072b', marginTop: 100 }}>
         <Button label={"Add Schedule"} onPress={() => this._panel.show()} style={{ marginRight: 10 }}></Button>
         <Button label={"Edit profile"} onPress={handlePress} style={{ marginHorizontal: 10 }}></Button>
-        <Button label={"icon"} onPress={handlePress2} style={{ marginLeft: 10 }}></Button>
-        
+        <TouchableOpacity style={{}} onPress={handlePress2}>
+        <LinearGradient colors={['#2acbf9', '#9aeeb0']}
+        style={{
+          width: 40,
+          height: 40,
+          backgroundColor: 'rgba(255, 255, 255, 0.7)',
+          borderRadius: 20, // Half of the width to make it a circle
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        start={{ x: 0, y: 0.5 }}
+        end={{ x: 1, y: 0.5 }}>
+        <Text style={{fontSize:20}}>
+        +</Text>
+      </LinearGradient>
+
+        </TouchableOpacity>
       </View>
     
 

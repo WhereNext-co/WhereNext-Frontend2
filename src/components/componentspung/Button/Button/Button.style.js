@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({  
     button: {
-      width: 100,
+      width: 160,
       height: 40,
       borderRadius: 100,
       flexDirection: 'row',
