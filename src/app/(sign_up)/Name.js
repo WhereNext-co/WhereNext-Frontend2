@@ -2,7 +2,7 @@ import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
 import React, { useState, useEffect } from "react";
 import Backbutton from "../../components/componentspung/Button/turnbackbutton/Backbutton";
 import { router, useLocalSearchParams,Stack } from "expo-router";
-import Button from "../../components/componentspung/Button/Button/Button";
+import Button from "../../components/componentspung/Button/Button/LongButton";
 import Inputtext from "../../components/componentspung/InputText/InputText";
 import Dropdown from "../../components/componentspung/Dropdown/Dropdown";
 

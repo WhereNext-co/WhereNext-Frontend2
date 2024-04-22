@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, Alert , Image} from 'react-native';
 import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
-import Button from '../../components/componentspung/Button/Button/Button';
+import Button from '../../components/componentspung/Button/Button/LongButton';
 import { SvgUri } from 'react-native-svg';
 import { router, useLocalSearchParams,Stack} from "expo-router";
 

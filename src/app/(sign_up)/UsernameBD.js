@@ -2,7 +2,7 @@ import { View, Text,StyleSheet, Platform} from "react-native";
 import React,{useState,useEffect}  from "react";
 import Backbutton from '../../components/componentspung/Button/turnbackbutton/Backbutton';
 import { router, useLocalSearchParams, Stack} from "expo-router";
-import Button from '../../components/componentspung/Button/Button/Button';
+import Button from '../../components/componentspung/Button/Button/LongButton';
 import Birthdate from '../../components/componentspung/Birthdate/Birthdate';
 
 export default function Login() {
