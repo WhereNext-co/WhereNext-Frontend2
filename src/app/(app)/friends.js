@@ -17,9 +17,11 @@ import axios from "axios";
 import Modal from "react-native-modal";
 import firebase from "firebase/auth";
 import colors from "../../shared/colors";
+import { AuthContext } from "../../context/authContext";
 
 export default function Friends() {
-  const currentUserUID = "bbb";
+  const currentUserUID = useContext(AuthContext);
+
   const [contacts, setContacts] = useState([]);
 
   const [search, setSearch] = useState("");
@@ -29,7 +31,7 @@ export default function Friends() {
 
   useEffect(() => {
     // friend lists from API
-    const user = currentUserUID;
+    const user = currentUserUID.user.uid;
     axios
       .post(`http://where-next.tech/users/get-friends`, {
         uid: user,
