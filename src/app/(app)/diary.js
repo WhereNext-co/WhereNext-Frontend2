@@ -161,7 +161,7 @@ export default function Diary() {
                 />
               ))}
           </View>
-        ) : selectedTab === "Past" ? (
+        ) : selectedTab === "Draft" ? (
           <View>
             {draftRendezvous &&
               draftRendezvous.map((rendezvous) => (
@@ -179,7 +179,7 @@ export default function Diary() {
                 />
               ))}
           </View>
-        ) : selectedTab === "Draft" ? (
+        ) : selectedTab === "Past" ? (
           <View>
             {pastRendezvous &&
               pastRendezvous.map((rendezvous) => (

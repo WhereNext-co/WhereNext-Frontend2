@@ -19,12 +19,12 @@ const LocationCard = ({
   const formatTime = (timeString) => {
     const time = new Date(timeString);
     return time.toLocaleString([], {
-      weekday: "long",
       year: "numeric",
       month: "long",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
+      timeZone: "UTC",
     });
   };
 

@@ -70,14 +70,32 @@ export default function confirmation() {
   };
 
   const onEdit = () => {
-    router.replace("./edit");
+    router.replace("./");
   };
 
   const onDraft = () => {
-    setRendezvous((prevState) => ({
-      ...prevState,
-      status: "Draft",
-    }));
+    axios
+      .post("http://where-next.tech/rendezvous/create-rendezvous", {
+        hostuid: uid,
+        name: rendezvousName,
+        type: "Work",
+        starttime: startTime,
+        endtime: endTime,
+        status: "Draft",
+        InvitedUsers: friendUIDs.split(","),
+        placename: placename,
+        placegoogleplaceid: placegoogleplaceid,
+        placelocation: placelocation,
+        placemaplink: placemaplink,
+        placephotolink: placephotolink,
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error updating data: ", error);
+      });
+    router.replace("../diary");
   };
 
   return (

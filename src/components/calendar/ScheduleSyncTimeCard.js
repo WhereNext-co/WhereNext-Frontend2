@@ -17,13 +17,12 @@ const ScheduleSyncTimeCard = ({ startTime, endTime, selected, onSelect }) => {
   const endTimeStr = `${endHours}:${endMinutes}`;
 
   return (
-    <TouchableOpacity onPress={() => onSelect({ startTime, endTime })}>
+    <TouchableOpacity onPress={() => onSelect([startTime, endTime])}>
       <View style={[styles.card, isSelected && styles.selectedCard]}>
         <Text style={styles.cardTitle}>
           {startTimeStr} - {endTimeStr}
         </Text>
       </View>
-      {selected && console.log(selected.startTime === startTime)}
     </TouchableOpacity>
   );
 };

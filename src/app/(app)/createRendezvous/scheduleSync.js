@@ -49,8 +49,8 @@ export default function scheduleSync() {
       pathname: "./confirmation",
       params: {
         uid: uid,
-        startTime: startTime,
-        endTime: endTime,
+        startTime: selectedTime[0],
+        endTime: selectedTime[1],
         friendUIDs: friendUIDs,
         duration: duration,
         placegoogleplaceid: placegoogleplaceid,

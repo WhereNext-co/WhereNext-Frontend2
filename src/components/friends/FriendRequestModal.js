@@ -73,7 +73,7 @@ export default function FriendRequestModal() {
                   <FriendRequestCard
                     requestsReceived={requestsReceived}
                     setRequestsReceived={setRequestsReceived}
-                    currentuserUID={CurrentUserUID}
+                    currentuserUID={CurrentUserUID.user.uid}
                     key={user.Sender.Uid}
                     img={user.Sender.ProfilePicture}
                     name={user.Sender.Name}
