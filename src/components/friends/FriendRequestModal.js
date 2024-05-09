@@ -32,17 +32,25 @@ export default function FriendRequestModal() {
   const [render, setRender] = useState(false);
 
   useEffect(() => {
-    axios
-      .post("http://where-next.tech/users/get-friendrequest", {
-        uid: CurrentUserUID.user.uid,
-      })
-      .then((response) => {
-        setRequestsReceived(response.data.requestsReceived);
-        setRender(true);
-      })
-      .catch((error) => {
-        console.error("Error fetching data: ", error);
-      });
+    const fetchRequests = () => {
+      axios
+        .post("http://where-next.tech/users/get-friendrequest", {
+          uid: CurrentUserUID.user.uid,
+        })
+        .then((response) => {
+          setRequestsReceived(response.data.requestsReceived);
+          setRender(true);
+        })
+        .catch((error) => {
+          console.error("Error fetching data: ", error);
+        });
+    };
+
+    fetchRequests(); // Fetch immediately on component mount
+
+    const intervalId = setInterval(fetchRequests, 2000); // Fetch every 2 seconds
+
+    return () => clearInterval(intervalId); // Clean up on component unmount
   }, []);
 
   return (
