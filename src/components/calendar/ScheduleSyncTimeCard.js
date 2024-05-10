@@ -15,18 +15,28 @@ const ScheduleSyncTimeCard = ({ startTime, endTime, selected, onSelect }) => {
     new Date(endTime).getTime() + offset * 60 * 60 * 1000
   );
 
+  const startDay = String(startDate.getUTCDate()).padStart(2, "0");
   const startHours = String(startDate.getUTCHours()).padStart(2, "0");
   const startMinutes = String(startDate.getUTCMinutes()).padStart(2, "0");
 
+  const endDay = String(endDate.getUTCDate()).padStart(2, "0");
   const endHours = String(endDate.getUTCHours()).padStart(2, "0");
   const endMinutes = String(endDate.getUTCMinutes()).padStart(2, "0");
 
   const startTimeStr = `${startHours}:${startMinutes}`;
   const endTimeStr = `${endHours}:${endMinutes}`;
+  const startDateStr = `${startDay}/${
+    startDate.getUTCMonth() + 1
+  }/${startDate.getUTCFullYear()}`;
+  const endDateStr = `${endDay}/${
+    endDate.getUTCMonth() + 1
+  }/${endDate.getUTCFullYear()}`;
 
   return (
     <TouchableOpacity onPress={() => onSelect([startTime, endTime])}>
       <View style={[styles.card, isSelected && styles.selectedCard]}>
+        <Text>{startDateStr}</Text>
+        <Text>{endDateStr}</Text>
         <Text style={styles.cardTitle}>
           {startTimeStr} - {endTimeStr}
         </Text>

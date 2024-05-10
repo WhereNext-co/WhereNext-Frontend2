@@ -18,6 +18,34 @@ export default function confirmation() {
     placephotolink,
     rendezvousName,
   } = useLocalSearchParams();
+
+  console.log("");
+
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const offset = -new Date().getTimezoneOffset() / 60;
+  const startDate = new Date(
+    new Date(startTime).getTime() + offset * 60 * 60 * 1000
+  );
+  const endDate = new Date(
+    new Date(endTime).getTime() + offset * 60 * 60 * 1000
+  );
+  const startDay = String(startDate.getUTCDate()).padStart(2, "0");
+  const startHours = String(startDate.getUTCHours()).padStart(2, "0");
+  const startMinutes = String(startDate.getUTCMinutes()).padStart(2, "0");
+
+  const endDay = String(endDate.getUTCDate()).padStart(2, "0");
+  const endHours = String(endDate.getUTCHours()).padStart(2, "0");
+  const endMinutes = String(endDate.getUTCMinutes()).padStart(2, "0");
+
+  const startTimeStr = `${startHours}:${startMinutes}`;
+  const endTimeStr = `${endHours}:${endMinutes}`;
+  const startDateStr = `${startDay}/${
+    startDate.getUTCMonth() + 1
+  }/${startDate.getUTCFullYear()}`;
+  const endDateStr = `${endDay}/${
+    endDate.getUTCMonth() + 1
+  }/${endDate.getUTCFullYear()}`;
+
   const onConfirm = () => {
     console.log(
       uid,
@@ -102,8 +130,10 @@ export default function confirmation() {
     <View style={{ backgroundColor: "white", padding: 22 }}>
       <Text>Rendezvous Name: {rendezvousName}</Text>
       <Text>Location: {placename}</Text>
-      <Text>Start Time: {startTime}</Text>
-      <Text>End Time: {endTime}</Text>
+      <Text>StartDate: {startDateStr}</Text>
+      <Text>EndDate: {endDateStr}</Text>
+      <Text>Start Time: {startTimeStr}</Text>
+      <Text>End Time: {endTimeStr}</Text>
       <Text>Friends:</Text>
       {friendUIDs.split(",").map((UID) => (
         <ConfirmationUsersCard uid={UID} />
