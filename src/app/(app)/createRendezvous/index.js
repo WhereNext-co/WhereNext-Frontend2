@@ -98,8 +98,8 @@ export default function CreateMeeting() {
       alert("Choose a place first!");
       return;
     } else {
-      const startDateObj = new Date(startDate);
-      const endDateObj = new Date(endDate);
+      const startDateObj = new Date(startDate.setHours(0, 0, 0, 0));
+      const endDateObj = new Date(endDate.setHours(23, 59, 59, 999));
 
       const startDateISO = `${startDateObj.getUTCFullYear()}-${String(
         startDateObj.getUTCMonth() + 1

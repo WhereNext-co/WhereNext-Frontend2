@@ -2,10 +2,18 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 const ScheduleSyncTimeCard = ({ startTime, endTime, selected, onSelect }) => {
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  console.log(timezone);
+  const offset = -new Date().getTimezoneOffset() / 60;
+  console.log("offset:" + offset);
   const [isSelected, setIsSelected] = useState(false);
-
-  const startDate = new Date(startTime);
-  const endDate = new Date(endTime);
+  console.log(startTime + 2 * 60 * 60 * 1000);
+  const startDate = new Date(
+    new Date(startTime).getTime() + offset * 60 * 60 * 1000
+  );
+  const endDate = new Date(
+    new Date(endTime).getTime() + offset * 60 * 60 * 1000
+  );
 
   const startHours = String(startDate.getUTCHours()).padStart(2, "0");
   const startMinutes = String(startDate.getUTCMinutes()).padStart(2, "0");

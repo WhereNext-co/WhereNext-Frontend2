@@ -33,6 +33,8 @@ export default function scheduleSync() {
       })
       .then((response) => {
         setTimeList(response.data.nonOverlappingSchedules);
+        console.log(response.data.nonOverlappingSchedules);
+        console.log(startTime, endTime);
       })
       .catch((error) => {
         console.error("Error:", error);
