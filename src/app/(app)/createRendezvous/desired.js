@@ -123,14 +123,14 @@ export default function CreateMeeting() {
           </View>
         ) : (
           <View>
-            <Text>Date Picker</Text>
+            <Text>Date and Time Picker</Text>
             <DateTimePicker
-              mode="date"
+              mode="datetime"
               value={startTime}
               onChange={onChangeStartDate}
             />
             <DateTimePicker
-              mode="date"
+              mode="datetime"
               value={endTime}
               onChange={onChangeEndDate}
             />
@@ -140,18 +140,8 @@ export default function CreateMeeting() {
         {/* Stack Screen */}
         <Stack.Screen options={{ headerShown: false }} />
 
-        {/* Rendezvous Name Input */}
-        <TextInput
-          value={rendezvousName}
-          onChangeText={handleRendezvousName}
-          placeholder="Rendezvous Name"
-        />
-
         {/* Invite Friend */}
         <InviteFriend onFriendChange={handleFriendChange} />
-
-        {/* Schedule Sync Button */}
-        <Button title="Schedule Sync" onPress={handleScheduleSync} />
       </View>
     </SafeAreaView>
   );
