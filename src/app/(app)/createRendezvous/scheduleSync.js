@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Button, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  Pressable,
+} from "react-native";
 import ScheduleSyncTimeCard from "../../../components/calendar/ScheduleSyncTimeCard";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams, Stack } from "expo-router";
 import axios from "axios";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function scheduleSync() {
   let {
@@ -22,7 +31,7 @@ export default function scheduleSync() {
   const [timeList, setTimeList] = useState([]);
   const [selectedTime, setSelectedTime] = useState(null);
 
-  useEffect(() => {
+  /* useEffect(() => {
     axios
       .post(`http://where-next.tech/schedulesync/get-free-timeslot`, {
         uid: uid,
@@ -40,6 +49,7 @@ export default function scheduleSync() {
         console.error("Error:", error);
       });
   }, []);
+  */
 
   const handleSelectTime = (time) => {
     setSelectedTime(time);
@@ -83,29 +93,38 @@ export default function scheduleSync() {
   };
 
   return (
-    <View>
-      {/* <Text>Schedule Sync</Text>
-      <Text>
-        {uid} {friendUIDs.split(",")} {startTime} {endTime}
-      </Text> */}
+    <SafeAreaView>
+      <Stack.Screen options={{ headerShown: false }} />
       <View>
+        <Text style={styles.title}>Schedule Sync</Text>
         {timeList ? (
           <View>
             <View style={styles.timeListContainer}>
               <ScrollView>
-                {timeList.map((time) => (
+                {timeList.map((time, index) => (
                   <ScheduleSyncTimeCard
-                    key={time[0]}
+                    key={index}
                     startTime={time[0]}
                     endTime={time[1]}
-                    selected={selectedTime}
                     onSelect={handleSelectTime}
+                    selectedTime={selectedTime}
                   />
                 ))}
               </ScrollView>
             </View>
-
-            <Button title="Send Invites" onPress={onConfirm} />
+            <Pressable
+              onPress={onConfirm}
+              style={styles.sendInvitesButtonContainer}
+            >
+              <LinearGradient
+                colors={["#2acbf9", "#9aeeb0"]}
+                style={styles.sendInvitesButton}
+                start={{ x: 0, y: 0.5 }}
+                end={{ x: 1, y: 0.5 }}
+              >
+                <Text style={styles.sendInviteButtonText}>Send Invites</Text>
+              </LinearGradient>
+            </Pressable>
             <Button title="Choose Desired Time" onPress={onEdit} />
           </View>
         ) : (
@@ -115,11 +134,16 @@ export default function scheduleSync() {
           </View>
         )}
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  title: {
+    fontSize: 25,
+    fontWeight: "bold",
+    margin: 15,
+  },
   cardContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -140,6 +164,22 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#000",
-    height: 300,
+    height: "80%",
+    backgroundColor: "#14072B",
+  },
+  sendInvitesButtonContainer: {
+    alignItems: "center",
+    marginTop: 10,
+  },
+  sendInvitesButton: {
+    width: "70%",
+    borderRadius: 100,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
+  },
+  sendInviteButtonText: {
+    fontSize: 25,
+    fontWeight: "bold",
   },
 });

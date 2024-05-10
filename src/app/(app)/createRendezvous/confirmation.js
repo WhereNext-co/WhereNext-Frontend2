@@ -19,7 +19,7 @@ export default function confirmation() {
     rendezvousName,
   } = useLocalSearchParams();
 
-  console.log("");
+  console.log("-");
 
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const offset = -new Date().getTimezoneOffset() / 60;
