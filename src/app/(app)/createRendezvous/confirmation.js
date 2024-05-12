@@ -1,8 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Button } from "react-native";
+import {
+  View,
+  Text,
+  Button,
+  Image,
+  StyleSheet,
+  ScrollView,
+  Pressable,
+} from "react-native";
 import ConfirmationUsersCard from "../../../components/calendar/ConfirmationUsersCard";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams, Stack } from "expo-router";
 import axios from "axios";
+import { LinearGradient } from "expo-linear-gradient";
+import Location from "../../../../assets/Rendezvous/location.svg";
 
 export default function confirmation() {
   let {
@@ -18,8 +28,6 @@ export default function confirmation() {
     placephotolink,
     rendezvousName,
   } = useLocalSearchParams();
-
-  console.log("-");
 
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const offset = -new Date().getTimezoneOffset() / 60;
@@ -39,6 +47,7 @@ export default function confirmation() {
 
   const startTimeStr = `${startHours}:${startMinutes}`;
   const endTimeStr = `${endHours}:${endMinutes}`;
+
   const startDateStr = `${startDay}/${
     startDate.getUTCMonth() + 1
   }/${startDate.getUTCFullYear()}`;
@@ -83,8 +92,10 @@ export default function confirmation() {
     router.push({
       pathname: "./rendezvousInfo",
       params: {
-        startTime: startTime,
-        endTime: endTime,
+        startTime: startTimeStr,
+        endTime: endTimeStr,
+        startDate: startDateStr,
+        endDate: endDateStr,
         friendUIDs: friendUIDs,
         duration: duration,
         placegoogleplaceid: placegoogleplaceid,
@@ -98,7 +109,7 @@ export default function confirmation() {
   };
 
   const onEdit = () => {
-    router.replace("./");
+    router.push("./");
   };
 
   const onDraft = () => {
@@ -127,23 +138,170 @@ export default function confirmation() {
   };
 
   return (
-    <View style={{ backgroundColor: "white", padding: 22 }}>
-      <Text>Rendezvous Name: {rendezvousName}</Text>
-      <Text>Location: {placename}</Text>
-      <Text>StartDate: {startDateStr}</Text>
-      <Text>EndDate: {endDateStr}</Text>
-      <Text>Start Time: {startTimeStr}</Text>
-      <Text>End Time: {endTimeStr}</Text>
-      <Text>Friends:</Text>
-      {friendUIDs.split(",").map((UID) => (
-        <ConfirmationUsersCard uid={UID} />
-      ))}
-      <Button title="Confirm" onPress={onConfirm} />
-      <Button title="Edit" onPress={onEdit} />
-      <Button title="Draft" onPress={onDraft} />
+    <View>
+      {/* Stack Screen */}
+      <Stack.Screen options={{ headerShown: false }} />
+
+      <View>
+        {/* Image */}
+        <Image
+          source={{ uri: placephotolink }}
+          style={{ width: "100%", height: 250 }}
+        />
+      </View>
+      <View>
+        <View style={styles.rendezvousNameContainer}>
+          <Text style={styles.rendezvousNameText}>{rendezvousName}</Text>
+        </View>
+        <View style={styles.placeNameContainer}>
+          <View style={styles.placeName}>
+            <Location width={25} height={25} fill="white" />
+            <Text style={styles.placeNameText}>{placename}</Text>
+          </View>
+          <View style={{ borderTopWidth: 1, borderColor: "#9aeeb0" }} />
+          <View style={styles.dateTimeContainer}>
+            <Text style={styles.dateText}>
+              {startDateStr === endDateStr
+                ? startDateStr
+                : `${startDateStr} to ${endDateStr}`}
+            </Text>
+          </View>
+          <View style={styles.dateTimeContainer}>
+            <Text style={styles.timeText}>{startTimeStr}</Text>
+            <Text style={styles.timeText}> - </Text>
+            <Text style={styles.timeText}>{endTimeStr}</Text>
+          </View>
+        </View>
+      </View>
+      <View style={styles.friendListContainer}>
+        <View style={styles.friendListTextContainer}>
+          <Text style={styles.friendListText}>
+            {friendUIDs.split(",").length} People
+          </Text>
+        </View>
+        <View style={{ borderTopWidth: 1, borderColor: "#9aeeb0" }} />
+        <ScrollView style={styles.friendList}>
+          {friendUIDs.split(",").map((UID) => (
+            <ConfirmationUsersCard uid={UID} />
+          ))}
+        </ScrollView>
+      </View>
+      <View>
+        <Pressable onPress={onConfirm} style={styles.createButtonContainer}>
+          <LinearGradient
+            colors={["#2acbf9", "#9aeeb0"]}
+            style={styles.createButton}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 0.5 }}
+          >
+            <Text style={styles.createButtonText}>Create Rendezvous</Text>
+          </LinearGradient>
+        </Pressable>
+        <Pressable onPress={onEdit} style={styles.editButtonContainer}>
+          <View style={styles.editButton}>
+            <Text style={styles.editButtonText}>Edit</Text>
+          </View>
+        </Pressable>
+      </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  rendezvousNameContainer: {
+    height: 50,
+    width: "90%",
+    paddingLeft: 10,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center",
+    backgroundColor: "#181D45",
+    margin: 10,
+  },
+  rendezvousNameText: {
+    color: "white",
+    fontSize: 30,
+    fontWeight: "bold",
+  },
+  placeNameContainer: {
+    width: "90%",
+    backgroundColor: "#181D45",
+    padding: 10,
+    borderRadius: 10,
+    alignSelf: "center",
+  },
+  placeName: {
+    marginBottom: 10,
+  },
+  placeNameText: {
+    color: "white",
+    fontSize: 25,
+    fontWeight: "bold",
+  },
+  dateTimeContainer: {
+    flexDirection: "row",
+    marginTop: 5,
+  },
+  dateText: {
+    fontSize: 20,
+    color: "white",
+  },
+  timeText: {
+    fontSize: 20,
+    color: "white",
+  },
+  friendListContainer: {
+    height: 200,
+    width: "90%",
+    padding: 20,
+    borderRadius: 10,
+    backgroundColor: "#181D45",
+    margin: 10,
+    alignSelf: "center",
+  },
+  friendListText: {
+    color: "white",
+    fontSize: 25,
+    fontWeight: "bold",
+  },
+  friendListTextContainer: {
+    marginBottom: 10,
+  },
+  createButtonText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#fff",
+  },
+  createButtonContainer: {
+    alignItems: "center",
+    marginTop: 5,
+  },
+  createButton: {
+    width: "90%",
+    borderRadius: 100,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
+  },
+  editButton: {
+    width: "90%",
+    borderRadius: 100,
+    padding: 10,
+    backgroundColor: "#43425e",
+    marginTop: 10,
+    alignItems: "center",
+  },
+  editButtonContainer: {
+    alignItems: "center",
+    marginTop: 5,
+  },
+  editButtonText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#fff",
+  },
+});
 
 /*
         hostuid: "",
@@ -167,3 +325,19 @@ export default function confirmation() {
       if (response.status !== 200) {
         throw new Error('HTTP error ' + response.status);
       } */
+
+// <View style={{ backgroundColor: "white", padding: 22 }}>
+//   <Text>Rendezvous Name: {rendezvousName}</Text>
+//   <Text>Location: {placename}</Text>
+//   <Text>StartDate: {startDateStr}</Text>
+//   <Text>EndDate: {endDateStr}</Text>
+//   <Text>Start Time: {startTimeStr}</Text>
+//   <Text>End Time: {endTimeStr}</Text>
+//   <Text>Friends:</Text>
+//   {friendUIDs.split(",").map((UID) => (
+//     <ConfirmationUsersCard uid={UID} />
+//   ))}
+//   <Button title="Confirm" onPress={onConfirm} />
+//   <Button title="Edit" onPress={onEdit} />
+//   <Button title="Draft" onPress={onDraft} />
+// </View>

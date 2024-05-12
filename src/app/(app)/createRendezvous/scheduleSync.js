@@ -26,12 +26,11 @@ export default function scheduleSync() {
     placemaplink,
     placephotolink,
     rendezvousName,
-    currentUserUID,
   } = useLocalSearchParams();
   const [timeList, setTimeList] = useState([]);
   const [selectedTime, setSelectedTime] = useState(null);
 
-  /* useEffect(() => {
+  useEffect(() => {
     axios
       .post(`http://where-next.tech/schedulesync/get-free-timeslot`, {
         uid: uid,
@@ -49,7 +48,6 @@ export default function scheduleSync() {
         console.error("Error:", error);
       });
   }, []);
-  */
 
   const handleSelectTime = (time) => {
     setSelectedTime(time);
@@ -89,7 +87,22 @@ export default function scheduleSync() {
   };
 
   const onEdit = () => {
-    router.replace("./desired");
+    router.push({
+      pathname: "./desired",
+      params: {
+        uid: uid,
+        startTime: selectedTime[0],
+        endTime: selectedTime[1],
+        friendUIDs: friendUIDs,
+        duration: duration,
+        placegoogleplaceid: placegoogleplaceid,
+        placename: placename,
+        placelocation: placelocation,
+        placemaplink: placemaplink,
+        placephotolink: placephotolink,
+        rendezvousName: rendezvousName,
+      },
+    });
   };
 
   return (
@@ -125,7 +138,12 @@ export default function scheduleSync() {
                 <Text style={styles.sendInviteButtonText}>Send Invites</Text>
               </LinearGradient>
             </Pressable>
-            <Button title="Choose Desired Time" onPress={onEdit} />
+
+            <Pressable onPress={onEdit} style={styles.chooseButtonContainer}>
+              <View style={styles.chooseButton}>
+                <Text style={styles.chooseButtonText}>Choose Desired Time</Text>
+              </View>
+            </Pressable>
           </View>
         ) : (
           <View>
@@ -164,7 +182,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#000",
-    height: "80%",
+    height: "75%",
     backgroundColor: "#14072B",
   },
   sendInvitesButtonContainer: {
@@ -172,11 +190,28 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   sendInvitesButton: {
-    width: "70%",
+    width: "90%",
     borderRadius: 100,
     alignItems: "center",
     justifyContent: "center",
     padding: 10,
+  },
+  chooseButton: {
+    width: "90%",
+    borderRadius: 100,
+    padding: 10,
+    backgroundColor: "#43425e",
+    marginTop: 10,
+    alignItems: "center",
+  },
+  chooseButtonContainer: {
+    alignItems: "center",
+    marginTop: 10,
+  },
+  chooseButtonText: {
+    fontSize: 25,
+    fontWeight: "bold",
+    color: "#fff",
   },
   sendInviteButtonText: {
     fontSize: 25,

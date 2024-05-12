@@ -84,7 +84,18 @@ export default function CreateMeeting() {
   const goSchedule = () => {
     router.push("./createRendezvous/scheduleSync");
   };
-
+  const goConfirmation = () => {
+    router.push("./createRendezvous/confirmation");
+  };
+  const goInfo = () => {
+    router.push("./createRendezvous/rendezvousInfo");
+  };
+  const goDesired = () => {
+    router.push("./createRendezvous/desired");
+  };
+  const goFriend = () => {
+    router.push("./createRendezvous/scheduleSyncFriend");
+  };
   // Schedule sync handler
   const handleScheduleSync = () => {
     if (rendezvousName === "") {
@@ -168,6 +179,10 @@ export default function CreateMeeting() {
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Create Rendezvous</Text>
           <Button title="Go schedule" onPress={goSchedule} />
+          <Button title="Go confirmation" onPress={goConfirmation} />
+          <Button title="Go Info" onPress={goInfo} />
+          <Button title="Go Desired" onPress={goDesired} />
+          <Button title="Go Friend" onPress={goFriend} />
         </View>
         <View style={styles.textInput}>
           {/* Rendezvous Name Input */}

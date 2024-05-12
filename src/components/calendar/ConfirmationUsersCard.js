@@ -27,7 +27,11 @@ const ConfirmationUsersCard = ({ uid }) => {
           <Image
             alt=""
             resizeMode="cover"
-            source={{ uri: img }}
+            source={{
+              uri: `https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images%2F${img.slice(
+                81
+              )}`,
+            }}
             style={styles.cardImg}
           />
         ) : (
@@ -50,7 +54,7 @@ export default ConfirmationUsersCard;
 const styles = StyleSheet.create({
   /** Card */
   card: {
-    paddingVertical: 14,
+    paddingVertical: 7,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
@@ -60,8 +64,8 @@ const styles = StyleSheet.create({
     borderColor: "#d6d6d6",
   },
   cardImg: {
-    width: 42,
-    height: 42,
+    width: 50,
+    height: 50,
     borderRadius: 12,
   },
   cardAvatar: {
@@ -80,9 +84,8 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   cardTitle: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#000",
+    fontSize: 18,
+    color: "white",
   },
   cardAction: {
     paddingRight: 16,
