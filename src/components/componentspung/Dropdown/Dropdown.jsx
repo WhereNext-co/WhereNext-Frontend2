@@ -21,7 +21,7 @@ const Dropdown = ({
                 activeOpacity={0.8}
                 onPress={() => setShowOption(!showOption)}>
                 <Text>{!!value ? value?.name : label}</Text>
-                <Text style={{}}>{!showOption ? '▲' : '▼'}</Text>
+                <Text style={{}}>{!showOption ? '▼' : '▲'}</Text>
             </TouchableOpacity>
             {showOption && (
                 <View style={styles.optionContainer}>

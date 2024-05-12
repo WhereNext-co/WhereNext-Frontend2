@@ -44,7 +44,7 @@ export default function Login() {
         <View style={{ position: 'absolute', top: 60, left: 20 }}>
         <Backbutton style={{}} onPress={handlePress2}/>
         </View>
-        <View style={{ alignItems: 'center' , marginBottom: 20}}>
+        <View style={{ alignItems: 'center' , marginBottom: 20, marginTop: 30}}>
           <Text style={{textAlign :"center",
           textAlignVertical:"bottom",
           fontSize:30,

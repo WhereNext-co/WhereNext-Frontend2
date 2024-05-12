@@ -51,7 +51,7 @@ useEffect(() => {
           region: countryCode2,
           telNo: phone2,
           profilePicture: profile,
-          bio: "Change this in settings",
+          bio: "",
         },
         {
           headers: {
