@@ -16,16 +16,19 @@ import TimePicker from "../../../components/calendar/TimePicker";
 import InviteFriend from "../../../components/calendar/InviteFriend";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, router, useLocalSearchParams } from "expo-router";
-import { set } from "date-fns";
-import { fr, se } from "date-fns/locale";
 import { UserLocationContext } from "../../../context/userLocationContext";
 import { AuthContext } from "../../../context/authContext";
 import { LinearGradient } from "expo-linear-gradient";
 import Pin from "../../../../assets/home/placeDetail/pin";
+import { useFocusEffect } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function CreateMeeting() {
   const currentUserUID = useContext(AuthContext).user.uid;
   let {
+    rendezvousNameFromConfirm,
+    durationFromConfirm,
+    placenameFromConfirm,
     placegoogleplaceid,
     placename,
     placelocation,
@@ -35,8 +38,10 @@ export default function CreateMeeting() {
   // State variables
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [rendezvousName, setRendezvousName] = useState("");
-  const [duration, setDuration] = useState(0);
+  const [rendezvousName, setRendezvousName] = useState(
+    rendezvousNameFromConfirm || ""
+  );
+  const [duration, setDuration] = useState(durationFromConfirm || null);
   const [day, setDay] = useState(0);
   const [hour, setHour] = useState(0);
   const [minute, setMinute] = useState(0);
@@ -53,13 +58,21 @@ export default function CreateMeeting() {
       startDate !== null &&
       endDate !== null &&
       duration !== 0 &&
-      placename !== undefined
+      (placename !== undefined || placenameFromConfirm !== undefined)
     ) {
       setIsFormFilled(true); // Set isFormFilled to true if all fields are filled
     } else {
       setIsFormFilled(false); // Set isFormFilled to false if any field is empty
     }
-  }, [rendezvousName, friendUIDs, startDate, endDate, duration, placename]);
+  }, [
+    rendezvousName,
+    friendUIDs,
+    startDate,
+    endDate,
+    duration,
+    placename,
+    placenameFromConfirm,
+  ]);
 
   const [fadeAnim] = useState(new Animated.Value(0)); // Initial opacity of 0
 
@@ -102,31 +115,6 @@ export default function CreateMeeting() {
     console.log(friendUIDs);
   };
 
-  // Rendezvous object
-  const [rendezvous, setRendezvous] = useState({
-    uid: "",
-    startTime: "",
-    endTime: "",
-    friendUIDs: [],
-    duration: 0,
-    rendezvousName: "",
-  });
-
-  const goSchedule = () => {
-    router.push("./createRendezvous/scheduleSync");
-  };
-  const goConfirmation = () => {
-    router.push("./createRendezvous/confirmation");
-  };
-  const goInfo = () => {
-    router.push("./createRendezvous/rendezvousInfo");
-  };
-  const goDesired = () => {
-    router.push("./createRendezvous/desired");
-  };
-  const goFriend = () => {
-    router.push("./createRendezvous/scheduleSyncFriend");
-  };
   // Schedule sync handler
   const handleScheduleSync = () => {
     if (rendezvousName === "") {
@@ -140,9 +128,6 @@ export default function CreateMeeting() {
       return;
     } else if (duration === 0) {
       alert("Duration can't be empty!");
-      return;
-    } else if (placename === undefined) {
-      alert("Choose a place first!");
       return;
     } else {
       const startDateObj = new Date(startDate.setHours(0, 0, 0, 0));
@@ -171,18 +156,7 @@ export default function CreateMeeting() {
         2,
         "0"
       )}Z`;
-      setRendezvous({
-        uid: currentUserUID,
-        startTime: startDateISO,
-        endTime: endDateISO,
-        friendUIDs: friendUIDs,
-        duration: duration,
-        rendezvousName: rendezvousName,
-      });
-      console.log("startD", startDateISO, "endD", endDateISO);
-      console.log("a", rendezvous);
-      console.log("b", friendUIDs);
-      console.log("Rendezvous created:", rendezvous);
+
       router.push({
         pathname: "./createRendezvous/scheduleSync",
         params: {
@@ -193,7 +167,7 @@ export default function CreateMeeting() {
           rendezvousName: rendezvousName,
           duration: duration,
           placegoogleplaceid: placegoogleplaceid,
-          placename: placename,
+          placename: placenameFromConfirm ? placenameFromConfirm : placename,
           placelocation: placelocation,
           placemaplink: placemaplink,
           placephotolink: placephotolink,
@@ -235,7 +209,11 @@ export default function CreateMeeting() {
           <View className="flex flex-row items-center mb-1">
             <Pin width={20} height={20} color="#fff" />
             <Text style={styles.searchDetails}>
-              {placename ? placename : "No search details"}
+              {placenameFromConfirm
+                ? placenameFromConfirm
+                : placename
+                ? placename
+                : "No search details"}
             </Text>
           </View>
         </View>

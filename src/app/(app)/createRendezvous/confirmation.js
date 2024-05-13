@@ -109,7 +109,18 @@ export default function confirmation() {
   };
 
   const onEdit = () => {
-    router.push("./");
+    router.push({
+      pathname: "./",
+      params: {
+        durationFromConfirm: duration,
+        placenameFromConfirm: placename,
+        rendezvousNameFromConfirm: rendezvousName,
+        placegoogleplaceidFromConfirm: placegoogleplaceid,
+        placelocationFromConfirm: placelocation,
+        placemaplinkFromConfirm: placemaplink,
+        placephotolinkFromConfirm: placephotolink,
+      },
+    });
   };
 
   const onDraft = () => {

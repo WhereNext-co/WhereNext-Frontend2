@@ -91,8 +91,6 @@ export default function scheduleSync() {
       pathname: "./desired",
       params: {
         uid: uid,
-        startTime: selectedTime[0],
-        endTime: selectedTime[1],
         friendUIDs: friendUIDs,
         duration: duration,
         placegoogleplaceid: placegoogleplaceid,
