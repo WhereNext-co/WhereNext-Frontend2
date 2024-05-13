@@ -2,9 +2,9 @@ import React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
-import Pin from "../../../assets/home/placeDetail/pin";
-import Members from "../../../assets/tabs/friends";
-import Clock from "../../../assets/home/placeDetail/clock";
+import Pin from "../../../assets/home/placeDetail/outline/pin";
+import Members from "../../../assets/tabs/outline/friends";
+import Clock from "../../../assets/home/placeDetail/outline/clock";
 
 const LocationCard = ({
   name,

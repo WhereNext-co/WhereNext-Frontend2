@@ -149,7 +149,7 @@ export default function scheduleSync() {
               style={{ flex: 1, justifyContent: "flex-end", marginBottom: 10 }}
             >
               <Pressable
-                onPress={onConfirm}
+                onPress={onEdit}
                 style={styles.sendInvitesButtonContainer}
               >
                 <LinearGradient

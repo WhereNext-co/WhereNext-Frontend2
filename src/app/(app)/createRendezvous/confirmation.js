@@ -223,7 +223,7 @@ export default function confirmation() {
             </View>
           </Pressable>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-            <Pressable onPress={onConfirm}>
+            <Pressable onPress={onDraft}>
               <LinearGradient
                 colors={["#2acbf9", "#9aeeb0"]}
                 start={{ x: 0, y: 0.5 }}

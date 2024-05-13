@@ -21,8 +21,6 @@ export default function rendezvousInfo() {
     uid,
     startTime,
     endTime,
-    startDate,
-    endDate,
     friendUIDs,
     duration,
     placegoogleplaceid,
@@ -33,22 +31,30 @@ export default function rendezvousInfo() {
     rendezvousName,
   } = useLocalSearchParams();
 
-  // const uid = "UqqOF7h6pTcLALbpE5hUXs9kq0I3";
-  // const startTime = "00:00";
-  // const endTime = "23:59";
-  // const startDate = "15/5/2024";
-  // const endDate = "17/5/2024";
-  // const friendUIDs =
-  //   "co2pbqcrSjNnUqJWqNSJSgbIK7B3,pkXM6xwBb4RnZt1Qh8qjuuPTHeI3";
+  const offset = -new Date().getTimezoneOffset() / 60;
+  const startDate = new Date(
+    new Date(startTime).getTime() + offset * 60 * 60 * 1000
+  );
+  const endDate = new Date(
+    new Date(endTime).getTime() + offset * 60 * 60 * 1000
+  );
+  const startDay = String(startDate.getUTCDate()).padStart(2, "0");
+  const startHours = String(startDate.getUTCHours()).padStart(2, "0");
+  const startMinutes = String(startDate.getUTCMinutes()).padStart(2, "0");
 
-  // const duration = 120;
-  // const placegoogleplaceid = "ChIJM6caJIaAhYARM_2YtmPwMNI";
-  // const placename = "Ross Dress for Less";
-  // const rendezvousName = "TT";
-  // const placelocation = "799 Market St, San Francisco, CA 94103, USA";
-  // const placemaplink = "https://maps.google.com/?cid=15145869857902886195";
-  // const placephotolink =
-  //   "https://places.googleapis.com/v1/places/ChIJM6caJIaAhYARM_2YtmPwMNI/photos/AUGGfZk6YF16nAGDvqpOzemUMwx_i_JK4H7jS9-C9aYzjVvjxGkg4uo94bAHN5lo3sKtOHgVa63Hz1neS3zgKfOTPoFN6yGNijP_rME47z7sIqY3Rqhq7iwNETbYL1upl5oRseiJ4502K_Q_1LqY4VIRNdQaYJ_IjYJs40Hy/media?maxHeightPx=400&maxWidthPx=400&key=AIzaSyAFn7D3VcmDtWXNJXoHyz44MVNMEj1sLZsc";
+  const endDay = String(endDate.getUTCDate()).padStart(2, "0");
+  const endHours = String(endDate.getUTCHours()).padStart(2, "0");
+  const endMinutes = String(endDate.getUTCMinutes()).padStart(2, "0");
+
+  const startTimeStr = `${startHours}:${startMinutes}`;
+  const endTimeStr = `${endHours}:${endMinutes}`;
+
+  const startDateStr = `${startDay}/${
+    startDate.getUTCMonth() + 1
+  }/${startDate.getUTCFullYear()}`;
+  const endDateStr = `${endDay}/${
+    endDate.getUTCMonth() + 1
+  }/${endDate.getUTCFullYear()}`;
 
   axios
     .post("http://where-next.tech/users/get-profile", {
@@ -105,24 +111,24 @@ export default function rendezvousInfo() {
                 style={{ marginRight: 10 }}
               />
 
-              {startDate === endDate ? (
-                <Text style={styles.dateText}>{`${startDate} `}</Text>
+              {startDateStr === endDateStr ? (
+                <Text style={styles.dateText}>{`${startDateStr} `}</Text>
               ) : (
-                <Text style={styles.dateText}>{`${startDate}, `}</Text>
+                <Text style={styles.dateText}>{`${startDateStr}, `}</Text>
               )}
 
-              {startDate === endDate ? (
-                <Text style={styles.timeText}>{`${startTime}`}</Text>
+              {startDateStr === endDateStr ? (
+                <Text style={styles.timeText}>{`${startTimeStr}`}</Text>
               ) : (
-                <Text style={styles.timeText}>{`${startTime} `}</Text>
+                <Text style={styles.timeText}>{`${startTimeStr} `}</Text>
               )}
 
-              {startDate === endDate ? (
+              {startDateStr === endDateStr ? (
                 <Text>-</Text>
               ) : (
-                <Text style={styles.dateText}> {`- ${endDate}, `}</Text>
+                <Text style={styles.dateText}> {`- ${endDateStr}, `}</Text>
               )}
-              <Text style={styles.timeText}>{`${endTime}`}</Text>
+              <Text style={styles.timeText}>{`${endTimeStr}`}</Text>
             </View>
 
             <View style={styles.friendListContainer}>

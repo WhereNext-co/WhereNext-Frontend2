@@ -113,7 +113,7 @@ export default function CreateMeeting() {
       endOfDay.setHours(23, 59, 59, 999);
       setEndTime(endOfDay);
     }
-  }, [isAllDay, startDate, endDate]);
+  }, [isAllDay]);
 
   const onPrint = () => {
     console.log("START:" + startTime + "END:" + endTime);

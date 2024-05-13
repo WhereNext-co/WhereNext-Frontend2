@@ -253,7 +253,12 @@ export default function Tab() {
     console.log("enddate2", enddate);
     a = startdate.toISOString();
     b = enddate.toISOString();
-
+    if (isEnabled) {
+      startdate.setHours(0, 0, 0, 0);
+      enddate.setHours(23, 59, 59, 999);
+    }
+    console.log("startdate2", startdate);
+    console.log("enddate2", enddate);
     if (title == "" || selectedTitle == null || searchText == "") {
       alert("Please fill in all fields");
       return;
