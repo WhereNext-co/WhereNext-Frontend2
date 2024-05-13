@@ -63,6 +63,7 @@ export default function Diary() {
       })
       .then((response) => {
         setPastRendezvous(response.data.RendezvousList);
+        console.log(response.data.RendezvousList);
       })
       .catch((error) => {
         console.error("Error:", error);

@@ -1,30 +1,36 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
+
 const FriendCard = ({ img, name, id, onPress, isSelected }) => {
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={[styles.card, isSelected ? styles.selected : null]}
-    >
+    <TouchableOpacity onPress={onPress}>
       <View style={styles.card}>
-        {img ? ( //Checking if the img is available
+        {img ? (
           <Image
             alt=""
             resizeMode="cover"
-            source={{ uri: img }}
+            source={{
+              uri: `https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images%2F${img.slice(
+                81
+              )}`,
+            }}
             style={styles.cardImg}
           />
         ) : (
-          // If the img is not available, display the first letter of the name.
           <View style={[styles.cardImg, styles.cardAvatar]}>
             <Text style={styles.cardAvatarText}>{name[0]}</Text>
           </View>
         )}
-
-        <View /*The part where name is displayed*/ style={styles.cardBody}>
+        <View style={styles.cardBody}>
           <Text style={styles.cardTitle}>{name}</Text>
         </View>
+        {/* Circle checkbox */}
+        <FeatherIcon
+          name={isSelected ? "check-circle" : "circle"}
+          size={24}
+          color={isSelected ? "#5fede4" : "#CCCCCC"}
+        />
       </View>
     </TouchableOpacity>
   );
@@ -33,13 +39,11 @@ const FriendCard = ({ img, name, id, onPress, isSelected }) => {
 export default FriendCard;
 
 const styles = StyleSheet.create({
-  /** Card */
   card: {
-    padding: 7,
+    paddingVertical: 4,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-start",
-    marginBottom: 8,
+    justifyContent: "space-between",
   },
   cardWrapper: {
     borderBottomWidth: 1,
@@ -48,9 +52,10 @@ const styles = StyleSheet.create({
   cardImg: {
     width: 42,
     height: 42,
-    borderRadius: 12,
+    borderRadius: 9999,
   },
   cardAvatar: {
+    display: "flex",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#9ca1ac",
@@ -58,7 +63,7 @@ const styles = StyleSheet.create({
   cardAvatarText: {
     fontSize: 19,
     fontWeight: "bold",
-    color: "#fff",
+    color: "#000",
   },
   cardBody: {
     marginRight: "auto",
@@ -66,16 +71,10 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 16,
-    fontWeight: "700",
-    color: "#000",
+    fontWeight: "bold",
+    color: "#fff",
   },
   cardAction: {
     paddingRight: 16,
-  },
-  selected: {
-    borderColor: "blue",
-    borderWidth: 1,
-    borderRadius: 12,
-    marginBottom: 8,
   },
 });

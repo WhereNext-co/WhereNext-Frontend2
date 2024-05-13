@@ -9,10 +9,17 @@ import {
   Image,
   TextInput,
   Button,
+  LayoutAnimation,
+  UIManager,
 } from "react-native";
 import FriendCard from "./InviteFriendCard";
 import axios from "axios";
 import Modal from "react-native-modal";
+import Search from "../../../assets/home/search/search.svg";
+
+// Enable layout animations for Android
+UIManager.setLayoutAnimationEnabledExperimental &&
+  UIManager.setLayoutAnimationEnabledExperimental(true);
 
 export default function Friends({ onFriendChange, currentUserUID }) {
   useEffect(() => {
@@ -35,12 +42,13 @@ export default function Friends({ onFriendChange, currentUserUID }) {
       )
     );
   }, [search, contacts]);
+
   // State variables
   const [contacts, setContacts] = useState([]);
-
   const [search, setSearch] = useState("");
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [selectedFriends, setSelectedFriends] = useState([]);
+  const [isExpanded, setIsExpanded] = useState(false); // State to manage input box expansion
 
   // Event handler for selecting/deselecting friends
   const handlePress = (friend) => {
@@ -68,57 +76,98 @@ export default function Friends({ onFriendChange, currentUserUID }) {
     );
   }, [search, contacts]);
 
-  // Render the component
-  return (
-    <SafeAreaView>
-      {/* Search input */}
-      <View style={styles.search}>
-        <TextInput
-          value={search}
-          onChangeText={setSearch}
-          placeholder="Search"
-          style={styles.searchInput}
-        />
-      </View>
+  // Function to handle search icon press
+  const handleSearchIconPress = () => {
+    setIsExpanded(!isExpanded); // Toggle input box visibility
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  };
 
-      {/* List of friends */}
-      <ScrollView>
-        {filteredContacts.map((contact) => (
-          <FriendCard
-            key={contact.Uid}
-            img={contact.ProfilePicture}
-            name={contact.Name}
-            onPress={() => handlePress(contact)}
-            isSelected={selectedFriends.includes(contact.Uid)}
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.headerContainer}>
+        {/* Render the "Choose Friends" text only if there is no search query */}
+        {!isExpanded && <Text style={styles.headerText}>Choose Friends</Text>}
+        <TouchableOpacity
+          style={isExpanded && styles.searchContainer}
+          onPress={handleSearchIconPress}
+        >
+          {/* Wrap the search icon inside a TouchableOpacity */}
+          <Search
+            width={20}
+            height={20}
+            style={
+              isExpanded ? styles.searchIconWhenExpanded : styles.searchIcon
+            }
           />
-        ))}
-      </ScrollView>
+          {/* Conditionally render the TextInput based on whether there is a search query */}
+          {isExpanded && (
+            <TextInput
+              value={search}
+              onChangeText={setSearch}
+              placeholder="Search"
+              placeholderTextColor="#181D45"
+              style={styles.searchInput}
+            />
+          )}
+        </TouchableOpacity>
+      </View>
+      {filteredContacts.length === 0 ? (
+        <View>
+          <Text className="text-[#fff]">No friends found</Text>
+        </View>
+      ) : (
+        <ScrollView contentContainerStyle={styles.friendList}>
+          {filteredContacts.map((contact) => (
+            <FriendCard
+              key={contact.Uid}
+              img={contact.ProfilePicture}
+              name={contact.Name}
+              onPress={() => handlePress(contact)}
+              isSelected={selectedFriends.includes(contact.Uid)}
+            />
+          ))}
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 }
 
-// Styles
 const styles = StyleSheet.create({
-  searchInput: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    paddingLeft: 10,
-    borderRadius: 10,
-  },
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background for modal
+    marginBottom: 16, // Add marginBottom for spacing
   },
-  search: {
-    padding: 10,
-    margin: 10,
+  headerText: {
+    color: "#FFFFFF",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F0F0F066",
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    flex: 1, // Fill remaining space
+  },
+  searchIconWhenExpanded: {
+    marginRight: 10,
+    color: "#181D45",
+  },
+  searchIcon: {
+    color: "#fff",
+  },
+  searchInput: {
+    height: 40,
+    color: "#181D45",
+    flex: 1, // Fill remaining space
+  },
+  friendList: {
+    flexGrow: 1,
   },
 });
