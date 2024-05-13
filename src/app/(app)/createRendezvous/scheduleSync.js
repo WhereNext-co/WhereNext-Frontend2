@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Button, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  Pressable,
+} from "react-native";
 import ScheduleSyncTimeCard from "../../../components/calendar/ScheduleSyncTimeCard";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams, Stack } from "expo-router";
 import axios from "axios";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function scheduleSync() {
   let {
@@ -17,7 +26,6 @@ export default function scheduleSync() {
     placemaplink,
     placephotolink,
     rendezvousName,
-    currentUserUID,
   } = useLocalSearchParams();
   const [timeList, setTimeList] = useState([]);
   const [selectedTime, setSelectedTime] = useState(null);
@@ -79,34 +87,63 @@ export default function scheduleSync() {
   };
 
   const onEdit = () => {
-    router.replace("./desired");
+    router.push({
+      pathname: "./desired",
+      params: {
+        uid: uid,
+        startTime: selectedTime[0],
+        endTime: selectedTime[1],
+        friendUIDs: friendUIDs,
+        duration: duration,
+        placegoogleplaceid: placegoogleplaceid,
+        placename: placename,
+        placelocation: placelocation,
+        placemaplink: placemaplink,
+        placephotolink: placephotolink,
+        rendezvousName: rendezvousName,
+      },
+    });
   };
 
   return (
-    <View>
-      {/* <Text>Schedule Sync</Text>
-      <Text>
-        {uid} {friendUIDs.split(",")} {startTime} {endTime}
-      </Text> */}
+    <SafeAreaView>
+      <Stack.Screen options={{ headerShown: false }} />
       <View>
+        <Text style={styles.title}>Schedule Sync</Text>
         {timeList ? (
           <View>
             <View style={styles.timeListContainer}>
               <ScrollView>
-                {timeList.map((time) => (
+                {timeList.map((time, index) => (
                   <ScheduleSyncTimeCard
-                    key={time[0]}
+                    key={index}
                     startTime={time[0]}
                     endTime={time[1]}
-                    selected={selectedTime}
                     onSelect={handleSelectTime}
+                    selectedTime={selectedTime}
                   />
                 ))}
               </ScrollView>
             </View>
+            <Pressable
+              onPress={onConfirm}
+              style={styles.sendInvitesButtonContainer}
+            >
+              <LinearGradient
+                colors={["#2acbf9", "#9aeeb0"]}
+                style={styles.sendInvitesButton}
+                start={{ x: 0, y: 0.5 }}
+                end={{ x: 1, y: 0.5 }}
+              >
+                <Text style={styles.sendInviteButtonText}>Send Invites</Text>
+              </LinearGradient>
+            </Pressable>
 
-            <Button title="Send Invites" onPress={onConfirm} />
-            <Button title="Choose Desired Time" onPress={onEdit} />
+            <Pressable onPress={onEdit} style={styles.chooseButtonContainer}>
+              <View style={styles.chooseButton}>
+                <Text style={styles.chooseButtonText}>Choose Desired Time</Text>
+              </View>
+            </Pressable>
           </View>
         ) : (
           <View>
@@ -115,11 +152,16 @@ export default function scheduleSync() {
           </View>
         )}
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  title: {
+    fontSize: 25,
+    fontWeight: "bold",
+    margin: 15,
+  },
   cardContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -140,6 +182,39 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#000",
-    height: 300,
+    height: "75%",
+    backgroundColor: "#14072B",
+  },
+  sendInvitesButtonContainer: {
+    alignItems: "center",
+    marginTop: 10,
+  },
+  sendInvitesButton: {
+    width: "90%",
+    borderRadius: 100,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
+  },
+  chooseButton: {
+    width: "90%",
+    borderRadius: 100,
+    padding: 10,
+    backgroundColor: "#43425e",
+    marginTop: 10,
+    alignItems: "center",
+  },
+  chooseButtonContainer: {
+    alignItems: "center",
+    marginTop: 10,
+  },
+  chooseButtonText: {
+    fontSize: 25,
+    fontWeight: "bold",
+    color: "#fff",
+  },
+  sendInviteButtonText: {
+    fontSize: 25,
+    fontWeight: "bold",
   },
 });

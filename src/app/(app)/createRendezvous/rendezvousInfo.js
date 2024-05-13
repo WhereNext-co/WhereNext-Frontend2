@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
-import { router, useLocalSearchParams } from "expo-router";
-import { ScrollView } from "react-native-gesture-handler";
-
-function Card(Name, ProfilePicture) {
-  return (
-    <View style={styles.card}>
-      <Image style={styles.profilePicture} source={{ uri: ProfilePicture }} />
-      <Text style={styles.text}>{Name}</Text>
-    </View>
-  );
-}
+import {
+  View,
+  Text,
+  Button,
+  Image,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
+import { router, useLocalSearchParams, Stack } from "expo-router";
+import ConfirmationUsersCard from "../../../components/calendar/ConfirmationUsersCard";
+import { LinearGradient } from "expo-linear-gradient";
+import axios from "axios";
 
 export default function rendezvousInfo() {
   let {
     uid,
     startTime,
     endTime,
+    startDate,
+    endDate,
     friendUIDs,
     duration,
     placegoogleplaceid,
@@ -26,66 +28,163 @@ export default function rendezvousInfo() {
     placephotolink,
     rendezvousName,
   } = useLocalSearchParams();
-  const [profiles, setProfiles] = useState([{}]);
 
-  useEffect(() => {
-    const fetchProfiles = async () => {
-      const profilePromises = friendUIDs.map((uid) =>
-        axios.post("http://where-next.tech/users/get-profile", { uid })
-      );
+  axios
+    .post("http://where-next.tech/users/get-profile", {
+      uid: "pkXM6xwBb4RnZt1Qh8qjuuPTHeI3",
+    })
+    .then((response) => {
+      console.log(response.data.user);
+      setUserName(response.data.user.UserName);
+      setImg(response.data.user.ProfilePicture);
+    })
+    .catch((error) => {
+      console.error("Error updating data: ", error);
+    });
 
-      try {
-        const profileResponses = await Promise.all(profilePromises);
-        const profileData = profileResponses.map((response) => ({
-          Name: response.data.user.Name,
-          ProfilePicture: response.data.user.ProfilePicture,
-        }));
-        setProfiles(profileData);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  const [userName, setUserName] = useState("");
+  const [img, setImg] = useState("");
 
-    fetchProfiles();
-  }, []);
+  const dummyPhotoLink = "https://via.placeholder.com/150";
 
   return (
-    <View style={styles.container}>
+    <View>
+      {/* Stack Screen */}
+      <Stack.Screen options={{ headerShown: false }} />
+
       <View>
-        {/*Image*/}
-        <Image style={styles.image} source={{ uri: placephotolink }} />
+        {/* Image */}
+        <Image
+          source={{ uri: placephotolink }}
+          style={{ width: "100%", height: 250 }}
+        />
       </View>
-      <View>
-        {/*Rendezvous Title*/}
-        <Text style={styles.title}>{rendezvousName}</Text>
-      </View>
-      <View>{/*Rendezvous Info (startTime endTime placeLocation)*/}</View>
-      <View>
-        {/*Member List*/}
-        <ScrollView>
-          {profiles.map((profile) => (
-            <Card Name={profile.Name} ProfilePicture={profile.ProfilePicture} />
+
+      <LinearGradient
+        colors={["#2acbf9", "#9aeeb0"]}
+        style={styles.rendezvousNameContainer}
+      >
+        <Text style={styles.rendezvousNameText}>{rendezvousName}</Text>
+      </LinearGradient>
+      <View style={styles.placeNameContainer}>
+        <View style={styles.placeName}>
+          <Text style={styles.placeNameText}>{placename}</Text>
+        </View>
+        <View style={styles.dateTimeContainer}>
+          <Text style={styles.dateText}>
+            {startDate === endDate ? startDate : `${startDate} to ${endDate}`}
+          </Text>
+          <Text style={styles.timeText}>{startTime}</Text>
+          <Text style={styles.timeText}> - </Text>
+          <Text style={styles.timeText}>{endTime}</Text>
+        </View>
+        <View style={styles.friendListContainer}>
+          <Text style={styles.friendListText}>
+            {friendUIDs.split(",").length} People
+          </Text>
+        </View>
+        <ScrollView style={styles.friendList}>
+          {friendUIDs.split(",").map((UID) => (
+            <ConfirmationUsersCard uid={UID} />
           ))}
         </ScrollView>
       </View>
-      <View>{/*Button*/}</View>
+      <View style={styles.hostContainer}>
+        <Image
+          alt=""
+          resizeMode="cover"
+          source={{
+            uri: `https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images%2F${img.slice(
+              81
+            )}`,
+          }}
+          style={styles.displayImg}
+        />
+        <Text style={styles.hostText}>{userName}</Text>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    padding: 22,
+  rendezvousNameContainer: {
+    width: "90%",
+    padding: 20,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center",
+    margin: 20,
   },
-  title: {
-    fontSize: 24,
+  rendezvousNameText: {
+    color: "white",
+    fontSize: 30,
     fontWeight: "bold",
+    textShadowColor: "rgba(0, 0, 0, 0.35)",
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 5,
+  },
+  placeNameContainer: {
+    width: "90%",
+    height: 300,
+    backgroundColor: "#181D45",
+    padding: 10,
+    borderRadius: 30,
+    alignSelf: "center",
+    alignItems: "center",
     marginBottom: 20,
   },
-  text: {
-    fontSize: 18,
+  placeName: {
+    flexDirection: "row",
+  },
+  placeNameText: {
+    color: "white",
+    fontSize: 25,
+    fontWeight: "bold",
+  },
+  dateTimeContainer: {
+    flexDirection: "row",
+    marginTop: 5,
+  },
+  dateText: {
+    fontSize: 20,
+    color: "white",
+  },
+  timeText: {
+    fontSize: 20,
+    color: "white",
+  },
+  friendListContainer: {
     marginBottom: 10,
+  },
+  friendListText: {
+    color: "white",
+    fontSize: 25,
+    fontWeight: "bold",
+  },
+  friendListTextContainer: {
+    marginBottom: 10,
+  },
+  hostContainer: {
+    flexDirection: "row",
+    width: "90%",
+    alignItems: "center",
+    alignSelf: "center",
+    justifyContent: "center",
+    padding: 20,
+    borderRadius: 30,
+    backgroundColor: "#181D45",
+  },
+  hostText: {
+    color: "white",
+    fontSize: 25,
+    fontWeight: "bold",
+    marginHorizontal: 10,
+  },
+  displayImg: {
+    width: 50,
+    height: 50,
+    borderRadius: 12,
+    marginHorizontal: 10,
   },
 });

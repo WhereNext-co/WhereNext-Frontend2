@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
-const ScheduleSyncTimeCard = ({ startTime, endTime, selected, onSelect }) => {
-  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  console.log(timezone);
+const ScheduleSyncTimeCard = ({
+  startTime,
+  endTime,
+  onSelect,
+  selectedTime,
+}) => {
   const offset = -new Date().getTimezoneOffset() / 60;
-  console.log("offset:" + offset);
-  const [isSelected, setIsSelected] = useState(false);
-  console.log(startTime + 2 * 60 * 60 * 1000);
+
   const startDate = new Date(
     new Date(startTime).getTime() + offset * 60 * 60 * 1000
   );
@@ -32,14 +33,39 @@ const ScheduleSyncTimeCard = ({ startTime, endTime, selected, onSelect }) => {
     endDate.getUTCMonth() + 1
   }/${endDate.getUTCFullYear()}`;
 
+  console.log("-------------");
+  console.log(startTimeStr, endTimeStr, startDateStr, endDateStr);
+  console.log("Selected Time: " + selectedTime);
+  console.log("-------------");
+
+  const [selected, setSelected] = useState(false);
+  useEffect(() => {
+    const startTimeDate = new Date(startTime);
+    const selectedTimeDate =
+      selectedTime && selectedTime[0] ? new Date(selectedTime[0]) : null;
+
+    if (
+      selectedTimeDate &&
+      startTimeDate.getTime() === selectedTimeDate.getTime()
+    ) {
+      setSelected(true);
+    } else {
+      setSelected(false);
+    }
+  }, [selectedTime, startTime]);
+
   return (
     <TouchableOpacity onPress={() => onSelect([startTime, endTime])}>
-      <View style={[styles.card, isSelected && styles.selectedCard]}>
-        <Text>{startDateStr}</Text>
-        <Text>{endDateStr}</Text>
-        <Text style={styles.cardTitle}>
-          {startTimeStr} - {endTimeStr}
-        </Text>
+      <View style={[styles.card, selected ? styles.selectedCard : null]}>
+        <View style={styles.dateContainer}>
+          <Text style={styles.date}>{startDateStr}</Text>
+          <Text style={styles.date}>{endDateStr}</Text>
+        </View>
+        <View style={styles.timeContainer}>
+          <Text style={styles.time}>{startTimeStr}</Text>
+          <Text style={styles.time}>-</Text>
+          <Text style={styles.time}>{endTimeStr}</Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -50,22 +76,41 @@ export default ScheduleSyncTimeCard;
 const styles = StyleSheet.create({
   card: {
     paddingVertical: 14,
-    alignItems: "center",
     margin: 8,
-  },
-  selectedCard: {
-    borderColor: "blue", // Change this to your desired color
-    borderWidth: 1,
-    borderRadius: 12,
-  },
-  cardBody: {
-    marginRight: "auto",
-    marginLeft: 12,
-    flexDirection: "row",
+    backgroundColor: "#171C44",
+    borderRadius: 20,
   },
   cardTitle: {
     fontSize: 16,
     fontWeight: "700",
     color: "#000",
   },
+  date: {
+    fontSize: 14,
+    color: "white",
+  },
+  dateContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 45,
+    marginBottom: 8,
+  },
+  time: {
+    fontSize: 30,
+    color: "white",
+    fontWeight: "700",
+  },
+  timeContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 45,
+  },
 });
+
+styles.selectedCard = {
+  ...styles.card,
+  borderColor: "white",
+  borderWidth: 2,
+};

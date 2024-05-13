@@ -24,7 +24,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import Pin from "../../../../assets/home/placeDetail/pin";
 
 export default function CreateMeeting() {
-  const currentUserUID = useContext(AuthContext).user.uid;
+  //const currentUserUID = useContext(AuthContext).user.uid;
+  const currentUserUID = "pkXM6xwBb4RnZt1Qh8qjuuPTHeI3";
   let {
     placegoogleplaceid,
     placename,
@@ -112,6 +113,21 @@ export default function CreateMeeting() {
     rendezvousName: "",
   });
 
+  const goSchedule = () => {
+    router.push("./createRendezvous/scheduleSync");
+  };
+  const goConfirmation = () => {
+    router.push("./createRendezvous/confirmation");
+  };
+  const goInfo = () => {
+    router.push("./createRendezvous/rendezvousInfo");
+  };
+  const goDesired = () => {
+    router.push("./createRendezvous/desired");
+  };
+  const goFriend = () => {
+    router.push("./createRendezvous/scheduleSyncFriend");
+  };
   // Schedule sync handler
   const handleScheduleSync = () => {
     if (rendezvousName === "") {
@@ -184,7 +200,6 @@ export default function CreateMeeting() {
           placephotolink: placephotolink,
         },
       });
-      alert("Rendezvous created successfully!");
     }
   };
 
@@ -198,6 +213,11 @@ export default function CreateMeeting() {
         <Stack.Screen options={{ headerShown: false }} />
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Create Rendezvous</Text>
+          <Button title="Go schedule" onPress={goSchedule} />
+          <Button title="Go confirmation" onPress={goConfirmation} />
+          <Button title="Go Info" onPress={goInfo} />
+          <Button title="Go Desired" onPress={goDesired} />
+          <Button title="Go Friend" onPress={goFriend} />
         </View>
         <View style={styles.headerContainer}>
           <TextInput
