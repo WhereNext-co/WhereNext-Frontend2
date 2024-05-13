@@ -139,7 +139,7 @@ export default function CreateMeeting() {
     } else if (startDate === null || endDate === null) {
       alert("Select at least a date!");
       return;
-    } else if (duration === 0) {
+    } else if (duration === 0 || duration === NaN) {
       alert("Duration can't be empty!");
       return;
     } else if (placename === undefined) {
