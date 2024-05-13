@@ -130,7 +130,7 @@ export default function AddFriendModal() {
           end={{ x: 1, y: 0.5 }}
           style={styles.button}
         >
-          <UserPlus width={20} height={20} />
+          <UserPlus width={20} height={20} color="white" />
         </LinearGradient>
       </Pressable>
       <Modal

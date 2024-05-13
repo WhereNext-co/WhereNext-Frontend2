@@ -86,49 +86,6 @@ export default function Friends() {
             <FriendRequestModal />
             <AddFriendModal />
           </View>
-          <View>
-            <Modal
-              isVisible={isModalVisible}
-              onBackdropPress={() => setModalVisible(false)}
-              style={styles.profileModalContainer}
-            >
-              <View style={styles.xmarkContainer}>
-                <Xmark
-                  width={25}
-                  height={25}
-                  onPress={() => {
-                    setModalVisible(false);
-                  }}
-                />
-              </View>
-              <View>
-                <Image
-                  alt=""
-                  resizeMode="cover"
-                  source={{
-                    uri: `https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images%2F${profilePicture.slice(
-                      81
-                    )}`,
-                  }}
-                  style={styles.imageProfileModal}
-                />
-              </View>
-              <View className="flex flex-row">
-                <Text style={styles.nameProfileText}>{title}</Text>
-                <Text style={styles.nameProfileText}>{name}</Text>
-              </View>
-              <View style={styles.usernameProfileContainer}>
-                <Text>@{username}</Text>
-              </View>
-              <View style={styles.phoneProfileContainer}>
-                <TouchableOpacity
-                  onPress={() => Linking.openURL(`tel:${phoneNumber}`)}
-                >
-                  <Text style={styles.phoneProfileText}>{phoneNumber}</Text>
-                </TouchableOpacity>
-              </View>
-            </Modal>
-          </View>
         </View>
         <TextInput
           value={search}
@@ -148,6 +105,48 @@ export default function Friends() {
           ))}
         </ScrollView>
       </View>
+
+      <Modal
+        isVisible={isModalVisible}
+        onBackdropPress={() => setModalVisible(false)}
+        style={styles.profileModalContainer}
+      >
+        <View style={styles.xmarkContainer}>
+          <Xmark
+            width={25}
+            height={25}
+            onPress={() => {
+              setModalVisible(false);
+            }}
+          />
+        </View>
+        <View>
+          <Image
+            alt=""
+            resizeMode="cover"
+            source={{
+              uri: `https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images%2F${profilePicture.slice(
+                81
+              )}`,
+            }}
+            style={styles.imageProfileModal}
+          />
+        </View>
+        <View className="flex flex-row">
+          <Text style={styles.nameProfileText}>{title}</Text>
+          <Text style={styles.nameProfileText}>{name}</Text>
+        </View>
+        <View style={styles.usernameProfileContainer}>
+          <Text>@{username}</Text>
+        </View>
+        <View style={styles.phoneProfileContainer}>
+          <TouchableOpacity
+            onPress={() => Linking.openURL(`tel:${phoneNumber}`)}
+          >
+            <Text style={styles.phoneProfileText}>{phoneNumber}</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }

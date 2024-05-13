@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import Pin from "../../../assets/home/placeDetail/outline/pin";
 import Members from "../../../assets/tabs/outline/friends";
 import Clock from "../../../assets/home/placeDetail/outline/clock";
 import { router } from "expo-router";
+import { AuthContext } from "../../context/authContext";
 
 const LocationCard = ({
   name,
@@ -32,34 +33,38 @@ const LocationCard = ({
       timeZone: "UTC",
     });
   };
+  const currentUserUID = useContext(AuthContext).user.uid;
+  const userUids = members.map((member) => member.Useruid).join(",");
 
   const onRendezvousPressHandler = () => {
     if (status === "Draft") {
       router.push({
-        pathname: "./createRendezvous/edit",
+        pathname: "./createRendezvous/confirmation",
         params: {
+          uid: currentUserUID,
           scheduleid: scheduleid,
-          name: name,
+          rendezvousName: name,
           placename: placename,
-          starttime: starttime,
-          endtime: endtime,
-          members: members,
+          startTime: starttime,
+          endTime: endtime,
+          friendUIDs: userUids,
           placephotolink: placephotolink,
           placelocation: placelocation,
-          status: status,
         },
       });
       return;
     } else {
+      console.log("member", members);
       router.push({
-        pathname: "./createRendezvous/rendezvousView",
+        pathname: "./createRendezvous/rendezvousInfo",
         params: {
+          uid: currentUserUID,
           scheduleid: scheduleid,
-          name: name,
+          rendezvousName: name,
           placename: placename,
-          starttime: starttime,
-          endtime: endtime,
-          members: members,
+          startTime: starttime,
+          endTime: endtime,
+          friendUIDs: userUids,
           placephotolink: placephotolink,
           placelocation: placelocation,
           status: status,
@@ -108,7 +113,7 @@ const LocationCard = ({
 
             <View className="flex flex-row items-center my-1">
               <Members width={25} height={25} className="mr-2" />
-              <Text className="text-white">{`${members} members`}</Text>
+              <Text className="text-white">{`${members.length} members`}</Text>
             </View>
           </View>
         </View>

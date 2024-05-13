@@ -153,7 +153,7 @@ export default function Diary() {
                   placename={rendezvous.placename}
                   starttime={rendezvous.starttime}
                   endtime={rendezvous.endtime}
-                  members={rendezvous.member.length}
+                  members={rendezvous.member}
                   placephotolink={rendezvous.placephotolink}
                   placelocation={rendezvous.placelocation}
                   status={rendezvous.status}
@@ -171,7 +171,7 @@ export default function Diary() {
                   placename={rendezvous.placename}
                   starttime={rendezvous.starttime}
                   endtime={rendezvous.endtime}
-                  members={rendezvous.member.length}
+                  members={rendezvous.member}
                   placephotolink={rendezvous.placephotolink}
                   placelocation={rendezvous.placelocation}
                   status={rendezvous.status}
@@ -189,7 +189,7 @@ export default function Diary() {
                   placename={rendezvous.placename}
                   starttime={rendezvous.starttime}
                   endtime={rendezvous.endtime}
-                  members={rendezvous.member.length}
+                  members={rendezvous.member}
                   placephotolink={rendezvous.placephotolink}
                   placelocation={rendezvous.placelocation}
                   status={rendezvous.status}

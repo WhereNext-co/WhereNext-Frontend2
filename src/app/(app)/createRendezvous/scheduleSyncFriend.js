@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  LayoutAnimation,
+} from "react-native";
 import axios from "axios";
 import Modal from "react-native-modal";
 import { router, useLocalSearchParams, Stack } from "expo-router";
@@ -17,8 +23,6 @@ export default function Friends() {
     placemaplink,
     placephotolink,
     rendezvousName,
-    Animated,
-    LayoutAnimation,
     duration,
   } = useLocalSearchParams();
 
@@ -50,6 +54,11 @@ export default function Friends() {
         friendUIDs: friendUIDs,
         duration: duration,
         rendezvousName: rendezvousName,
+        placegoogleplaceid: placegoogleplaceid,
+        placename: placename,
+        placelocation: placelocation,
+        placemaplink: placemaplink,
+        placephotolink: placephotolink,
       },
     });
   };
