@@ -23,9 +23,9 @@ const FriendCard = ({ img, name, id, onPress, isSelected, available }) => {
           </View>
         )}
         <Text style={styles.cardTitle}>{name}</Text>
-        {available === "Busy" && (
+        {available === "busy" && (
           <View style={styles.busyBox}>
-            <Text style={styles.busyText}>{available}</Text>
+            <Text style={styles.busyText}>Busy</Text>
           </View>
         )}
       </View>

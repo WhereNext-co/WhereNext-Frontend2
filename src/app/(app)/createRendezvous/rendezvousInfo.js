@@ -58,7 +58,7 @@ export default function rendezvousInfo() {
 
   axios
     .post("http://where-next.tech/users/get-profile", {
-      uid: "pkXM6xwBb4RnZt1Qh8qjuuPTHeI3",
+      uid: uid,
     })
     .then((response) => {
       console.log(response.data.user);
