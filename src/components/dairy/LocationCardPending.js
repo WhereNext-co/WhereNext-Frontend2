@@ -1,9 +1,10 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
-import FeatherIcon from "react-native-vector-icons/Feather";
-import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
+import Pin from "../../../assets/home/placeDetail/pin";
+import Members from "../../../assets/tabs/friends";
+import Clock from "../../../assets/home/placeDetail/clock";
 
 const LocationCard = ({
   name,
@@ -57,74 +58,108 @@ const LocationCard = ({
       });
   };
 
+  const formattedStartTime = new Date(starttime).toLocaleString([], {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZoneName: "short",
+  });
+
+  const formattedEndTime = new Date(endtime).toLocaleString([], {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZoneName: "short",
+  });
+
   return (
     <View style={styles.card}>
-      {placephotolink ? ( //Checking if the img is available
-        <Image
-          alt=""
-          resizeMode="cover"
-          source={{ uri: placephotolink }}
-          style={styles.cardImg}
-        />
-      ) : (
-        // If the img is not available, display the first letter of the name.
-        <View style={[styles.cardImg, styles.cardAvatar]}>
-          <Text style={styles.cardAvatarText}>{placename[0]}</Text>
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <View className="flex flex-column">
+          <View className="flex flex-row">
+            {placephotolink ? (
+              <Image
+                alt=""
+                resizeMode="cover"
+                source={{ uri: placephotolink }}
+                style={styles.cardImg}
+              />
+            ) : (
+              <View style={[styles.cardImg, styles.cardAvatar]}>
+                <Text style={styles.cardAvatarText}>{placename[0]}</Text>
+              </View>
+            )}
+
+            <View className="flex flex-col ml-3">
+              <Text className="font-bold text-xl text-[#a0de32]">{name}</Text>
+
+              <View className="flex flex-row items-center my-1">
+                <Pin width={25} height={25} className="mr-2" />
+                <View width={"60%"}>
+                  <Text className="text-white">{placename}</Text>
+                  <Text className="text-white">{placelocation}</Text>
+                </View>
+              </View>
+
+              <View className="flex flex-row items-center my-1">
+                <Members width={25} height={25} className="mr-2" />
+                <Text className="text-white">{`${members} members`}</Text>
+              </View>
+            </View>
+          </View>
+          <View className="flex flex-row items-center mt-2">
+            <Clock width={25} height={25} className="mr-2" />
+            <View>
+              <Text className="text-white">Start: {formattedStartTime}</Text>
+              <Text className="text-white">End: {formattedEndTime}</Text>
+            </View>
+          </View>
         </View>
-      )}
-
-      <View>
-        <Text>{name}</Text>
-      </View>
-
-      <View /*The part where name is displayed*/ style={styles.cardBody}>
-        <Text style={styles.cardTitle}>{placename}</Text>
-        <Text style={styles.cardTitle}>{placelocation}</Text>
-        <Text>{members}</Text>
-      </View>
-
-      <View>
-        <Text>{starttime}</Text>
-        <Text>{endtime}</Text>
-      </View>
-
-      <View>
-        <Text>{members}</Text>
-      </View>
-
-      <View style={styles.cardAction}>
-        <TouchableOpacity onPress={onAcceptPress}>
-          <AntDesign name="check" size={24} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={onDeclinePress}>
-          <AntDesign name="close" size={24} color="black" />
-        </TouchableOpacity>
+        <View
+          style={{
+            flexDirection: "column",
+            alignItems: "center",
+            right: "30%",
+            top: "10%",
+          }}
+        >
+          <TouchableOpacity onPress={onAcceptPress} style={styles.actionButton}>
+            <AntDesign name="check" size={50} color="green" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={onDeclinePress}
+            style={styles.actionButton}
+          >
+            <AntDesign name="close" size={50} color="red" />
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
 };
 
 export default LocationCard;
-
 const styles = StyleSheet.create({
-  /** Card */
   card: {
-    paddingVertical: 14,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
-  },
-  cardWrapper: {
-    borderBottomWidth: 1,
-    borderColor: "#d6d6d6",
+    paddingVertical: 20,
+    // flexDirection: "row",
+    // alignItems: "center",
+    // justifyContent: "flex-start",
+    backgroundColor: "#14072b",
+    borderRadius: 24,
+    marginVertical: 8,
+    paddingHorizontal: 16,
   },
   cardImg: {
-    width: 42,
-    height: 42,
+    width: 100,
+    height: 100,
     borderRadius: 12,
   },
   cardAvatar: {
-    display: "flex",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#9ca1ac",
@@ -134,17 +169,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#fff",
   },
-  cardBody: {
-    marginRight: "auto",
-    marginLeft: 12,
-  },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#000",
-  },
   cardAction: {
     paddingRight: 16,
-    flexDirection: "row",
   },
 });

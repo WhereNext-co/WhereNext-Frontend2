@@ -18,6 +18,8 @@ import axios from "axios";
 import globalApi from "../../services/globalApi";
 import { AuthContext } from "../../context/authContext";
 import { LinearGradient } from "expo-linear-gradient";
+import { set } from "date-fns";
+import { is, se } from "date-fns/locale";
 export default function Tab() {
   const [events, setEvents] = useState([]);
   const [title, setTitle] = useState("");
@@ -127,10 +129,17 @@ export default function Tab() {
       let endhour = new Date(item.endtime).getHours();
       let startmin = new Date(item.starttime).getMinutes();
       let endmin = new Date(item.endtime).getMinutes();
-
+      if (new Date().setHours(23, 59, 59, 599) < new Date(item.endtime)) {
+        endhour = 24;
+        endmin = 0;
+      }
+      if (new Date().setHours(0, 0, 0, 0) > new Date(item.starttime)) {
+        starthour = 24;
+        startmin = 0;
+      }
       eventList.push(`${starthour}:${startmin}-${endhour}:${endmin}`);
     });
-    console.log(eventList);
+    console.log("event", eventList);
     setEvents(eventList);
     setEventnum(eventnumb + data.length);
   };
@@ -144,12 +153,9 @@ export default function Tab() {
   const enddate1 = new Date();
 
   startdate1.setHours(0, 0, 0, 0);
-  console.log("start", startdate1);
   let a = startdate1.toISOString();
   enddate1.setHours(23, 59, 59, 999);
   let b = enddate1.toISOString();
-  console.log("a,b", a, b);
-  console.log(typeof a);
   useEffect(() => {
     axios
       .post("http://where-next.tech/schedules/get-schedulebytime", {
@@ -158,7 +164,8 @@ export default function Tab() {
         endtime: b,
       })
       .then((response) => {
-        console.log("output", response.data);
+        setEvents([]);
+        setEventnum(0);
         if (response.data.scheduleList != null) {
           addEvent(response.data.scheduleList);
         }
@@ -179,7 +186,6 @@ export default function Tab() {
         uid: userUID.user.uid,
       })
       .then((response) => {
-        console.log("outputUser", response.data);
         setName(response.data.user.Name);
         setProfile(response.data.user.ProfilePicture);
       })
@@ -190,6 +196,10 @@ export default function Tab() {
         setLoading2(false);
       });
   }, []);
+  const setSearchText2 = (text) => {
+    setSearchText(text);
+    setSearching(true);
+  };
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowPicker(Platform.OS === "ios");
@@ -216,20 +226,30 @@ export default function Tab() {
   const handlePress2 = () => {
     router.push("../(calendar)/calendar");
   };
+  const handlePress4 = () => {
+    console.log("startdate1", startdate);
+    console.log("enddate1", enddate);
+    console.log(isEnabled);
+    if (isEnabled) {
+      startdate.setHours(0, 0, 0, 0);
+      enddate.setHours(23, 59, 59, 999);
+    }
+    console.log("startdate2", startdate);
+    console.log("enddate2", enddate);
+    setTitle("");
+    setNote("");
+    setSearchText("");
+    setSelectedTitle(null);
+    this._panel.hide();
+  };
   const handlePress3 = () => {
     a = startdate.toISOString();
     b = enddate.toISOString();
 
-    console.log("name", title);
-    console.log("type", selectedTitle.name);
-    console.log("starttime", a);
-    console.log("endtime", b);
-    console.log("placename", searchText);
-    console.log("placegoogleplaceid", searchDetails.id);
-    console.log("placelocation", searchDetails.formattedAddress);
-    console.log("placemaplink", searchDetails.googleMapsUri);
-    console.log("placephotolink", pic);
-
+    if (title == "" || selectedTitle == null || searchText == "") {
+      alert("Please fill in all fields");
+      return;
+    }
     axios
       .post("http://where-next.tech/schedules/create-personalschedule", {
         hostuid: userUID.user.uid,
@@ -252,6 +272,10 @@ export default function Tab() {
       })
       .finally(() => {
         setLoading(false);
+        setTitle("");
+        setNote("");
+        setSearchText("");
+        setSelectedTitle(null);
         this._panel.hide();
       });
   };
@@ -329,12 +353,12 @@ export default function Tab() {
         <Button
           label={"Add Schedule"}
           onPress={() => this._panel.show()}
-          style={{ marginRight: 10 }}
+          style={{ marginRight: 5 }}
         ></Button>
         <Button
           label={"Edit profile"}
           onPress={handlePress}
-          style={{ marginHorizontal: 10 }}
+          style={{ marginHorizontal: 5 }}
         ></Button>
         <TouchableOpacity style={{}} onPress={handlePress2}>
           <LinearGradient
@@ -361,7 +385,7 @@ export default function Tab() {
             flex: 1,
             backgroundColor: "#171c44",
             alignItems: "center",
-            justifyContent: "center",
+            justifyContent: "flex-start",
           }}
         >
           <View
@@ -370,7 +394,7 @@ export default function Tab() {
               justifyContent: "flex-start",
               width: "100%",
               height: "auto",
-              paddingBottom: 100,
+              paddingTop: "40%",
             }}
           >
             <View
@@ -493,7 +517,7 @@ export default function Tab() {
                 placeholder="Add Location"
                 value={searchText}
                 onChangeText={(newText) => {
-                  setSearchText(newText);
+                  setSearchText2(newText);
                   getSearchPlaces({ textQuery: newText });
                 }}
                 color={"white"}
@@ -597,7 +621,7 @@ export default function Tab() {
               right: 0,
             }}
           >
-            <TouchableOpacity onPress={() => this._panel.hide()}>
+            <TouchableOpacity onPress={handlePress4}>
               <Text style={{ color: "blue", marginLeft: 20 }}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={handlePress3}>
