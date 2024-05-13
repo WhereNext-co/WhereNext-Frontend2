@@ -33,10 +33,10 @@ const ScheduleSyncTimeCard = ({
     endDate.getUTCMonth() + 1
   }/${endDate.getUTCFullYear()}`;
 
-  console.log("-------------");
-  console.log(startTimeStr, endTimeStr, startDateStr, endDateStr);
-  console.log("Selected Time: " + selectedTime);
-  console.log("-------------");
+  // console.log("-------------");
+  // console.log(startTimeStr, endTimeStr, startDateStr, endDateStr);
+  // console.log("Selected Time: " + selectedTime);
+  // console.log("-------------");
 
   const [selected, setSelected] = useState(false);
   useEffect(() => {

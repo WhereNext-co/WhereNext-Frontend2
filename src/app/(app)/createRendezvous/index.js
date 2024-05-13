@@ -19,12 +19,13 @@ import { Stack, router, useLocalSearchParams } from "expo-router";
 import { UserLocationContext } from "../../../context/userLocationContext";
 import { AuthContext } from "../../../context/authContext";
 import { LinearGradient } from "expo-linear-gradient";
-import Pin from "../../../../assets/home/placeDetail/pin";
-import { useFocusEffect } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import Pin from "../../../../assets/home/placeDetail/outline/pin";
+
 
 export default function CreateMeeting() {
   const currentUserUID = useContext(AuthContext).user.uid;
+
   let {
     rendezvousNameFromConfirm,
     durationFromConfirm,
@@ -126,7 +127,7 @@ export default function CreateMeeting() {
     } else if (startDate === null || endDate === null) {
       alert("Select at least a date!");
       return;
-    } else if (duration === 0) {
+    } else if (duration === 0 || duration === NaN) {
       alert("Duration can't be empty!");
       return;
     } else {
@@ -186,10 +187,10 @@ export default function CreateMeeting() {
         <Stack.Screen options={{ headerShown: false }} />
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Create Rendezvous</Text>
-          {/* <Button title="Go schedule" onPress={goSchedule} />
-          <Button title="Go confirmation" onPress={goConfirmation} />
-          <Button title="Go Info" onPress={goInfo} />
-          <Button title="Go Desired" onPress={goDesired} />
+          {/* <Button title="Go schedule" onPress={goSchedule} /> */}
+          {/* <Button title="Go confirmation" onPress={goConfirmation} />
+          <Button title="Go Info" onPress={goInfo} /> */}
+          {/* <Button title="Go Desired" onPress={goDesired} />
           <Button title="Go Friend" onPress={goFriend} /> */}
         </View>
         <View style={styles.headerContainer}>
@@ -238,7 +239,6 @@ export default function CreateMeeting() {
         </View>
 
         <View style={styles.inviteFriend}>
-          {/* Invite Friend */}
           <InviteFriend
             onFriendChange={handleFriendChange}
             currentUserUID={currentUserUID}

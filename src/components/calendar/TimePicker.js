@@ -45,14 +45,29 @@ export default function TimePicker({
     if (selectedMinutes === "") {
       setSelectedMinutes(0);
     }
-    onDayChange(selectedDays);
-    onHourChange(selectedHours);
-    onMinuteChange(selectedMinutes);
-    const daysInMinutes = parseInt(selectedDays) * 24 * 60;
-    const hoursInMinutes = parseInt(selectedHours) * 60;
-    const minutes = parseInt(selectedMinutes);
+
+    // onDayChange(selectedDays);
+    // onHourChange(selectedHours);
+    // onMinuteChange(selectedMinutes);
+    // const daysInMinutes = parseInt(selectedDays) * 24 * 60;
+    // const hoursInMinutes = parseInt(selectedHours) * 60;
+    // const minutes = parseInt(selectedMinutes);
+    // const totalDurationInMinutes = daysInMinutes + hoursInMinutes + minutes;
+
+    const days = selectedDays ? parseInt(selectedDays) : 0;
+    const hours = selectedHours ? parseInt(selectedHours) : 0;
+    const minutes = selectedMinutes ? parseInt(selectedMinutes) : 0;
+
+    onDayChange(days);
+    onHourChange(hours);
+    onMinuteChange(minutes);
+
+    const daysInMinutes = days * 24 * 60;
+    const hoursInMinutes = hours * 60;
     const totalDurationInMinutes = daysInMinutes + hoursInMinutes + minutes;
+
     onDurationChange(totalDurationInMinutes);
+    console.log(totalDurationInMinutes);
     hidePicker();
   };
 
