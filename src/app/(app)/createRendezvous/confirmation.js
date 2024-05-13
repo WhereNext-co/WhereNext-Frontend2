@@ -12,7 +12,9 @@ import ConfirmationUsersCard from "../../../components/calendar/ConfirmationUser
 import { router, useLocalSearchParams, Stack } from "expo-router";
 import axios from "axios";
 import { LinearGradient } from "expo-linear-gradient";
-import Location from "../../../../assets/Rendezvous/location.svg";
+import Location from "../../../../assets/Rendezvous/outline/location.svg";
+import Calendar from "../../../../assets/Rendezvous/outline/calendar.svg";
+import UserGroup from "../../../../assets/Rendezvous/outline/user-group.svg";
 
 export default function confirmation() {
   let {
@@ -28,7 +30,6 @@ export default function confirmation() {
     placephotolink,
     rendezvousName,
   } = useLocalSearchParams();
-
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const offset = -new Date().getTimezoneOffset() / 60;
   const startDate = new Date(
@@ -138,206 +139,232 @@ export default function confirmation() {
   };
 
   return (
-    <View>
-      {/* Stack Screen */}
+    <View style={{ backgroundColor: "#14072b", height: "100%" }}>
       <Stack.Screen options={{ headerShown: false }} />
-
       <View>
-        {/* Image */}
         <Image
           source={{ uri: placephotolink }}
           style={{ width: "100%", height: 250 }}
         />
       </View>
-      <View>
-        <View style={styles.rendezvousNameContainer}>
-          <Text style={styles.rendezvousNameText}>{rendezvousName}</Text>
+      <View style={styles.content}>
+        <View style={{ flex: 1, gap: 10 }}>
+          <View style={styles.rendezvousNameContainer}>
+            <Text style={styles.rendezvousNameText}>{rendezvousName}</Text>
+          </View>
+          <View style={styles.placeNameContainer}>
+            <View style={styles.placeName}>
+              <Location width={20} height={20} color="#fff" />
+              <Text style={styles.placeNameText}>{placename}</Text>
+            </View>
+            <View style={styles.dateTimeContainer}>
+              <Calendar
+                width={20}
+                height={20}
+                color="#fff"
+                style={{ marginRight: 10 }}
+              />
+
+              {startDateStr === endDateStr ? (
+                <Text style={styles.dateText}>{`${startDateStr} `}</Text>
+              ) : (
+                <Text style={styles.dateText}>{`${startDateStr}, `}</Text>
+              )}
+
+              {startDateStr === endDateStr ? (
+                <Text style={styles.timeText}>{`${startTimeStr}`}</Text>
+              ) : (
+                <Text style={styles.timeText}>{`${startTimeStr} `}</Text>
+              )}
+
+              {startDateStr === endDateStr ? (
+                <Text>-</Text>
+              ) : (
+                <Text style={styles.dateText}> {`- ${endDateStr}, `}</Text>
+              )}
+              <Text style={styles.timeText}>{`${endTimeStr}`}</Text>
+            </View>
+          </View>
+          <View style={styles.friendListContainer}>
+            <View style={styles.friendListTextContainer}>
+              <UserGroup width={20} height={20} color="#fff" />
+              <Text style={styles.friendListText}>
+                {friendUIDs.split(",").length} People
+              </Text>
+            </View>
+            <LinearGradient
+              colors={["#2acbf9", "#9aeeb0"]}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+              style={styles.divider}
+            />
+            <ScrollView style={styles.friendList}>
+              {friendUIDs.split(",").map((UID) => (
+                <ConfirmationUsersCard uid={UID} />
+              ))}
+            </ScrollView>
+          </View>
         </View>
-        <View style={styles.placeNameContainer}>
-          <View style={styles.placeName}>
-            <Location width={25} height={25} fill="white" />
-            <Text style={styles.placeNameText}>{placename}</Text>
-          </View>
-          <View style={{ borderTopWidth: 1, borderColor: "#9aeeb0" }} />
-          <View style={styles.dateTimeContainer}>
-            <Text style={styles.dateText}>
-              {startDateStr === endDateStr
-                ? startDateStr
-                : `${startDateStr} to ${endDateStr}`}
-            </Text>
-          </View>
-          <View style={styles.dateTimeContainer}>
-            <Text style={styles.timeText}>{startTimeStr}</Text>
-            <Text style={styles.timeText}> - </Text>
-            <Text style={styles.timeText}>{endTimeStr}</Text>
+        <View style={styles.groupButtonContainer}>
+          <Pressable onPress={onEdit}>
+            <View style={styles.editButton}>
+              <Text style={styles.editButtonText}>Edit</Text>
+            </View>
+          </Pressable>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
+            <Pressable onPress={onConfirm}>
+              <LinearGradient
+                colors={["#2acbf9", "#9aeeb0"]}
+                start={{ x: 0, y: 0.5 }}
+                end={{ x: 1, y: 0.5 }}
+                style={styles.draftButtonOutline}
+              >
+                <View style={styles.draftButton}>
+                  <Text style={styles.draftButtonText}>Draft</Text>
+                </View>
+              </LinearGradient>
+            </Pressable>
+            <Pressable onPress={onConfirm}>
+              <LinearGradient
+                colors={["#2acbf9", "#9aeeb0"]}
+                style={styles.createButton}
+                start={{ x: 0, y: 0.5 }}
+                end={{ x: 1, y: 0.5 }}
+              >
+                <Text style={styles.createButtonText}>Create</Text>
+              </LinearGradient>
+            </Pressable>
           </View>
         </View>
-      </View>
-      <View style={styles.friendListContainer}>
-        <View style={styles.friendListTextContainer}>
-          <Text style={styles.friendListText}>
-            {friendUIDs.split(",").length} People
-          </Text>
-        </View>
-        <View style={{ borderTopWidth: 1, borderColor: "#9aeeb0" }} />
-        <ScrollView style={styles.friendList}>
-          {friendUIDs.split(",").map((UID) => (
-            <ConfirmationUsersCard uid={UID} />
-          ))}
-        </ScrollView>
-      </View>
-      <View>
-        <Pressable onPress={onConfirm} style={styles.createButtonContainer}>
-          <LinearGradient
-            colors={["#2acbf9", "#9aeeb0"]}
-            style={styles.createButton}
-            start={{ x: 0, y: 0.5 }}
-            end={{ x: 1, y: 0.5 }}
-          >
-            <Text style={styles.createButtonText}>Create Rendezvous</Text>
-          </LinearGradient>
-        </Pressable>
-        <Pressable onPress={onEdit} style={styles.editButtonContainer}>
-          <View style={styles.editButton}>
-            <Text style={styles.editButtonText}>Edit</Text>
-          </View>
-        </Pressable>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  content: {
+    flex: 1,
+    paddingHorizontal: 16,
+    marginVertical: 10,
+    gap: 10,
+    width: "100%",
+    justifyContent: "space-between",
+  },
+  groupButtonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  buttonContainer: {},
   rendezvousNameContainer: {
-    height: 50,
-    width: "90%",
-    paddingLeft: 10,
     borderRadius: 10,
+    width: "100%",
+    padding: 10,
     alignItems: "center",
     justifyContent: "center",
     alignSelf: "center",
     backgroundColor: "#181D45",
-    margin: 10,
+    marginTop: 10,
   },
   rendezvousNameText: {
     color: "white",
-    fontSize: 30,
+    fontSize: 24,
     fontWeight: "bold",
   },
   placeNameContainer: {
-    width: "90%",
+    width: "100%",
     backgroundColor: "#181D45",
-    padding: 10,
+    padding: 16,
     borderRadius: 10,
     alignSelf: "center",
   },
   placeName: {
     marginBottom: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
   },
   placeNameText: {
     color: "white",
-    fontSize: 25,
+    fontSize: 16,
     fontWeight: "bold",
   },
   dateTimeContainer: {
     flexDirection: "row",
-    marginTop: 5,
+    alignItems: "center",
   },
   dateText: {
-    fontSize: 20,
+    fontSize: 16,
     color: "white",
+    fontWeight: "bold",
   },
   timeText: {
-    fontSize: 20,
-    color: "white",
+    fontSize: 16,
+    color: "#5fede4",
+    fontWeight: "bold",
   },
   friendListContainer: {
-    height: 200,
-    width: "90%",
-    padding: 20,
+    width: "100%",
+    padding: 16,
     borderRadius: 10,
     backgroundColor: "#181D45",
-    margin: 10,
     alignSelf: "center",
   },
   friendListText: {
     color: "white",
-    fontSize: 25,
+    fontSize: 16,
     fontWeight: "bold",
   },
   friendListTextContainer: {
     marginBottom: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
   },
   createButtonText: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#fff",
-  },
-  createButtonContainer: {
-    alignItems: "center",
-    marginTop: 5,
+    fontSize: 14,
+    color: "#181D45",
   },
   createButton: {
-    width: "90%",
     borderRadius: 100,
     alignItems: "center",
     justifyContent: "center",
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  draftButtonOutline: {
+    borderRadius: 100,
+    border: 3,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 2,
+  },
+  draftButton: {
+    borderRadius: 100,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: "#14072b",
+  },
+  draftButtonText: {
+    fontSize: 14,
+    color: "#5fede4",
   },
   editButton: {
-    width: "90%",
     borderRadius: 100,
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     backgroundColor: "#43425e",
-    marginTop: 10,
     alignItems: "center",
-  },
-  editButtonContainer: {
-    alignItems: "center",
-    marginTop: 5,
   },
   editButtonText: {
-    fontSize: 20,
-    fontWeight: "bold",
+    fontSize: 14,
     color: "#fff",
   },
+  divider: {
+    borderBottomWidth: 1,
+    marginBottom: 10,
+  },
+  friendList: {
+    flexGrow: 1,
+  },
 });
-
-/*
-        hostuid: "",
-        name: rendezvousName,
-        type: "",
-        starttime: startDate,
-        endtime: endDate,
-        status: "Active",
-        InvitedUsers: ["163", "496"],
-        placename: "",
-        placegoogleplaceid: "",
-        placelocation: "",
-        placemaplink: "",
-        placephotolink: "",
-*/
-/* const response = await axios.post(
-        'https://your-api-url.com/create',
-        rendezvous
-      );
-
-      if (response.status !== 200) {
-        throw new Error('HTTP error ' + response.status);
-      } */
-
-// <View style={{ backgroundColor: "white", padding: 22 }}>
-//   <Text>Rendezvous Name: {rendezvousName}</Text>
-//   <Text>Location: {placename}</Text>
-//   <Text>StartDate: {startDateStr}</Text>
-//   <Text>EndDate: {endDateStr}</Text>
-//   <Text>Start Time: {startTimeStr}</Text>
-//   <Text>End Time: {endTimeStr}</Text>
-//   <Text>Friends:</Text>
-//   {friendUIDs.split(",").map((UID) => (
-//     <ConfirmationUsersCard uid={UID} />
-//   ))}
-//   <Button title="Confirm" onPress={onConfirm} />
-//   <Button title="Edit" onPress={onEdit} />
-//   <Button title="Draft" onPress={onDraft} />
-// </View>

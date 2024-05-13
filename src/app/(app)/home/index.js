@@ -42,12 +42,12 @@ import {
   NativeViewGestureHandler,
 } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
-import Star from "../../../../assets/home/placeDetail/star";
-import Pin from "../../../../assets/home/placeDetail/pin";
-import Clock from "../../../../assets/home/placeDetail/clock";
-import BookmarkSquare from "../../../../assets/home/placeDetail/bookmarkSquare";
-import Car from "../../../../assets/home/placeDetail/car";
-import Thumbup from "../../../../assets/home/placeDetail/thumbup";
+import Star from "../../../../assets/home/placeDetail/outline/star";
+import Pin from "../../../../assets/home/placeDetail/outline/pin";
+import Clock from "../../../../assets/home/placeDetail/outline/clock";
+import BookmarkSquare from "../../../../assets/home/placeDetail/outline/bookmarkSquare";
+import Car from "../../../../assets/home/placeDetail/outline/car";
+import Thumbup from "../../../../assets/home/placeDetail/outline/thumbup";
 
 export default function MapView() {
   const { location, setLocation } = useContext(UserLocationContext);

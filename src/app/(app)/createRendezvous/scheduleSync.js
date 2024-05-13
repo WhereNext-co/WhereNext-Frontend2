@@ -56,24 +56,11 @@ export default function scheduleSync() {
   };
 
   const onConfirm = () => {
-    /*
-      axios
-    .post('https://your-api-url.com/endpoint', {
-      uid: uid,
-      DATE_LIST: selectedTime,
-    })
-    .then((response) => {
-      console.log(response.data);
-    })
-    .catch((error) => {
-      console.error('Error sending data: ', error);
-    });
-    */
     if (!selectedTime) {
       alert("Please select the time slot first.");
       return;
     }
-
+    console.log();
     router.push({
       pathname: "./confirmation",
       params: {
