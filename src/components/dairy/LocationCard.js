@@ -37,6 +37,7 @@ const LocationCard = ({
   const userUids = members.map((member) => member.Useruid).join(",");
 
   const onRendezvousPressHandler = () => {
+    console.log("UID: " + currentUserUID);
     if (status === "Draft") {
       router.push({
         pathname: "./createRendezvous/confirmation",

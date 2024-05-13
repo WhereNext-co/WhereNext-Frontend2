@@ -90,13 +90,13 @@ export default function confirmation() {
       .catch((error) => {
         console.error("Error updating data: ", error);
       });
+    console.log();
     router.push({
       pathname: "./rendezvousInfo",
       params: {
-        startTime: startTimeStr,
-        endTime: endTimeStr,
-        startDate: startDateStr,
-        endDate: endDateStr,
+        uid: uid,
+        startTime: startTime,
+        endTime: endTime,
         friendUIDs: friendUIDs,
         duration: duration,
         placegoogleplaceid: placegoogleplaceid,

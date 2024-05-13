@@ -83,7 +83,7 @@ export default function Friends({
           contact.Uid.toLowerCase().includes(search.toLowerCase())
       )
     );
-    console.log(filteredContacts);
+    console.log("fil", filteredContacts);
   }, [search, contacts]);
 
   // Function to handle search icon press

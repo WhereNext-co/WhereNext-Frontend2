@@ -158,7 +158,7 @@ export default function Diary() {
                   placelocation={rendezvous.placelocation}
                   status={rendezvous.status}
                   scheduleid={rendezvous.scheduleid}
-                  currentuseruid={currentUserUID}
+                  currentuseruid={currentUserUID.user.uid}
                 />
               ))}
           </View>
@@ -176,7 +176,7 @@ export default function Diary() {
                   placelocation={rendezvous.placelocation}
                   status={rendezvous.status}
                   scheduleid={rendezvous.scheduleid}
-                  currentuseruid={currentUserUID}
+                  currentuseruid={currentUserUID.user.uid}
                 />
               ))}
           </View>
@@ -194,7 +194,7 @@ export default function Diary() {
                   placelocation={rendezvous.placelocation}
                   status={rendezvous.status}
                   scheduleid={rendezvous.scheduleid}
-                  currentuseruid={currentUserUID}
+                  currentuseruid={currentUserUID.user.uid}
                 />
               ))}
           </View>
@@ -212,7 +212,7 @@ export default function Diary() {
                   placelocation={rendezvous.placelocation}
                   status={rendezvous.status}
                   scheduleid={rendezvous.scheduleid}
-                  currentuseruid={currentUserUID}
+                  currentuseruid={currentUserUID.user.uid}
                   pendingRendezvous={pendingRendezvous}
                   setPendingRendezvous={setPendingRendezvous}
                 />
