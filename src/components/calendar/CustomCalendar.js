@@ -74,10 +74,11 @@ export default function CustomCalendar({ onStartDateChange, onEndDateChange }) {
     <View>
       <CalendarPicker
         onDateChange={onDateChange}
+        startFromMonday={true}
         allowRangeSelection={true}
         allowBackwardRangeSelect={true}
         selectedDayColor="#5fede4"
-        selectedDayTextColor="#FFFFFF"
+        selectedDayTextColor="#181D45"
         minDate={new Date()}
         previousComponent={<AntDesign name="left" size={24} color="white" />}
         nextComponent={<AntDesign name="right" size={24} color="white" />}

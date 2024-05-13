@@ -135,6 +135,7 @@ export default function MapView() {
   const reversehandleSearchFocus = () => {
     // console.log("Search box focused");
     setSearching(false);
+    console.log();
   };
 
   const handleSearchChange = (newText) => {
@@ -150,7 +151,10 @@ export default function MapView() {
         placename: searchDetails.displayName.text,
         placelocation: searchDetails.formattedAddress,
         placemaplink: searchDetails.googleMapsUri,
-        placephotolink: `https://places.googleapis.com/v1/${searchDetails.photos[0].name}/media?maxHeightPx=400&maxWidthPx=400&key=AIzaSyAFn7D3VcmDtWXNJXoHyz44MVNMEj1sLZs`,
+        placephotolink:
+          searchDetails.photos !== undefined
+            ? `https://places.googleapis.com/v1/${searchDetails.photos[0].name}/media?maxHeightPx=400&maxWidthPx=400&key=AIzaSyAFn7D3VcmDtWXNJXoHyz44MVNMEj1sLZs`
+            : "",
       },
     });
   };

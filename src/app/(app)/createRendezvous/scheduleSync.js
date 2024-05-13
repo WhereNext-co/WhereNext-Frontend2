@@ -52,6 +52,7 @@ export default function scheduleSync() {
   const handleSelectTime = (time) => {
     setSelectedTime(time);
     console.log(time);
+    console.log();
   };
 
   const onConfirm = () => {
@@ -68,6 +69,11 @@ export default function scheduleSync() {
       console.error('Error sending data: ', error);
     });
     */
+    if (!selectedTime) {
+      alert("Please select the time slot first.");
+      return;
+    }
+
     router.push({
       pathname: "./confirmation",
       params: {
@@ -91,8 +97,6 @@ export default function scheduleSync() {
       pathname: "./desired",
       params: {
         uid: uid,
-        startTime: selectedTime[0],
-        endTime: selectedTime[1],
         friendUIDs: friendUIDs,
         duration: duration,
         placegoogleplaceid: placegoogleplaceid,
@@ -106,25 +110,31 @@ export default function scheduleSync() {
   };
 
   return (
-    <SafeAreaView>
+    <View
+      style={{ backgroundColor: "#14072b" }}
+      className="px-4 pt-20 h-full w-full"
+    >
       <Stack.Screen options={{ headerShown: false }} />
-      <View>
+      <View className="flex-1">
         <Text style={styles.title}>Schedule Sync</Text>
         {timeList ? (
           <View>
-            <View style={styles.timeListContainer}>
-              <ScrollView>
-                {timeList.map((time, index) => (
-                  <ScheduleSyncTimeCard
-                    key={index}
-                    startTime={time[0]}
-                    endTime={time[1]}
-                    onSelect={handleSelectTime}
-                    selectedTime={selectedTime}
-                  />
-                ))}
-              </ScrollView>
-            </View>
+            <ScrollView
+              style={styles.timeListContainer}
+              pagingEnabled={false}
+              indicatorStyle="white"
+            >
+              {timeList.map((time, index) => (
+                <ScheduleSyncTimeCard
+                  key={index}
+                  startTime={time[0]}
+                  endTime={time[1]}
+                  onSelect={handleSelectTime}
+                  selectedTime={selectedTime}
+                />
+              ))}
+            </ScrollView>
+
             <Pressable
               onPress={onConfirm}
               style={styles.sendInvitesButtonContainer}
@@ -140,19 +150,37 @@ export default function scheduleSync() {
             </Pressable>
 
             <Pressable onPress={onEdit} style={styles.chooseButtonContainer}>
-              <View style={styles.chooseButton}>
-                <Text style={styles.chooseButtonText}>Choose Desired Time</Text>
-              </View>
+              <Text style={styles.chooseButtonText}>Choose Desired Time</Text>
             </Pressable>
           </View>
         ) : (
-          <View>
-            <Text>Uh oh... Seems like there are no matching time</Text>
-            <Button title="Choose Desired Time" onPress={onEdit} />
+          <View className="mt-6 flex-1">
+            <Text className="font-semibold text-center text-white text-base">
+              Uh oh... Seems like there are no matching time
+            </Text>
+            <View
+              style={{ flex: 1, justifyContent: "flex-end", marginBottom: 10 }}
+            >
+              <Pressable
+                onPress={onConfirm}
+                style={styles.sendInvitesButtonContainer}
+              >
+                <LinearGradient
+                  colors={["#2acbf9", "#9aeeb0"]}
+                  style={styles.sendInvitesButton}
+                  start={{ x: 0, y: 0.5 }}
+                  end={{ x: 1, y: 0.5 }}
+                >
+                  <Text style={styles.sendInviteButtonText}>
+                    Choose Desired Time
+                  </Text>
+                </LinearGradient>
+              </Pressable>
+            </View>
           </View>
         )}
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -160,7 +188,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 25,
     fontWeight: "bold",
-    margin: 15,
+    color: "#fff",
   },
   cardContainer: {
     flexDirection: "row",
@@ -179,11 +207,7 @@ const styles = StyleSheet.create({
   timeListContainer: {
     margin: 10,
     padding: 20,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#000",
-    height: "75%",
-    backgroundColor: "#14072B",
+    height: "82%",
   },
   sendInvitesButtonContainer: {
     alignItems: "center",
@@ -196,25 +220,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 10,
   },
-  chooseButton: {
-    width: "90%",
-    borderRadius: 100,
-    padding: 10,
-    backgroundColor: "#43425e",
-    marginTop: 10,
-    alignItems: "center",
-  },
   chooseButtonContainer: {
     alignItems: "center",
     marginTop: 10,
   },
   chooseButtonText: {
-    fontSize: 25,
-    fontWeight: "bold",
+    fontSize: 12,
     color: "#fff",
+    textDecorationLine: "underline",
   },
   sendInviteButtonText: {
-    fontSize: 25,
+    fontSize: 18,
     fontWeight: "bold",
   },
 });
