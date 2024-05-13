@@ -243,6 +243,14 @@ export default function Tab() {
     this._panel.hide();
   };
   const handlePress3 = () => {
+    console.log("startdate1", startdate);
+    console.log("enddate1", enddate);
+    if (isEnabled) {
+      startdate.setHours(0, 0, 0, 0);
+      enddate.setHours(23, 59, 59, 999);
+    }
+    console.log("startdate2", startdate);
+    console.log("enddate2", enddate);
     a = startdate.toISOString();
     b = enddate.toISOString();
 
