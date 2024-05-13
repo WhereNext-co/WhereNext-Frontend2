@@ -41,6 +41,8 @@ export default function Friends({ onFriendChange, currentUserUID }) {
           contact.Uid.toLowerCase().includes(search.toLowerCase())
       )
     );
+    console.log("contacts", contacts);
+    console.log("filteredContacts", filteredContacts);
   }, [search, contacts]);
 
   // State variables
@@ -74,6 +76,7 @@ export default function Friends({ onFriendChange, currentUserUID }) {
           contact.Uid.toLowerCase().includes(search.toLowerCase())
       )
     );
+    console.log(filteredContacts);
   }, [search, contacts]);
 
   // Function to handle search icon press
