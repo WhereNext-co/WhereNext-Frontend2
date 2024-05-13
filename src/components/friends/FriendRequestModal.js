@@ -15,7 +15,6 @@ import {
 import FriendRequestCard from "./FriendRequestCard";
 import Modal from "react-native-modal";
 import axios from "axios";
-import { set } from "date-fns";
 import { LinearGradient } from "expo-linear-gradient";
 import { AuthContext } from "../../context/authContext";
 

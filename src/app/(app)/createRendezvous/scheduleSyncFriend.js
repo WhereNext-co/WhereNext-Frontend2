@@ -1,41 +1,44 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  SafeAreaView,
-  ScrollView,
-  Image,
-  TextInput,
-  Button,
-} from "react-native";
-import DesiredFriendCard from "../../../components/calendar/DesiredFriendCard";
-import InviteFriend from "../../../components/calendar/InviteFriend";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import axios from "axios";
 import Modal from "react-native-modal";
 import { router, useLocalSearchParams, Stack } from "expo-router";
+import InviteFriendAvailable from "../../../components/calendar/InviteFriendAvailable";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function Friends() {
   let {
     uid,
     startTime,
     endTime,
-    duration,
     placegoogleplaceid,
     placename,
     placelocation,
     placemaplink,
     placephotolink,
     rendezvousName,
+    Animated,
+    LayoutAnimation,
+    duration,
   } = useLocalSearchParams();
 
   const [friendUIDs, setFriendUIDs] = useState([]);
-
+  const [isFormFilled, setIsFormFilled] = useState(false);
+  useEffect(() => {
+    // Check if all required fields are filled
+    if (friendUIDs.length > 0) {
+      setIsFormFilled(true); // Set isFormFilled to true if all fields are filled
+    } else {
+      setIsFormFilled(false); // Set isFormFilled to false if any field is empty
+    }
+  }, [friendUIDs]);
   const handleFriendChange = (friendUIDList) => {
     setFriendUIDs(friendUIDList);
     console.log(friendUIDs);
   };
+  useEffect(() => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  }, [isFormFilled]); // Trigger animation when isFormFilled changes
 
   const sendInvitesHandler = () => {
     router.push({
@@ -46,51 +49,82 @@ export default function Friends() {
         endTime: endTime,
         friendUIDs: friendUIDs,
         duration: duration,
-        placegoogleplaceid: placegoogleplaceid,
-        placename: placename,
-        placelocation: placelocation,
-        placemaplink: placemaplink,
-        placephotolink: placephotolink,
         rendezvousName: rendezvousName,
       },
     });
   };
 
-  const DummyUid = "pkXM6xwBb4RnZt1Qh8qjuuPTHeI3";
-
   return (
-    <SafeAreaView>
-      <ScrollView>
-        <InviteFriend
-          onFriendChange={handleFriendChange}
-          currentUserUID={DummyUid}
-        />
-      </ScrollView>
-      <Button title="Send Invites" onPress={sendInvitesHandler}></Button>
-
+    <View style={styles.container}>
       {/* Stack Screen */}
       <Stack.Screen options={{ headerShown: false }} />
-    </SafeAreaView>
+      <View style={styles.friendContainer}>
+        <InviteFriendAvailable
+          onFriendChange={handleFriendChange}
+          currentUserUID={uid}
+          startTime={startTime}
+          endTime={endTime}
+        />
+      </View>
+
+      {isFormFilled && (
+        <TouchableOpacity onPress={sendInvitesHandler}>
+          <LinearGradient
+            colors={["#2acbf9", "#9aeeb0"]}
+            style={styles.createButton}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 0.5 }}
+          >
+            <Text style={styles.createButtonText}>Create Rendezvous</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  searchInput: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    paddingLeft: 10,
+  friendContainer: {
+    paddingTop: 50,
+    height: "80%",
+    width: 400,
   },
   container: {
     flex: 1,
+    backgroundColor: "#181D45",
     justifyContent: "center",
     alignItems: "center",
   },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  button: {
+    backgroundColor: "#2A9D8F",
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  buttonText: {
+    color: "#fff",
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+  createButtonText: {
+    fontSize: 25,
+    fontWeight: "bold",
+    color: "#fff",
+    textShadowColor: "rgba(0, 0, 0, 0.35)",
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 5,
+  },
+  createButton: {
+    width: "90%",
+    borderRadius: 100,
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background for modal
+    justifyContent: "center",
+    padding: 10,
   },
 });
 
@@ -105,3 +139,12 @@ const styles = StyleSheet.create({
 // placemaplink,
 // placephotolink,
 // rendezvousName,
+
+{
+  /* <InviteFriendAvailable
+onFriendChange={handleFriendChange}
+currentUserUID={uid}
+startTime={startTime}
+endTime={endTime}
+/> */
+}
