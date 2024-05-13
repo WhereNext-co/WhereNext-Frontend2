@@ -64,12 +64,11 @@ export default function GoogleMapHomeView({
           width: "100%",
           height: "100%",
         }}
-        // provider={PROVIDER_GOOGLE}
+        // // provider={PROVIDER_GOOGLE}
         showsUserLocation={true}
         region={region}
         initialRegion={region}
         showsMyLocationButton={true}
-        followsUserLocation={true}
         loadingEnabled={true}
         onMapReady={() => setIsMapReady(true)}
       >

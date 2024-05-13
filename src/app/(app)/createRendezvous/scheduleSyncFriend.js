@@ -1,113 +1,150 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  SafeAreaView,
-  ScrollView,
-  Image,
-  TextInput,
-  Button,
-} from "react-native";
-import DesiredFriendCard from "../../../components/calendar/DesiredFriendCard";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import axios from "axios";
 import Modal from "react-native-modal";
-import { router } from "expo-router";
+import { router, useLocalSearchParams, Stack } from "expo-router";
+import InviteFriendAvailable from "../../../components/calendar/InviteFriendAvailable";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function Friends() {
-  const [contacts, setContacts] = useState([
-    //default friends
-    {
-      img: "",
-      name: "Guy Chelsea",
-      id: "0xfjri3995",
-    },
+  let {
+    uid,
+    startTime,
+    endTime,
+    placegoogleplaceid,
+    placename,
+    placelocation,
+    placemaplink,
+    placephotolink,
+    rendezvousName,
+    Animated,
+    LayoutAnimation,
+    duration,
+  } = useLocalSearchParams();
 
-    {
-      img: "",
-      name: "Mearz Wong",
-      id: "03djccnjfj",
-    },
-    {
-      img: "",
-      name: "John Doe",
-      id: "12345",
-    },
-    {
-      img: "",
-      name: "Jane Doe",
-      id: "15556",
-    },
-  ]);
-
-  const [search, setSearch] = useState("");
-  const [filteredContacts, setFilteredContacts] = useState([]);
-  const [selectedFriends, setSelectedFriends] = useState([]);
+  const [friendUIDs, setFriendUIDs] = useState([]);
+  const [isFormFilled, setIsFormFilled] = useState(false);
+  useEffect(() => {
+    // Check if all required fields are filled
+    if (friendUIDs.length > 0) {
+      setIsFormFilled(true); // Set isFormFilled to true if all fields are filled
+    } else {
+      setIsFormFilled(false); // Set isFormFilled to false if any field is empty
+    }
+  }, [friendUIDs]);
+  const handleFriendChange = (friendUIDList) => {
+    setFriendUIDs(friendUIDList);
+    console.log(friendUIDs);
+  };
+  useEffect(() => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  }, [isFormFilled]); // Trigger animation when isFormFilled changes
 
   const sendInvitesHandler = () => {
-    router.push("./confirmation");
+    router.push({
+      pathname: "./confirmation",
+      params: {
+        uid: uid,
+        startTime: startTime,
+        endTime: endTime,
+        friendUIDs: friendUIDs,
+        duration: duration,
+        rendezvousName: rendezvousName,
+      },
+    });
   };
 
-  useEffect(() => {
-    setFilteredContacts(
-      contacts.filter(
-        (contact) =>
-          contact.name.toLowerCase().includes(search.toLowerCase()) ||
-          contact.id.toLowerCase().includes(search.toLowerCase())
-      )
-    );
-  }, [search, contacts]);
-
   return (
-    <SafeAreaView>
-      <TextInput
-        value={search}
-        onChangeText={setSearch}
-        placeholder="Search"
-        style={styles.searchInput}
-      />
+    <View style={styles.container}>
+      {/* Stack Screen */}
+      <Stack.Screen options={{ headerShown: false }} />
+      <View style={styles.friendContainer}>
+        <InviteFriendAvailable
+          onFriendChange={handleFriendChange}
+          currentUserUID={uid}
+          startTime={startTime}
+          endTime={endTime}
+        />
+      </View>
 
-      <ScrollView>
-        {filteredContacts.map((contact) => (
-          <DesiredFriendCard
-            key={contact.id}
-            img={contact.img}
-            name={contact.name}
-            selected={selectedFriends.includes(contact.id)}
-            onPress={() => {
-              if (selectedFriends.includes(contact.id)) {
-                setSelectedFriends(
-                  selectedFriends.filter((id) => id !== contact.id)
-                );
-              } else {
-                setSelectedFriends([...selectedFriends, contact.id]);
-              }
-            }}
-          />
-        ))}
-      </ScrollView>
-      <Button title="Send Invites" onPress={sendInvitesHandler}></Button>
-    </SafeAreaView>
+      {isFormFilled && (
+        <TouchableOpacity onPress={sendInvitesHandler}>
+          <LinearGradient
+            colors={["#2acbf9", "#9aeeb0"]}
+            style={styles.createButton}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 0.5 }}
+          >
+            <Text style={styles.createButtonText}>Create Rendezvous</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  searchInput: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    paddingLeft: 10,
+  friendContainer: {
+    paddingTop: 50,
+    height: "80%",
+    width: 400,
   },
   container: {
     flex: 1,
+    backgroundColor: "#181D45",
     justifyContent: "center",
     alignItems: "center",
   },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  button: {
+    backgroundColor: "#2A9D8F",
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  buttonText: {
+    color: "#fff",
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+  createButtonText: {
+    fontSize: 25,
+    fontWeight: "bold",
+    color: "#fff",
+    textShadowColor: "rgba(0, 0, 0, 0.35)",
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 5,
+  },
+  createButton: {
+    width: "90%",
+    borderRadius: 100,
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background for modal
+    justifyContent: "center",
+    padding: 10,
   },
 });
+
+// uid,
+// startTime,
+// endTime,
+// friendUIDs,
+// duration,
+// placegoogleplaceid,
+// placename,
+// placelocation,
+// placemaplink,
+// placephotolink,
+// rendezvousName,
+
+{
+  /* <InviteFriendAvailable
+onFriendChange={handleFriendChange}
+currentUserUID={uid}
+startTime={startTime}
+endTime={endTime}
+/> */
+}

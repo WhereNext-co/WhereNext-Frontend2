@@ -22,24 +22,26 @@ const ConfirmationUsersCard = ({ uid }) => {
 
   return (
     <View style={styles.card}>
-      <View style={styles.card}>
-        {img ? ( //Checking if the img is available
-          <Image
-            alt=""
-            resizeMode="cover"
-            source={{ uri: img }}
-            style={styles.cardImg}
-          />
-        ) : (
-          // If the img is not available, display the first letter of the name.
-          <View style={[styles.cardImg, styles.cardAvatar]}>
-            <Text style={styles.cardAvatarText}>{name[0]}</Text>
-          </View>
-        )}
-
-        <View /*The part where name is displayed*/ style={styles.cardBody}>
-          <Text style={styles.cardTitle}>{name}</Text>
+      {img ? ( //Checking if the img is available
+        <Image
+          alt=""
+          resizeMode="cover"
+          source={{
+            uri: `https://firebasestorage.googleapis.com/v0/b/wherenext-24624.appspot.com/o/images%2F${img.slice(
+              81
+            )}`,
+          }}
+          style={styles.cardImg}
+        />
+      ) : (
+        // If the img is not available, display the first letter of the name.
+        <View style={[styles.cardImg, styles.cardAvatar]}>
+          <Text style={styles.cardAvatarText}>{name[0]}</Text>
         </View>
+      )}
+
+      <View style={styles.cardBody}>
+        <Text style={styles.cardTitle}>{name}</Text>
       </View>
     </View>
   );
@@ -50,10 +52,9 @@ export default ConfirmationUsersCard;
 const styles = StyleSheet.create({
   /** Card */
   card: {
-    paddingVertical: 14,
+    paddingVertical: 4,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-start",
   },
   cardWrapper: {
     borderBottomWidth: 1,
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
   cardImg: {
     width: 42,
     height: 42,
-    borderRadius: 12,
+    borderRadius: 9999,
   },
   cardAvatar: {
     display: "flex",
@@ -80,15 +81,11 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   cardTitle: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#000",
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#fff",
   },
   cardAction: {
     paddingRight: 16,
-  },
-  selected: {
-    borderColor: "blue",
-    borderWidth: 2,
   },
 });

@@ -1,9 +1,9 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import Pin from "../../../assets/home/placeDetail/pin";
-import Members from "../../../assets/tabs/friends";
-import Clock from "../../../assets/home/placeDetail/clock";
+import Pin from "../../../assets/home/placeDetail/outline/pin";
+import Members from "../../../assets/tabs/outline/friends";
+import Clock from "../../../assets/home/placeDetail/outline/clock";
 import { router } from "expo-router";
 
 const LocationCard = ({
@@ -15,9 +15,14 @@ const LocationCard = ({
   placephotolink,
   placelocation,
   status,
+  scheduleid,
 }) => {
   const formatTime = (timeString) => {
-    const time = new Date(timeString);
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const offset = -new Date().getTimezoneOffset() / 60;
+    const time = new Date(
+      new Date(timeString).getTime() + offset * 60 * 60 * 1000
+    );
     return time.toLocaleString([], {
       year: "numeric",
       month: "long",

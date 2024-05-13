@@ -6,20 +6,30 @@ import {
   TextInput,
   Button,
   ScrollView,
+  Animated,
+  LayoutAnimation,
+  TouchableOpacity,
 } from "react-native";
+
 import CustomCalendar from "../../../components/calendar/CustomCalendar";
 import TimePicker from "../../../components/calendar/TimePicker";
 import InviteFriend from "../../../components/calendar/InviteFriend";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, router, useLocalSearchParams } from "expo-router";
-import { set } from "date-fns";
-import { fr, se } from "date-fns/locale";
 import { UserLocationContext } from "../../../context/userLocationContext";
 import { AuthContext } from "../../../context/authContext";
+import { LinearGradient } from "expo-linear-gradient";
+
+import Pin from "../../../../assets/home/placeDetail/outline/pin";
+
 
 export default function CreateMeeting() {
   const currentUserUID = useContext(AuthContext).user.uid;
+
   let {
+    rendezvousNameFromConfirm,
+    durationFromConfirm,
+    placenameFromConfirm,
     placegoogleplaceid,
     placename,
     placelocation,
@@ -29,12 +39,48 @@ export default function CreateMeeting() {
   // State variables
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [rendezvousName, setRendezvousName] = useState("");
-  const [duration, setDuration] = useState(0);
+  const [rendezvousName, setRendezvousName] = useState(
+    rendezvousNameFromConfirm || ""
+  );
+  const [duration, setDuration] = useState(durationFromConfirm || null);
   const [day, setDay] = useState(0);
   const [hour, setHour] = useState(0);
   const [minute, setMinute] = useState(0);
   const [friendUIDs, setFriendUIDs] = useState([]);
+  // Inside your CreateMeeting component
+  const [isFormFilled, setIsFormFilled] = useState(false); // State to track if all fields are filled
+
+  // useEffect hook to check if all fields are filled whenever there's a change
+  useEffect(() => {
+    // Check if all required fields are filled
+    if (
+      rendezvousName !== "" &&
+      friendUIDs.length > 0 &&
+      startDate !== null &&
+      endDate !== null &&
+      duration !== 0 &&
+      (placename !== undefined || placenameFromConfirm !== undefined)
+    ) {
+      setIsFormFilled(true); // Set isFormFilled to true if all fields are filled
+    } else {
+      setIsFormFilled(false); // Set isFormFilled to false if any field is empty
+    }
+  }, [
+    rendezvousName,
+    friendUIDs,
+    startDate,
+    endDate,
+    duration,
+    placename,
+    placenameFromConfirm,
+  ]);
+
+  const [fadeAnim] = useState(new Animated.Value(0)); // Initial opacity of 0
+
+  // Inside your CreateMeeting component, after defining state variables
+  useEffect(() => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  }, [isFormFilled]); // Trigger animation when isFormFilled changes
 
   // Event handlers
   const handleStartDateChange = (date) => {
@@ -70,16 +116,6 @@ export default function CreateMeeting() {
     console.log(friendUIDs);
   };
 
-  // Rendezvous object
-  const [rendezvous, setRendezvous] = useState({
-    uid: "",
-    startTime: "",
-    endTime: "",
-    friendUIDs: [],
-    duration: 0,
-    rendezvousName: "",
-  });
-
   // Schedule sync handler
   const handleScheduleSync = () => {
     if (rendezvousName === "") {
@@ -91,11 +127,8 @@ export default function CreateMeeting() {
     } else if (startDate === null || endDate === null) {
       alert("Select at least a date!");
       return;
-    } else if (duration === 0) {
+    } else if (duration === 0 || duration === NaN) {
       alert("Duration can't be empty!");
-      return;
-    } else if (placename === undefined) {
-      alert("Choose a place first!");
       return;
     } else {
       const startDateObj = new Date(startDate.setHours(0, 0, 0, 0));
@@ -124,18 +157,7 @@ export default function CreateMeeting() {
         2,
         "0"
       )}Z`;
-      setRendezvous({
-        uid: currentUserUID,
-        startTime: startDateISO,
-        endTime: endDateISO,
-        friendUIDs: friendUIDs,
-        duration: duration,
-        rendezvousName: rendezvousName,
-      });
-      console.log("startD", startDateISO, "endD", endDateISO);
-      console.log("a", rendezvous);
-      console.log("b", friendUIDs);
-      console.log("Rendezvous created:", rendezvous);
+
       router.push({
         pathname: "./createRendezvous/scheduleSync",
         params: {
@@ -146,77 +168,100 @@ export default function CreateMeeting() {
           rendezvousName: rendezvousName,
           duration: duration,
           placegoogleplaceid: placegoogleplaceid,
-          placename: placename,
+          placename: placenameFromConfirm ? placenameFromConfirm : placename,
           placelocation: placelocation,
           placemaplink: placemaplink,
           placephotolink: placephotolink,
         },
       });
-      alert("Rendezvous created successfully!");
     }
   };
 
   return (
-    <SafeAreaView>
-      <ScrollView>
+    <View
+      style={{ backgroundColor: "#14072b" }}
+      className={`px-4 pt-20 ${isFormFilled && "pb-2"} h-full w-full`}
+    >
+      <ScrollView style={{ backgroundColor: "#14072b" }}>
         {/* Stack Screen */}
         <Stack.Screen options={{ headerShown: false }} />
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Create Rendezvous</Text>
+          {/* <Button title="Go schedule" onPress={goSchedule} /> */}
+          {/* <Button title="Go confirmation" onPress={goConfirmation} />
+          <Button title="Go Info" onPress={goInfo} /> */}
+          {/* <Button title="Go Desired" onPress={goDesired} />
+          <Button title="Go Friend" onPress={goFriend} /> */}
         </View>
-        <View style={styles.textInput}>
-          {/* Rendezvous Name Input */}
+        <View style={styles.headerContainer}>
           <TextInput
             value={rendezvousName}
             onChangeText={handleRendezvousName}
-            placeholder="Rendezvous Name"
+            placeholder="Please enter a rendezvous name"
+            placeholderTextColor="rgba(255, 255, 255, 0.6)" // Setting opacity to 60%
+            style={styles.textInput} // Full opacity for entered text
           />
+          <LinearGradient
+            colors={["#2acbf9", "#9aeeb0"]}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 0.5 }}
+            style={styles.divider}
+          />
+          <View className="flex flex-row items-center mb-1">
+            <Pin width={20} height={20} color="#fff" />
+            <Text style={styles.searchDetails}>
+              {placenameFromConfirm
+                ? placenameFromConfirm
+                : placename
+                ? placename
+                : "No search details"}
+            </Text>
+          </View>
         </View>
-
-        <View>
-          {console.log(
-            placegoogleplaceid,
-            placelocation,
-            placemaplink,
-            placephotolink
-          )}
-          <Text style={styles.searchDetails}>
-            {placename ? placename : "No search details"}
-          </Text>
-        </View>
-
-        <View style={styles.calendar}>
-          {/* Custom Calendar */}
-
+        <View style={styles.calendarContainer}>
           <CustomCalendar
             onEndDateChange={handleEndDateChange}
             onStartDateChange={handleStartDateChange}
           />
         </View>
 
-        <View>
+        <View style={styles.durationContainer}>
           {/* Time Picker */}
           <TimePicker
             onDurationChange={handleDurationChange}
             onDayChange={handleDayChange}
             onHourChange={handleHourChange}
             onMinuteChange={handleMinuteChange}
+            day={day}
+            hour={hour}
+            minute={minute}
           />
         </View>
 
         <View style={styles.inviteFriend}>
-          {/* Invite Friend */}
           <InviteFriend
             onFriendChange={handleFriendChange}
             currentUserUID={currentUserUID}
           />
         </View>
       </ScrollView>
-      {/* Schedule Sync Button */}
-      <View style={styles.floatingButton}>
-        <Button title="Schedule Sync" onPress={handleScheduleSync} />
-      </View>
-    </SafeAreaView>
+      {isFormFilled && (
+        <LinearGradient
+          colors={["#2acbf9", "#9aeeb0"]}
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 1, y: 0.5 }}
+          style={styles.floatingButton}
+        >
+          <TouchableOpacity onPress={handleScheduleSync}>
+            <Text
+              style={{ color: "#181D45", fontWeight: "bold", fontSize: 18 }}
+            >
+              Schedule Sync
+            </Text>
+          </TouchableOpacity>
+        </LinearGradient>
+      )}
+    </View>
   );
 }
 
@@ -227,50 +272,73 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  calendar: {
+  calendarContainer: {
     flexDirection: "column",
-    margin: 10,
+    marginBottom: 10,
     padding: 20,
     borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#000",
+    backgroundColor: "#181D45",
     justifyContent: "center",
     alignItems: "center",
   },
-  textInput: {
-    flex: 1,
-    borderColor: "#000",
-    borderWidth: 1,
+  durationContainer: {
+    flexDirection: "column",
+    marginBottom: 10,
     borderRadius: 10,
-    margin: 10,
+    backgroundColor: "#181D45",
+  },
+  headerContainer: {
+    flex: 1,
+    borderRadius: 10,
+    marginBottom: 10,
     padding: 10,
+    backgroundColor: "#181D45",
+  },
+  textInput: {
+    fontSize: 14,
+    fontWeight: "bold",
+    marginTop: 5,
+
+    color: "#fff",
   },
   inviteFriend: {
-    margin: 10,
+    marginBottom: 10,
     padding: 20,
     borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#000",
+    backgroundColor: "#181D45",
   },
   floatingButton: {
-    position: "absolute",
-    width: "100%",
-    bottom: 0,
+    borderRadius: 30, // Add border radius for rounded corners
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    marginTop: 10,
     padding: 10,
-    backgroundColor: "blue", // Change this color to match your design
+    alignItems: "center",
   },
   searchDetails: {
-    fontSize: 20,
+    fontSize: 14,
     fontWeight: "bold",
-    marginLeft: 10,
-    marginTop: 5,
-    marginBottom: 5,
+    marginLeft: 5,
+    color: "#fff",
   },
   title: {
     fontSize: 25,
     fontWeight: "bold",
+    color: "#fff",
   },
   titleContainer: {
-    margin: 15,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 16, // Add marginBottom for spacing
+  },
+  divider: {
+    borderBottomWidth: 1,
+    marginVertical: 10, // Adjust this value as needed for spacing
   },
 });

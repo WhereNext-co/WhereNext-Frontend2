@@ -12,7 +12,7 @@ import {
   LayoutAnimation,
   UIManager,
 } from "react-native";
-import FriendCard from "./InviteFriendCard";
+import FriendAvailableCard from "./InviteFriendAvailableCard";
 import axios from "axios";
 import Modal from "react-native-modal";
 import Search from "../../../assets/home/search/search.svg";
@@ -21,15 +21,22 @@ import Search from "../../../assets/home/search/search.svg";
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
 
-export default function Friends({ onFriendChange, currentUserUID }) {
+export default function Friends({
+  onFriendChange,
+  currentUserUID,
+  startTime,
+  endTime,
+}) {
   useEffect(() => {
     // friend lists from API
     axios
-      .post(`http://where-next.tech/users/get-friends`, {
+      .post(`http://where-next.tech/schedulesync/get-friends-schedules`, {
         uid: currentUserUID,
+        startTime: startTime,
+        endTime: endTime,
       })
       .then((response) => {
-        setContacts(response.data.friendList);
+        setContacts(response.data);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -96,8 +103,8 @@ export default function Friends({ onFriendChange, currentUserUID }) {
         >
           {/* Wrap the search icon inside a TouchableOpacity */}
           <Search
-            width={20}
-            height={20}
+            width={25}
+            height={25}
             style={
               isExpanded ? styles.searchIconWhenExpanded : styles.searchIcon
             }
@@ -121,12 +128,13 @@ export default function Friends({ onFriendChange, currentUserUID }) {
       ) : (
         <ScrollView contentContainerStyle={styles.friendList}>
           {filteredContacts.map((contact) => (
-            <FriendCard
+            <FriendAvailableCard
               key={contact.Uid}
               img={contact.ProfilePicture}
               name={contact.Name}
               onPress={() => handlePress(contact)}
               isSelected={selectedFriends.includes(contact.Uid)}
+              available={contact.Availability}
             />
           ))}
         </ScrollView>
@@ -147,7 +155,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     color: "#FFFFFF",
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: "bold",
   },
   searchContainer: {
